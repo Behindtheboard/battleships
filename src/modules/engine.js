@@ -1,10 +1,9 @@
 class Ship {
-  constructor(isVertical) {
-    this.name = this.name;
+  constructor(name, isVertical) {
+    this.name = name;
     this.length = this.calcLength();
     this.isVertical = isVertical;
     this.damage = 0;
-    this.sunk = false;
   }
 
   calcLength() {
@@ -23,9 +22,7 @@ class Ship {
   }
 
   isSunk() {
-    if (this.length === this.damage) {
-      this.sunk = true;
-    }
+    return this.length === this.damage;
   }
 
   hit() {
@@ -36,3 +33,6 @@ class Ship {
   }
 }
 
+
+
+module.exports = Ship;
