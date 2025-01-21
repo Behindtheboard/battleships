@@ -36,7 +36,7 @@ class Ship {
 class Gameboard {
   constructor() {
     this.board = this.createBoard(10);
-    this.fleet = []
+    this.fleet = [];
   }
 
   createBoard(n) {
@@ -50,13 +50,13 @@ class Gameboard {
     if (Number(row) + length > 9 || Number(col) + length > 9) {
       return console.error("out of bounds");
     }
-    this.fleet.push(ship)
+    this.fleet.push(ship);
     if (ship.isVertical) {
-      for (let i = row; i <= ship.length; i++) {
+      for (let i = row; i < ship.length; i++) {
         this.board[i][col] = ship;
       }
     } else {
-      for (let i = col; i <= ship.length; i++) {
+      for (let i = col; i < ship.length; i++) {
         this.board[row][i] = ship;
       }
     }
@@ -64,32 +64,37 @@ class Gameboard {
 
   recieveAttack(coordinate) {
     const hitBox = this.board[coordinate[0]][coordinate[1]];
-    console.log(hitBox);
-    if (hitBox !== null) {
-      hitBox.hit();
-      return (this.board[coordinate[0]][
-        coordinate[1]
-      ] = `hit ${hitBox.name[0]}`);
-    } else {
-      if (hitBox === "hit") {
-        return console.error("already attacked");
-      }
-      this.board[coordinate[0]][coordinate[1]] = "missed";
+    if (hitBox === null) {
+      return (this.board[coordinate[0]][coordinate[1]] = "missed");
     }
+    if (hitBox === "hit" || hitBox === "missed") {
+      return console.error("already attacked");
+    }
+    hitBox.hit();
+    (this.board[coordinate[0]][coordinate[1]] = `hit`);
+    return this.fleetSunk();
   }
 
   fleetSunk() {
-
+    return this.fleet.every((ship) => {
+      return ship.isSunk() === true;
+    });
   }
 }
 
-
-
+const battleship = new Ship("battleship", false);
 const carrier = new Ship("carrier", false);
 const test = new Gameboard();
 
+test.placeShip("10", battleship);
 test.placeShip("00", carrier);
 test.recieveAttack("00");
+test.recieveAttack("01");
+test.recieveAttack("02");
+test.recieveAttack("03");
+console.log(test.recieveAttack("04"));
+
+console.log(test.fleetSunk());
 
 console.log(test.board);
 
