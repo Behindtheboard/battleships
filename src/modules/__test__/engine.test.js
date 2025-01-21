@@ -59,7 +59,6 @@ describe("Gameboard object class methods and properties", () => {
 
   test("battleship should fill the first index of 4 arrays from the 2nd", () => {
     const test = gameboard.board.slice(2, 4).every((row) => {
-      console.log(row[0]);
       return row[0] === battleship;
     });
     expect(test).toBeTruthy();
@@ -72,4 +71,46 @@ describe("Gameboard object class methods and properties", () => {
     }).toThrow("ship already there");
   });
 
+  test("recievattack on 00 should hit carrier", () => {
+    gameboard.receiveAttack("00");
+    expect(gameboard.board[0][0]).toBe("hit");
+  });
+
+  test("should say already attacked", () => {
+    gameboard.receiveAttack("01");
+    expect(() => {
+      gameboard.receiveAttack("01");
+    }).toThrow("already attacked");
+  });
+
+  test("receiveattack should return false if miss", () => {
+    gameboard.receiveAttack("99");
+    console.log(gameboard.board)
+    expect(gameboard.board[9][9]).toBe('missed');
+  });
+  
+  test("receiveAttack should be true", () => {
+    gameboard.receiveAttack("00");
+    gameboard.receiveAttack("01");
+    gameboard.receiveAttack("02");
+    gameboard.receiveAttack("03");
+    gameboard.receiveAttack("04");
+    gameboard.receiveAttack("20");
+    gameboard.receiveAttack("30");
+    gameboard.receiveAttack("40");
+    expect(gameboard.receiveAttack("50")).toBeTruthy()
+  })
+
+  test("fleetSunk should be true", () => {
+    gameboard.receiveAttack("00");
+    gameboard.receiveAttack("01");
+    gameboard.receiveAttack("02");
+    gameboard.receiveAttack("03");
+    gameboard.receiveAttack("04");
+    gameboard.receiveAttack("20");
+    gameboard.receiveAttack("30");
+    gameboard.receiveAttack("40");
+    gameboard.receiveAttack("50");
+    expect(gameboard.fleetSunk()).toBeTruthy()
+  })
 });

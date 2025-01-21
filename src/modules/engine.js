@@ -67,7 +67,7 @@ class Gameboard {
     this.fleet.push(ship);
   }
 
-  recieveAttack(coordinate) {
+  receiveAttack(coordinate) {
     const hitBox = this.board[coordinate[0]][coordinate[1]];
     if (hitBox === null) {
       return (this.board[coordinate[0]][coordinate[1]] = "missed");
@@ -86,21 +86,5 @@ class Gameboard {
     });
   }
 }
-
-const battleship = new Ship("battleship", false);
-const carrier = new Ship("carrier", false);
-const test = new Gameboard();
-
-test.placeShip("10", battleship);
-test.placeShip("00", carrier);
-test.recieveAttack("00");
-test.recieveAttack("01");
-test.recieveAttack("02");
-test.recieveAttack("03");
-console.log(test.recieveAttack("04"));
-
-console.log(test.fleetSunk());
-
-console.log(test.board);
 
 module.exports = { Ship, Gameboard };
