@@ -1,4 +1,4 @@
-const Ship = require("../engine");
+const { Ship, Gameboard } = require("../engine");
 
 describe("Ship object class methods and properties", () => {
   let ship;
@@ -26,5 +26,13 @@ describe("Ship object class methods and properties", () => {
 
   test("isVertical should be true", () => {
     expect(ship.isVertical).toBeTruthy();
+  });
+});
+
+describe("Gameboard object class methods and properties", () => {
+  let gameboard;
+
+  beforeEach(() => {
+    gameboard = new Gameboard();
   });
 });

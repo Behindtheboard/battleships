@@ -33,6 +33,39 @@ class Ship {
   }
 }
 
+class Gameboard {
+  constructor() {
+    this.board = this.createBoard(10);
+  }
 
+  createBoard(n) {
+    return [...Array(n)].map((row) => Array(n).fill(null));
+  }
 
-module.exports = Ship;
+  placeShip(coordinate, ship) {
+    const row = coordinate[0];
+    const col = coordinate[1];
+    const length = ship.length;
+    if (Number(row) + length > 9 || Number(col) + length > 9) {
+      return console.error('out of bounds')
+    }
+    let i;
+    if (ship.isVertical) {
+      for (let i = row; i <= ship.length; i++) {
+        this.board[i][col] = ship.name;
+      }
+    } else {
+      for (let i = col; i <= ship.length; i++) {
+        this.board[row][i] = ship.name;
+      }
+    }
+  }
+}
+
+const carrier = new Ship("carrier", false);
+const test = new Gameboard();
+
+test.placeShip("12", carrier);
+console.log(test.board);
+
+module.exports = { Ship, Gameboard };
