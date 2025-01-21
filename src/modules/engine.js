@@ -44,22 +44,27 @@ class Gameboard {
   }
 
   placeShip(coordinate, ship) {
-    const row = coordinate[0];
-    const col = coordinate[1];
+    const [row, col] = coordinate.split("").map((n) => Number(n));
     const length = ship.length;
-    if (Number(row) + length > 9 || Number(col) + length > 9) {
-      return console.error("out of bounds");
+    if (row + length > 9 || col + length > 9) {
+      throw new Error("out of bounds");
     }
+
+    let r = row;
+    let c = col;
+    for (let i = 0; i < length; i++) {
+      ship.isVertical ? (r = row + i) : (c = col + i);
+      if (this.board[r][c] !== null) {
+        throw new Error("ship already there");
+      }
+    }
+
+    for (let i = 0; i < length; i++) {
+      ship.isVertical ? (r = row + i) : (c = col + i);
+      this.board[r][c] = ship;
+    }
+
     this.fleet.push(ship);
-    if (ship.isVertical) {
-      for (let i = row; i < ship.length; i++) {
-        this.board[i][col] = ship;
-      }
-    } else {
-      for (let i = col; i < ship.length; i++) {
-        this.board[row][i] = ship;
-      }
-    }
   }
 
   recieveAttack(coordinate) {
@@ -68,10 +73,10 @@ class Gameboard {
       return (this.board[coordinate[0]][coordinate[1]] = "missed");
     }
     if (hitBox === "hit" || hitBox === "missed") {
-      return console.error("already attacked");
+      throw new Error("already attacked");
     }
     hitBox.hit();
-    (this.board[coordinate[0]][coordinate[1]] = `hit`);
+    this.board[coordinate[0]][coordinate[1]] = `hit`;
     return this.fleetSunk();
   }
 
