@@ -94,6 +94,6 @@ export class Player {
   }
 }
 
-module.exports = { Ship, Gameboard };
+// module.exports = { Ship, Gameboard };
 
 

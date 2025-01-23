@@ -1,5 +1,7 @@
-import { Ship, Gameboard, Player} from "./objects"
+import { Ship, Gameboard, Player } from "./objects";
+import computerLogic from "./computerLogic";
+import renderUI from "./renderUI";
 
-function game() {
-    
+export default function game() {
+  renderUI();
 }

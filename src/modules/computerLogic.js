@@ -1,7 +1,3 @@
-import { Ship, Gameboard, Player } from "./objects";
-
-const test = new Player("test", false);
-
 const hits = [];
 
 export default function computerLogic(opponentBoard) {
@@ -90,5 +86,3 @@ export default function computerLogic(opponentBoard) {
     return [row] + [col - 1];
   }
 }
-
-computerLogic(test.board);
