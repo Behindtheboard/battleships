@@ -1,7 +1,13 @@
 import { Ship, Gameboard, Player } from "./objects";
 import computerLogic from "./computerLogic";
-import renderUI from "./renderUI";
+
+
+function renderBoard(player) {
+
+}
 
 export default function game() {
-  renderUI();
+
+    
+
 }

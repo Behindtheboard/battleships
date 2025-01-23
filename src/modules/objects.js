@@ -16,7 +16,7 @@ export class Ship {
         return 3;
       case "submarine":
         return 3;
-      case "patrolBoat":
+      case "patrol":
         return 2;
     }
   }
@@ -92,6 +92,33 @@ export class Player {
     this.name = name;
     this.board = new Gameboard();
   }
+
+  placeCarrier(coordinate, isVertical) {
+    const carrier = new Ship('carrier', isVertical)
+    this.board.placeShip(coordinate, carrier)
+  }
+
+  placeBattleship(coordinate, isVertical) {
+    const battleship = new Ship('battleship', isVertical)
+    this.board.placeShip(coordinate, carrier)
+  }
+
+  placeDestroyer(coordinate, isVertical) {
+    const destroyer = new Ship('destroyer', isVertical)
+    this.board.placeShip(coordinate, carrier)
+  }
+
+  placeSubmarine(coordinate, isVertical) {
+    const submarine = new Ship('submarine', isVertical)
+    this.board.placeShip(coordinate, carrier)
+  }
+
+  placePatrol(coordinate, isVertical) {
+    const patrol = new Ship('patrol', isVertical)
+    this.board.placeShip(coordinate, carrier)
+  }
+
+  
 }
 
 // module.exports = { Ship, Gameboard };
