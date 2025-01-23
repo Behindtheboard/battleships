@@ -1,4 +1,4 @@
-const { Ship, Gameboard } = require("../engine");
+const { Ship, Gameboard } = require("../objects");
 
 describe("Ship object class methods and properties", () => {
   let ship;

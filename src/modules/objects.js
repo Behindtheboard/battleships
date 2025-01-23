@@ -1,4 +1,4 @@
-class Ship {
+export class Ship {
   constructor(name, isVertical) {
     this.name = name;
     this.length = this.calcLength();
@@ -33,7 +33,7 @@ class Ship {
   }
 }
 
-class Gameboard {
+export class Gameboard {
   constructor() {
     this.board = this.createBoard(10);
     this.fleet = [];
@@ -87,4 +87,13 @@ class Gameboard {
   }
 }
 
+export class Player {
+  constructor(name) {
+    this.name = name;
+    this.board = new Gameboard();
+  }
+}
+
 module.exports = { Ship, Gameboard };
+
+
