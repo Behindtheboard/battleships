@@ -1,4 +1,4 @@
-class Ship {
+export class Ship {
   constructor(name, isVertical) {
     this.name = name;
     this.length = this.calcLength();
@@ -33,7 +33,7 @@ class Ship {
   }
 }
 
-class Gameboard {
+export class Gameboard {
   constructor() {
     this.board = this.createBoard(10);
     this.fleet = [];
@@ -46,7 +46,11 @@ class Gameboard {
   placeShip(coordinate, ship) {
     const [row, col] = coordinate.split("").map((n) => Number(n));
     const length = ship.length;
-    if (row + length > 9 || col + length > 9) {
+
+    let ob;
+    ship.isVertical ? (ob = row + length) : (ob = col + length);
+
+    if (ob > 10) {
       throw new Error("out of bounds");
     }
 
@@ -87,39 +91,37 @@ class Gameboard {
   }
 }
 
-class Player {
-  constructor(name) {
+export class Player {
+  constructor(name, turn) {
     this.name = name;
     this.board = new Gameboard();
+    this.turn = turn;
   }
 
   placeCarrier(coordinate, isVertical) {
-    const carrier = new Ship('carrier', isVertical)
-    this.board.placeShip(coordinate, carrier)
+    const carrier = new Ship("carrier", isVertical);
+    this.board.placeShip(coordinate, carrier);
   }
 
   placeBattleship(coordinate, isVertical) {
-    const battleship = new Ship('battleship', isVertical)
-    this.board.placeShip(coordinate, carrier)
+    const battleship = new Ship("battleship", isVertical);
+    this.board.placeShip(coordinate, battleship);
   }
 
   placeDestroyer(coordinate, isVertical) {
-    const destroyer = new Ship('destroyer', isVertical)
-    this.board.placeShip(coordinate, carrier)
+    const destroyer = new Ship("destroyer", isVertical);
+    this.board.placeShip(coordinate, destroyer);
   }
 
   placeSubmarine(coordinate, isVertical) {
-    const submarine = new Ship('submarine', isVertical)
-    this.board.placeShip(coordinate, carrier)
+    const submarine = new Ship("submarine", isVertical);
+    this.board.placeShip(coordinate, submarine);
   }
 
   placePatrol(coordinate, isVertical) {
-    const patrol = new Ship('patrol', isVertical)
-    this.board.placeShip(coordinate, carrier)
+    const patrol = new Ship("patrol", isVertical);
+    this.board.placeShip(coordinate, patrol);
   }
-
 }
 
-module.exports = { Ship, Gameboard, Player };
-
-
+// module.exports = { Ship, Gameboard, Player };

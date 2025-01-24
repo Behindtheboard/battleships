@@ -1,4 +1,5 @@
 const hits = [];
+const hitShips = []
 
 export default function computerLogic(opponentBoard) {
   const oppBoard = opponentBoard.board;
@@ -14,13 +15,14 @@ export default function computerLogic(opponentBoard) {
 
   function addIfHit(coordinate) {
     const [row, col] = coordinate.split("").map((n) => Number(n));
-    const nextAttack = oppBoard[row][col];
+    const coord = oppBoard[row][col];
     if (
-      nextAttack !== "missed" &&
-      nextAttack !== "hit" &&
-      nextAttack !== null
+      coord !== "missed" &&
+      coord !== "hit" &&
+      coord !== null
     ) {
       hits.push(coordinate);
+      hitShips.push(coord)
     }
   }
 
@@ -39,7 +41,9 @@ export default function computerLogic(opponentBoard) {
 
   function checkIsSunk(coordinate) {
     const [row, col] = coordinate.split("").map((n) => Number(n));
-    oppBoard[row][col].isSunk() ? true : false;
+    const lastHitShip = hitShips[hitShips.length-1]
+    console.log(lastHitShip)
+    lastHitShip.isSunk() ? true : false;
   }
 
   if (hits.length === 0) {
@@ -55,7 +59,7 @@ export default function computerLogic(opponentBoard) {
   const [row, col] = lastHit.split("").map((n) => Number(n));
 
   if (
-    !checkMissed(oppBoard[row + 1][col]) &&
+    !checkMissed([row + 1] + [col]) ||
     !hits.includes([row + 1] + [col])
   ) {
     addIfHit([row + 1] + [col]);
@@ -63,7 +67,7 @@ export default function computerLogic(opponentBoard) {
   }
 
   if (
-    !checkMissed(oppBoard[row - 1][col]) &&
+    !checkMissed([row - 1] + [col]) ||
     !hits.includes([row - 1] + [col])
   ) {
     addIfHit([row + 1] + [col]);
@@ -71,7 +75,7 @@ export default function computerLogic(opponentBoard) {
   }
 
   if (
-    !checkMissed(oppBoard[row][col + 1]) &&
+    !checkMissed([row] + [col + 1]) ||
     !hits.includes([row] + [col + 1])
   ) {
     addIfHit([row] + [col + 1]);
@@ -79,7 +83,7 @@ export default function computerLogic(opponentBoard) {
   }
   
   if (
-    !checkMissed(oppBoard[row][col - 1]) &&
+    !checkMissed([row] + [col - 1]) ||
     !hits.includes([row] + [col - 1])
   ) {
     addIfHit([row] + [col - 1]);
