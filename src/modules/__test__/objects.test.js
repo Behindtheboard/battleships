@@ -1,4 +1,4 @@
-const { Ship, Gameboard } = require("../objects");
+const { Ship, Gameboard, Player } = require("../objects");
 
 describe("Ship object class methods and properties", () => {
   let ship;
@@ -113,4 +113,20 @@ describe("Gameboard object class methods and properties", () => {
     gameboard.receiveAttack("50");
     expect(gameboard.fleetSunk()).toBeTruthy()
   })
+
+describe("Player object class methods and properties", () => {
+  let person
+  beforeEach(() => {
+    person = new Player('person');
+  })
+
+  test('person.board should be a new gameboard by finding fleet array', () => {
+    expect(person.board.fleet.length).toBe(0)
+  })
+
+  test('placeCarrier should make a new ship with carrier named carrier', () => {
+    person.placeCarrier('00', false)
+    expect(person.board.board[0][0].name).toBe('carrier')
+  })
+})
 });

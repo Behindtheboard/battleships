@@ -20,8 +20,9 @@ function renderBoard(player) {
       }
       if (player.name !== "computer") {
         boxDiv.id = `${rindex}${cindex}`;
-        if (col !== null && col !== 'hit' && col !== 'missed')
-        boxDiv.style.backgroundColor = "green";
+        if (col !== null && col !== "hit" && col !== "missed") {
+          boxDiv.style.backgroundColor = "green";
+        }
         leftBoard.appendChild(boxDiv);
       }
     });
