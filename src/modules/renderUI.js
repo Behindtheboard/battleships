@@ -68,3 +68,44 @@ export function renderBoard(player) {
     });
   });
 }
+
+export function renderWin() {
+
+}
+
+export function renderStart() {
+  createDialog('Computer or 1v1?', 'Computer', '1v1')
+}
+
+ function createDialog(titleTxt, leftbtn, rightbtn) {
+  const dialog = document.createElement('dialog');
+  dialog.id = 'modal';
+
+  const title = document.createElement('h2');
+  title.id = 'modal-title';
+  title.textContent = `${titleTxt}`;
+  dialog.appendChild(title);
+
+  const buttonContainer = document.createElement('div');
+  buttonContainer.id = 'button-container'
+  buttonContainer.style.textAlign = 'center';
+  buttonContainer.style.marginTop = '20px';
+
+  const leftBtn = document.createElement('button');
+  leftBtn.id = 'left-btn';
+  leftBtn.textContent = `${leftbtn}`;
+
+
+  const rightBtn = document.createElement('button');
+  rightBtn.id = 'right-btn';
+  rightBtn.textContent = `${rightbtn}`;
+
+  buttonContainer.appendChild(leftBtn);
+  buttonContainer.appendChild(rightBtn);
+
+  dialog.appendChild(buttonContainer);
+
+  document.getElementById('modal-container').appendChild(dialog);
+
+  dialog.showModal()
+}

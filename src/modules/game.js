@@ -1,6 +1,6 @@
 import { Ship, Gameboard, Player } from "./objects";
 import computerLogic from "./computerLogic";
-import { renderUI, renderBoard } from "./renderUI";
+import { renderUI, renderBoard, renderWin, renderStart } from "./renderUI";
 
 renderUI();
 
@@ -10,11 +10,11 @@ const rightBoard = document.getElementById("right-board");
 function win(lostplayer) {
   const winBoard = rightBoard.cloneNode(true);
   rightBoard.parentNode.replaceChild(winBoard, rightBoard);
-
   renderBoard(lostplayer);
+  renderWin();
 }
 
-export default function game() {
+function initComputerGame() {
   const person = new Player("person", true);
   const computer = new Player("computer", false);
 
@@ -57,5 +57,23 @@ export default function game() {
         computer.turn = false;
       }
     }, 200);
+  });
+}
+
+export default function init() {
+  renderStart();
+
+  const dialog = document.getElementById("modal");
+  document.getElementById("button-container").addEventListener('click', (e) => {
+    if (e.target.id === "left-btn") {
+      e.preventDefault();
+      dialog.close();
+      return initComputerGame();
+    }
+
+    if (e.target.id === "right-btn") {
+      e.preventDefault();
+      return console.log("computer game only available");
+    }
   });
 }
