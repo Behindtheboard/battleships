@@ -3,7 +3,6 @@ const hitShips = [];
 
 export default function computerLogic(opponentBoard) {
   const oppBoard = opponentBoard.board;
-  console.log("---new coordinate---");
   function checkMissed(coordinate) {
     const [row, col] = coordinate.split("").map((n) => Number(n));
     // console.log("checkmissed " + oppBoard[row][col]);

@@ -64,10 +64,13 @@ export default function init() {
   renderStart();
 
   const dialog = document.getElementById("modal");
-  document.getElementById("button-container").addEventListener('click', (e) => {
+
+  document.getElementById("button-container").addEventListener("click", (e) => {
     if (e.target.id === "left-btn") {
       e.preventDefault();
       dialog.close();
+      dialog.remove()
+      document.getElementById('modal-overlay').remove()
       return initComputerGame();
     }
 
