@@ -4,3 +4,4 @@ import renderUI from "./modules/renderUI";
 
 renderUI();
 game();
+

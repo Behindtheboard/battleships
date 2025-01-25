@@ -72,7 +72,6 @@ export default function game() {
   rightBoard.addEventListener("click", (e) => {
     if (person.turn) {
       const coordinate = e.target.id;
-      console.log(coordinate);
       computer.board.receiveAttack(coordinate);
       renderBoard(computer);
       if (computer.board.fleetSunk()) {
@@ -84,6 +83,7 @@ export default function game() {
     setTimeout(() => {
       if (computer.turn) {
         const coordinate = computerLogic(person.board);
+        // console.log(coordinate);
         person.board.receiveAttack(coordinate);
         renderBoard(person);
         if (person.board.fleetSunk()) {

@@ -1,12 +1,15 @@
 const hits = [];
-const hitShips = []
+const hitShips = [];
 
 export default function computerLogic(opponentBoard) {
   const oppBoard = opponentBoard.board;
-
+  console.log("---new coordinate---");
   function checkMissed(coordinate) {
     const [row, col] = coordinate.split("").map((n) => Number(n));
+    // console.log("checkmissed " + oppBoard[row][col]);
+    // console.log("checkmissed " + coordinate);
     if (oppBoard[row][col] === "missed") {
+      console.log("true");
       return true;
     } else {
       return false;
@@ -16,13 +19,11 @@ export default function computerLogic(opponentBoard) {
   function addIfHit(coordinate) {
     const [row, col] = coordinate.split("").map((n) => Number(n));
     const coord = oppBoard[row][col];
-    if (
-      coord !== "missed" &&
-      coord !== "hit" &&
-      coord !== null
-    ) {
+    // console.log("addifhit " + oppBoard[row][col]);
+    // console.log("addifhit " + coordinate);
+    if (coord !== "missed" && coord !== "hit" && coord !== null) {
       hits.push(coordinate);
-      hitShips.push(coord)
+      hitShips.push(coord);
     }
   }
 
@@ -41,8 +42,8 @@ export default function computerLogic(opponentBoard) {
 
   function checkIsSunk(coordinate) {
     const [row, col] = coordinate.split("").map((n) => Number(n));
-    const lastHitShip = hitShips[hitShips.length-1]
-    console.log(lastHitShip)
+    const lastHitShip = hitShips[hitShips.length - 1];
+    // console.log(lastHitShip.isSunk());
     lastHitShip.isSunk() ? true : false;
   }
 
@@ -50,43 +51,38 @@ export default function computerLogic(opponentBoard) {
     return generateCoordinate();
   }
 
-  const lastHit = hits[hits.length - 1];
+  const hitsArrLength = hits.length - 1;
+  const lastHit = hits[hitsArrLength];
 
   if (checkIsSunk(lastHit)) {
     return generateCoordinate();
   }
 
-  const [row, col] = lastHit.split("").map((n) => Number(n));
+  return generateCoordinate()
 
-  if (
-    !checkMissed([row + 1] + [col]) ||
-    !hits.includes([row + 1] + [col])
-  ) {
-    addIfHit([row + 1] + [col]);
-    return [row + 1] + [col];
-  }
 
-  if (
-    !checkMissed([row - 1] + [col]) ||
-    !hits.includes([row - 1] + [col])
-  ) {
-    addIfHit([row + 1] + [col]);
-    return [row + 1] + [col];
-  }
+  // const [row, col] = lastHit.split("").map((n) => Number(n));
 
-  if (
-    !checkMissed([row] + [col + 1]) ||
-    !hits.includes([row] + [col + 1])
-  ) {
-    addIfHit([row] + [col + 1]);
-    return [row] + [col + 1];
-  }
-  
-  if (
-    !checkMissed([row] + [col - 1]) ||
-    !hits.includes([row] + [col - 1])
-  ) {
-    addIfHit([row] + [col - 1]);
-    return [row] + [col - 1];
-  }
+  // let j;
+  // let minusLength;
+  // let newRow = row;
+  // let newCol = col;
+
+  // if (row + 1 > 0 && row + 1 < 10 && !checkMissed([row + 1] + [col])) {
+  //   newRow = row + 1;
+  // }
+  // if (row - 1 > 0 && row - 1 < 10 && !checkMissed([row - 1] + [col])) {
+  //   newRow = row - 1;
+  // }
+  // if (col + 1 > 0 && col + 1 < 10 && !checkMissed([row] + [col + 1])) {
+  //   newCol = col + 1;
+  // }
+  // if (col - 1 > 0 && col - 1 < 10 && !checkMissed([row] + [col - 1])) {
+  //   newCol = col - 1;
+  // }
+
+  // if (!hits.includes([newRow] + [newCol])) {
+  //   addIfHit([newRow] + [newCol]);
+  //   return [newRow] + [newCol];
+  // }
 }

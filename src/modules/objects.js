@@ -77,7 +77,7 @@ export class Gameboard {
       return (this.board[coordinate[0]][coordinate[1]] = "missed");
     }
     if (hitBox === "hit" || hitBox === "missed") {
-      throw new Error("already attacked");
+      throw new Error(`already attacked ${coordinate}`);
     }
     hitBox.hit();
     this.board[coordinate[0]][coordinate[1]] = `hit`;
