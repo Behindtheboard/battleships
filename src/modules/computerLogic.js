@@ -103,8 +103,6 @@ export function computerLogic(opponentBoard) {
 export function resetHitsList() {
   hits.length = 0;
   hitShips.length = 0;
-  console.log(hits)
-  console.log(hitShips)
 }
 
 export function autoWin(player) {

@@ -51,7 +51,15 @@ function initComputerGame() {
   document.getElementById("right-board").addEventListener("click", (e) => {
     if (person.turn) {
       const coordinate = e.target.id;
-      computer.board.receiveAttack(coordinate);
+      let i = true;
+      while (i) {
+        try {
+          computer.board.receiveAttack(coordinate);
+        } catch (error) {
+          return alert(error.message);
+        }
+        i = false;
+      }
       renderBoard(computer);
       if (computer.board.fleetSunk()) {
         gameover = true;
@@ -63,8 +71,12 @@ function initComputerGame() {
     if (computer.turn) {
       const coordinate = computerLogic(person.board);
       setTimeout(() => {
-        person.board.receiveAttack(coordinate);
-        // autoWin(person)
+        try {
+          person.board.receiveAttack(coordinate);
+          // autoWin(person)
+        } catch (error) {
+          alert(error.message);
+        }
         renderBoard(person);
       }, 200);
 
