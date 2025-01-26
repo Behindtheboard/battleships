@@ -1,5 +1,5 @@
 import { Ship, Gameboard, Player } from "./objects";
-import {computerLogic, resetHitsList, autoWin} from "./computerLogic";
+import { computerLogic, resetHitsList, autoWin } from "./computerLogic";
 import {
   renderUI,
   renderBoard,
@@ -11,7 +11,6 @@ import {
 renderUI();
 
 let restart = 0;
-
 
 function win(wonPlayer) {
   renderWin(wonPlayer);
@@ -63,9 +62,11 @@ function initComputerGame() {
     }
     if (computer.turn) {
       const coordinate = computerLogic(person.board);
-      person.board.receiveAttack(coordinate);
-      // autoWin(person)
-      renderBoard(person);
+      setTimeout(() => {
+        person.board.receiveAttack(coordinate);
+        // autoWin(person)
+        renderBoard(person);
+      }, 200);
 
       if (person.board.fleetSunk()) {
         gameover = true;

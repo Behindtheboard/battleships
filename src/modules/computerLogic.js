@@ -37,7 +37,6 @@ export function computerLogic(opponentBoard) {
   function checkIsSunk(coordinate) {
     const [row, col] = coordinate.split("").map((n) => Number(n));
     const lastHitShip = hitShips[hitShips.length - 1];
-    // console.log(lastHitShip.isSunk());
     lastHitShip.isSunk() ? true : false;
   }
 
