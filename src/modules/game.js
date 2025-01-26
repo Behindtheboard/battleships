@@ -1,11 +1,15 @@
 import { Ship, Gameboard, Player } from "./objects";
 import computerLogic from "./computerLogic";
-import { renderUI, renderBoard, renderWin, renderStart } from "./renderUI";
+import {
+  renderUI,
+  renderBoard,
+  renderWin,
+  renderStart,
+  replaceRightBoard,
+} from "./renderUI";
 
 renderUI();
 
-const leftBoard = document.getElementById("left-board");
-const rightBoard = document.getElementById("right-board");
 let restart = 0;
 let person;
 let computer;
@@ -16,6 +20,7 @@ function win(wonPlayer) {
   document.getElementById("button-container").addEventListener("click", (e) => {
     if (e.target.id === "left-btn") {
       e.preventDefault();
+      replaceRightBoard();
       restart++;
       dialog.close();
       dialog.remove();
@@ -48,7 +53,7 @@ function initComputerGame() {
   renderBoard(person);
   renderBoard(computer);
 
-  rightBoard.addEventListener("click", (e) => {
+  document.getElementById('right-board').addEventListener("click", (e) => {
     if (person.turn) {
       const coordinate = e.target.id;
       computer.board.receiveAttack(coordinate);

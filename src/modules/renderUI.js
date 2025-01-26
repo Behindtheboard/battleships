@@ -1,5 +1,5 @@
 function createDialog(titleTxt, leftbtn, rightbtn) {
-  const modalContainer = document.getElementById("modal-container")
+  const modalContainer = document.getElementById("modal-container");
 
   const dialog = document.createElement("dialog");
   dialog.id = "modal";
@@ -83,13 +83,13 @@ export function renderUI() {
 export function renderStart(handler) {
   createDialog("Computer or 1v1?", "Computer", "1v1");
   createOverlay();
-  handler()
+  handler();
 }
 
-const leftBoard = document.getElementById("left-board");
-const rightBoard = document.getElementById("right-board");
-
 export function renderBoard(player) {
+  const leftBoard = document.getElementById("left-board");
+  const rightBoard = document.getElementById("right-board");
+
   const board = player.board.board;
   let computer;
 
@@ -131,4 +131,12 @@ export function renderBoard(player) {
 
 export function renderWin(wonPlayer) {
   createDialog(`${wonPlayer.name} wins! Start new game?`, "Yes!", "No");
+}
+
+export function replaceRightBoard() {
+  document.getElementById("right-board").remove();
+  const rightBox = document.getElementById("right-box");
+  const newBoard = document.createElement("div");
+  newBoard.id = "right-board";
+  rightBox.appendChild(newBoard);
 }
