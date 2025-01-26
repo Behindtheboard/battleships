@@ -8,7 +8,6 @@ export default function computerLogic(opponentBoard) {
     // console.log("checkmissed " + oppBoard[row][col]);
     // console.log("checkmissed " + coordinate);
     if (oppBoard[row][col] === "missed") {
-      console.log("true");
       return true;
     } else {
       return false;
@@ -46,6 +45,27 @@ export default function computerLogic(opponentBoard) {
     lastHitShip.isSunk() ? true : false;
   }
 
+  function winCheat() {
+    for (let rindex = 0; rindex < oppBoard.length; rindex++) {
+      const row = oppBoard[rindex];
+      for (let cindex = 0; cindex < row.length; cindex++) {
+        const col = row[cindex];
+        if (
+          col !== "missed" &&
+          col !== "hit" &&
+          col !== null &&
+          !hits.includes(`${rindex}${cindex}`)
+        ) {
+          hits.push(`${rindex}${cindex}`);
+          const nc = `${rindex}${cindex}`;
+          return nc;
+        }
+      }
+    }
+  }
+
+  return winCheat();
+
   if (hits.length === 0) {
     return generateCoordinate();
   }
@@ -57,8 +77,7 @@ export default function computerLogic(opponentBoard) {
     return generateCoordinate();
   }
 
-  return generateCoordinate()
-
+  return generateCoordinate();
 
   // const [row, col] = lastHit.split("").map((n) => Number(n));
 

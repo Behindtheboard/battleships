@@ -103,6 +103,10 @@ export class Player {
     this.board.placeShip(coordinate, carrier);
   }
 
+  resetCarrier() {
+    const carrier = null;
+  }
+
   placeBattleship(coordinate, isVertical) {
     const battleship = new Ship("battleship", isVertical);
     this.board.placeShip(coordinate, battleship);
@@ -121,6 +125,12 @@ export class Player {
   placePatrol(coordinate, isVertical) {
     const patrol = new Ship("patrol", isVertical);
     this.board.placeShip(coordinate, patrol);
+  }
+
+  reset() {
+    this.board = new Gameboard();
+    this.resetCarrier();
+    // console.log(this.board.board);
   }
 }
 
