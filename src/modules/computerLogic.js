@@ -1,12 +1,10 @@
 const hits = [];
 const hitShips = [];
 
-export default function computerLogic(opponentBoard) {
+export function computerLogic(opponentBoard) {
   const oppBoard = opponentBoard.board;
   function checkMissed(coordinate) {
     const [row, col] = coordinate.split("").map((n) => Number(n));
-    // console.log("checkmissed " + oppBoard[row][col]);
-    // console.log("checkmissed " + coordinate);
     if (oppBoard[row][col] === "missed") {
       return true;
     } else {
@@ -17,8 +15,6 @@ export default function computerLogic(opponentBoard) {
   function addIfHit(coordinate) {
     const [row, col] = coordinate.split("").map((n) => Number(n));
     const coord = oppBoard[row][col];
-    // console.log("addifhit " + oppBoard[row][col]);
-    // console.log("addifhit " + coordinate);
     if (coord !== "missed" && coord !== "hit" && coord !== null) {
       hits.push(coordinate);
       hitShips.push(coord);
@@ -64,7 +60,7 @@ export default function computerLogic(opponentBoard) {
     }
   }
 
-  return winCheat();
+  // return winCheat();
 
   if (hits.length === 0) {
     return generateCoordinate();
@@ -103,4 +99,28 @@ export default function computerLogic(opponentBoard) {
   //   addIfHit([newRow] + [newCol]);
   //   return [newRow] + [newCol];
   // }
+}
+
+export function resetHitsList() {
+  hits.length = 0;
+  hitShips.length = 0;
+  console.log(hits)
+  console.log(hitShips)
+}
+
+export function autoWin(player) {
+  const hits = [];
+  player.board.board.forEach((row, rindex) => {
+    row.forEach((col, cindex) => {
+      if (
+        col !== "missed" &&
+        col !== "hit" &&
+        col !== null &&
+        !hits.includes(`${rindex}${cindex}`)
+      ) {
+        hits.push(`${rindex}${cindex}`);
+        player.board.receiveAttack(`${rindex}${cindex}`);
+      }
+    });
+  });
 }

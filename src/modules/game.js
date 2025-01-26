@@ -1,5 +1,5 @@
 import { Ship, Gameboard, Player } from "./objects";
-import computerLogic from "./computerLogic";
+import {computerLogic, resetHitsList, autoWin} from "./computerLogic";
 import {
   renderUI,
   renderBoard,
@@ -11,8 +11,7 @@ import {
 renderUI();
 
 let restart = 0;
-let person;
-let computer;
+
 
 function win(wonPlayer) {
   renderWin(wonPlayer);
@@ -21,22 +20,19 @@ function win(wonPlayer) {
     if (e.target.id === "left-btn") {
       e.preventDefault();
       replaceRightBoard();
+      resetHitsList();
       restart++;
       dialog.close();
       dialog.remove();
-      return init();
+      return renderStart(renderStartHandler);
     }
   });
 }
 
 function initComputerGame() {
-  if (restart === 0) {
-    person = new Player("person", true);
-    computer = new Player("computer", false);
-  } else {
-    person.reset();
-    computer.reset();
-  }
+  let gameover = false;
+  const person = new Player("person", true);
+  const computer = new Player("computer", false);
 
   person.placeCarrier("00", false);
   person.placeBattleship("22", true);
@@ -53,75 +49,55 @@ function initComputerGame() {
   renderBoard(person);
   renderBoard(computer);
 
-  document.getElementById('right-board').addEventListener("click", (e) => {
+  document.getElementById("right-board").addEventListener("click", (e) => {
     if (person.turn) {
       const coordinate = e.target.id;
       computer.board.receiveAttack(coordinate);
       renderBoard(computer);
       if (computer.board.fleetSunk()) {
+        gameover = true;
         return win(person);
       }
       computer.turn = true;
       person.turn = false;
     }
-    setTimeout(() => {
-      if (computer.turn) {
-        const coordinate = computerLogic(person.board);
-        // person.board.receiveAttack(coordinate);
-        // renderBoard(person);
-        autoWin();
+    if (computer.turn) {
+      const coordinate = computerLogic(person.board);
+      person.board.receiveAttack(coordinate);
+      // autoWin(person)
+      renderBoard(person);
 
-        renderBoard(person);
-
-        if (person.board.fleetSunk()) {
-          return win(computer);
-        }
-        person.turn = true;
-        computer.turn = false;
+      if (person.board.fleetSunk()) {
+        gameover = true;
+        return win(computer);
       }
-    }, 200);
+      person.turn = true;
+      computer.turn = false;
+    }
+  });
+
+  if (gameover) return;
+}
+
+function renderStartHandler() {
+  const dialog = document.getElementById("modal");
+
+  document.getElementById("button-container").addEventListener("click", (e) => {
+    if (e.target.id === "left-btn") {
+      e.preventDefault();
+      dialog.close();
+      dialog.remove();
+      document.getElementById("modal-overlay").remove();
+      return initComputerGame();
+    }
+
+    if (e.target.id === "right-btn") {
+      e.preventDefault();
+      return console.log("computer game only available");
+    }
   });
 }
 
 export default function init() {
-  function renderStartHandler() {
-    const dialog = document.getElementById("modal");
-
-    document
-      .getElementById("button-container")
-      .addEventListener("click", (e) => {
-        if (e.target.id === "left-btn") {
-          e.preventDefault();
-          dialog.close();
-          dialog.remove();
-          document.getElementById("modal-overlay").remove();
-          return initComputerGame();
-        }
-
-        if (e.target.id === "right-btn") {
-          e.preventDefault();
-          return console.log("computer game only available");
-        }
-      });
-  }
-
   renderStart(renderStartHandler);
-}
-
-function autoWin() {
-  const hits = [];
-  person.board.board.forEach((row, rindex) => {
-    row.forEach((col, cindex) => {
-      if (
-        col !== "missed" &&
-        col !== "hit" &&
-        col !== null &&
-        !hits.includes(`${rindex}${cindex}`)
-      ) {
-        hits.push(`${rindex}${cindex}`);
-        const nc = `${rindex}${cindex}`;
-        person.board.receiveAttack(`${rindex}${cindex}`);
-      }
-    });
-  });
 }

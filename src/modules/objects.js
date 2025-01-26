@@ -126,12 +126,6 @@ export class Player {
     const patrol = new Ship("patrol", isVertical);
     this.board.placeShip(coordinate, patrol);
   }
-
-  reset() {
-    this.board = new Gameboard();
-    this.resetCarrier();
-    // console.log(this.board.board);
-  }
 }
 
 // module.exports = { Ship, Gameboard, Player };
