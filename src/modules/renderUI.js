@@ -52,7 +52,7 @@ function createOverlay() {
   document.body.appendChild(overlay);
 }
 
-export function renderUI() {
+export function renderXY() {
   const leftRow = document.querySelector("div#left-row");
   const rightRow = document.querySelector("div#right-row");
   const row = [..."ABCDEFGHIJ"];
@@ -127,6 +127,81 @@ export function renderBoard(player) {
       }
     });
   });
+}
+
+export function renderShips() {
+  function addDivs(amount, parentDiv) {
+    for (let i = 0; i < amount; i++) {
+      const newDiv = document.createElement("div");
+      newDiv.className = "ship";
+      parentDiv.appendChild(newDiv);
+    }
+  }
+
+  const leftShips = document.getElementById("left-ships");
+  const rightShips = document.getElementById("right-ships");
+
+  leftShips.innerHTML = ''
+  rightShips.innerHTML = ''
+
+  const lcarrier = document.createElement("div");
+  addDivs(5, lcarrier);
+  lcarrier.id = "lcarrier";
+  const lbattleship = document.createElement("div");
+  addDivs(4, lbattleship);
+  lbattleship.id = "lbattleship'";
+  const ldestroyer = document.createElement("div");
+  addDivs(3, ldestroyer);
+  ldestroyer.id = "ldestroyer";
+  const lsubmarine = document.createElement("div");
+  addDivs(3, lsubmarine);
+  lsubmarine.id = "lsubmarine";
+  const lpatrol = document.createElement("div");
+  addDivs(2, lpatrol);
+  lpatrol.id = "lpatrol";
+
+  leftShips.appendChild(lcarrier);
+  leftShips.appendChild(lbattleship);
+  leftShips.appendChild(ldestroyer);
+  leftShips.appendChild(lsubmarine);
+  leftShips.appendChild(lpatrol);
+
+  const rcarrier = document.createElement("div");
+  addDivs(5, rcarrier);
+  rcarrier.id = "rcarrier";
+  const rbattleship = document.createElement("div");
+  addDivs(4, rbattleship);
+  rbattleship.id = "rbattleship'";
+  const rdestroyer = document.createElement("div");
+  addDivs(3, rdestroyer);
+  rdestroyer.id = "rdestroyer";
+  const rsubmarine = document.createElement("div");
+  addDivs(3, rsubmarine);
+  rsubmarine.id = "rsubmarine";
+  const rpatrol = document.createElement("div");
+  addDivs(2, rpatrol);
+  rpatrol.id = "rpatrol";
+
+  rightShips.appendChild(rcarrier);
+  rightShips.appendChild(rbattleship);
+  rightShips.appendChild(rdestroyer);
+  rightShips.appendChild(rsubmarine);
+  rightShips.appendChild(rpatrol);
+
+  const source = document.querySelector("#left-row + div");
+  const targets = document.querySelectorAll(".ship");
+
+  function matchSize() {
+    const rect = source.getBoundingClientRect();
+    targets.forEach((target) => {
+      target.style.width = `${rect.width}px`;
+      target.style.height = `${rect.width}px`;
+    });
+  }
+
+  matchSize();
+
+  window.addEventListener("resize", matchSize);
 }
 
 export function renderWin(wonPlayer) {

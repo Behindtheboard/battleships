@@ -1,14 +1,15 @@
 import { Ship, Gameboard, Player } from "./objects";
 import { computerLogic, resetHitsList, autoWin } from "./computerLogic";
 import {
-  renderUI,
+  renderXY,
   renderBoard,
   renderWin,
   renderStart,
   replaceRightBoard,
+  renderShips
 } from "./renderUI";
 
-renderUI();
+renderXY();
 
 let restart = 0;
 
@@ -33,24 +34,15 @@ function initComputerGame() {
   const person = new Player("person", true);
   const computer = new Player("computer", false);
 
-  person.placeCarrier("00", false);
-  person.placeBattleship("22", true);
-  person.placeDestroyer("67", false);
-  person.placeSubmarine("46", false);
-  person.placePatrol("96", false);
-
-  computer.placeCarrier("01", false);
-  computer.placeBattleship("32", true);
-  computer.placeDestroyer("63", false);
-  computer.placeSubmarine("36", false);
-  computer.placePatrol("86", false);
-
+  
   renderBoard(person);
   renderBoard(computer);
+  renderShips();
 
   document.getElementById("right-board").addEventListener("click", (e) => {
     if (person.turn) {
       const coordinate = e.target.id;
+
       let i = true;
       while (i) {
         try {
@@ -60,16 +52,20 @@ function initComputerGame() {
         }
         i = false;
       }
+
       renderBoard(computer);
+
       if (computer.board.fleetSunk()) {
         gameover = true;
         return win(person);
       }
+
       computer.turn = true;
       person.turn = false;
     }
     if (computer.turn) {
       const coordinate = computerLogic(person.board);
+
       setTimeout(() => {
         try {
           person.board.receiveAttack(coordinate);
@@ -77,6 +73,7 @@ function initComputerGame() {
         } catch (error) {
           alert(error.message);
         }
+
         renderBoard(person);
       }, 200);
 
@@ -84,6 +81,7 @@ function initComputerGame() {
         gameover = true;
         return win(computer);
       }
+
       person.turn = true;
       computer.turn = false;
     }
@@ -112,5 +110,6 @@ function renderStartHandler() {
 }
 
 export default function init() {
-  renderStart(renderStartHandler);
+  // renderStart(renderStartHandler);
+  initComputerGame()
 }
