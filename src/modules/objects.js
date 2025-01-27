@@ -96,34 +96,36 @@ export class Player {
     this.name = name;
     this.board = new Gameboard();
     this.turn = turn;
+    this.ships = [];
   }
 
   placeCarrier(coordinate, isVertical) {
     const carrier = new Ship("carrier", isVertical);
+    this.ships.push(carrier);
     this.board.placeShip(coordinate, carrier);
-  }
-
-  resetCarrier() {
-    const carrier = null;
   }
 
   placeBattleship(coordinate, isVertical) {
     const battleship = new Ship("battleship", isVertical);
+    this.ships.push(battleship);
     this.board.placeShip(coordinate, battleship);
   }
 
   placeDestroyer(coordinate, isVertical) {
     const destroyer = new Ship("destroyer", isVertical);
+    this.ships.push(destroyer);
     this.board.placeShip(coordinate, destroyer);
   }
 
   placeSubmarine(coordinate, isVertical) {
     const submarine = new Ship("submarine", isVertical);
+    this.ships.push(submarine);
     this.board.placeShip(coordinate, submarine);
   }
 
   placePatrol(coordinate, isVertical) {
     const patrol = new Ship("patrol", isVertical);
+    this.ships.push(patrol);
     this.board.placeShip(coordinate, patrol);
   }
 }

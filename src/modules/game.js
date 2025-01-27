@@ -11,8 +11,6 @@ import {
 
 renderXY();
 
-let restart = 0;
-
 function win(wonPlayer) {
   renderWin(wonPlayer);
   const dialog = document.getElementById("modal");
@@ -21,7 +19,6 @@ function win(wonPlayer) {
       e.preventDefault();
       replaceRightBoard();
       resetHitsList();
-      restart++;
       dialog.close();
       dialog.remove();
       return renderStart(renderStartHandler);
@@ -34,7 +31,6 @@ function initComputerGame() {
   const person = new Player("person", true);
   const computer = new Player("computer", false);
 
-  
   renderBoard(person);
   renderBoard(computer);
   renderShips();

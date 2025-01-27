@@ -200,7 +200,6 @@ export function renderShips() {
   }
 
   matchSize();
-
   window.addEventListener("resize", matchSize);
 }
 
