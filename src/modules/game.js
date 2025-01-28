@@ -31,7 +31,7 @@ function initComputerGame() {
   const person = new Player("person", true);
   const computer = new Player("computer", false);
 
-  renderBoard(person);
+  renderBoard(person, true);
   renderBoard(computer);
   renderShips(person, computer, true);
 

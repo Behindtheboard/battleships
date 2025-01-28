@@ -86,7 +86,7 @@ export function renderStart(handler) {
   handler();
 }
 
-export function renderBoard(player) {
+export function renderBoard(player, needShips) {
   const leftBoard = document.getElementById("left-board");
   const rightBoard = document.getElementById("right-board");
 
@@ -119,10 +119,14 @@ export function renderBoard(player) {
           ? (boxDiv.style.backgroundColor = "grey")
           : (boxDiv.style.backgroundColor = "green");
       }
+
       if (computer) {
         boxDiv.id = `${rindex}${cindex}`;
         rightBoard.appendChild(boxDiv);
       } else {
+        if (needShips) {
+          boxDiv.id = `${rindex}${cindex}`;
+        }
         leftBoard.appendChild(boxDiv);
       }
     });
@@ -169,7 +173,7 @@ export function renderShips(leftplayer, rightplayer, newGame) {
 
   shipsContainers.forEach((container) => {
     const childNodes = container.childNodes;
-    
+
     childNodes.forEach((ship) => {
       if (ship.id.includes("carrier")) {
         addDivs(5, ship);
@@ -237,23 +241,26 @@ export function renderShips(leftplayer, rightplayer, newGame) {
     let isDragging = false;
     let originalX, originalY;
 
-    originalX = draggable.style.left
-    originalY = draggable.style.top
+    originalX = draggable.style.left;
+    originalY = draggable.style.top;
 
     draggable.addEventListener("mousedown", (e) => {
+      e.preventDefault();
       isDragging = true;
 
       draggable.style.transition = "";
-
-      e.preventDefault();
     });
 
     document.addEventListener("mousemove", (e) => {
+      e.preventDefault();
       const rect = sizeSource.getBoundingClientRect();
       if (!isDragging) return;
 
-      draggable.style.left = `${e.clientX - rect.width / 2}px`;
-      draggable.style.top = `${e.clientY - rect.width / 2}px`;
+      const scrollX = window.scrollX;
+      const scrollY = window.scrollY;
+
+      draggable.style.left = `${e.clientX + scrollX - rect.width / 2}px`;
+      draggable.style.top = `${e.clientY + scrollY - rect.width / 2}px`;
     });
 
     document.addEventListener("mouseup", (e) => {
@@ -262,6 +269,9 @@ export function renderShips(leftplayer, rightplayer, newGame) {
       let snapped = false;
 
       const boardDivs = document.querySelectorAll("#left-board div");
+
+      const scrollX = window.scrollX;
+      const scrollY = window.scrollY;
 
       boardDivs.forEach((cell) => {
         const rect = cell.getBoundingClientRect();
@@ -272,8 +282,8 @@ export function renderShips(leftplayer, rightplayer, newGame) {
           e.clientY >= rect.top &&
           e.clientY <= rect.bottom
         ) {
-          draggable.style.left = `${rect.left}px`;
-          draggable.style.top = `${rect.top}px`;
+          draggable.style.left = `${rect.left + scrollX}px`;
+          draggable.style.top = `${rect.top + scrollY}px`;
           snapped = true;
         }
       });
@@ -287,6 +297,26 @@ export function renderShips(leftplayer, rightplayer, newGame) {
 
       draggable.style.cursor = "grab";
     });
+
+    // document.getElementById("left-board").addEventListener("mouseup", (e) => {
+    //   if (!isDragging) return;
+    //   console.log(e.target.id);
+    //   if (elementId.includes("carrier")) {
+    //     leftplayer.placeCarrier(e.target.id, false);
+    //   }
+    //   if (elementId.includes("battleship")) {
+    //     leftplayer.placeBattleship(e.target.id, false);
+    //   }
+    //   if (elementId.includes("destroyer")) {
+    //     leftplayer.placeDestroyer(e.target.id, false);
+    //   }
+    //   if (elementId.includes("submarine")) {
+    //     leftplayer.placeSubmarine(e.target.id, false);
+    //   }
+    //   if (elementId.includes("patrol")) {
+    //     leftplayer.placePatrol(e.target.id, false);
+    //   }
+    // });
   }
 }
 
