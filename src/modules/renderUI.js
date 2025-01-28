@@ -140,133 +140,108 @@ export function renderShips(leftplayer, rightplayer, newGame) {
 
   const leftShipsContainer = document.getElementById("left-ships");
   const rightShipsContainer = document.getElementById("right-ships");
-
   leftShipsContainer.innerHTML = "";
   rightShipsContainer.innerHTML = "";
 
-  const lcarrier = document.createElement("div");
-  addDivs(5, lcarrier);
-  lcarrier.id = "lcarrier";
-  const lbattleship = document.createElement("div");
-  addDivs(4, lbattleship);
-  lbattleship.id = "lbattleship";
-  const ldestroyer = document.createElement("div");
-  addDivs(3, ldestroyer);
-  ldestroyer.id = "ldestroyer";
-  const lsubmarine = document.createElement("div");
-  addDivs(3, lsubmarine);
-  lsubmarine.id = "lsubmarine";
-  const lpatrol = document.createElement("div");
-  addDivs(2, lpatrol);
-  lpatrol.id = "lpatrol";
+  const battleShips = [
+    ["carrier", "battleship", "destroyer", "submarine", "patrol"],
+    ["carrier", "battleship", "destroyer", "submarine", "patrol"],
+  ];
 
-  leftShipsContainer.appendChild(lcarrier);
-  leftShipsContainer.appendChild(lbattleship);
-  leftShipsContainer.appendChild(ldestroyer);
-  leftShipsContainer.appendChild(lsubmarine);
-  leftShipsContainer.appendChild(lpatrol);
+  battleShips.forEach((playerShips, index) => {
+    playerShips.forEach((ship) => {
+      const newDiv = document.createElement("div");
+      let side;
+      let sideContainer;
+      if (index === 0) {
+        side = "l";
+        sideContainer = leftShipsContainer;
+      } else {
+        side = "r";
+        sideContainer = rightShipsContainer;
+      }
+      newDiv.id = `${side}${ship}`;
+      sideContainer.appendChild(newDiv);
+    });
+  });
 
-  const rcarrier = document.createElement("div");
-  addDivs(5, rcarrier);
-  rcarrier.id = "rcarrier";
-  const rbattleship = document.createElement("div");
-  addDivs(4, rbattleship);
-  rbattleship.id = "rbattleship'";
-  const rdestroyer = document.createElement("div");
-  addDivs(3, rdestroyer);
-  rdestroyer.id = "rdestroyer";
-  const rsubmarine = document.createElement("div");
-  addDivs(3, rsubmarine);
-  rsubmarine.id = "rsubmarine";
-  const rpatrol = document.createElement("div");
-  addDivs(2, rpatrol);
-  rpatrol.id = "rpatrol";
+  const shipsContainers = document.querySelectorAll(".ships-container");
 
-  rightShipsContainer.appendChild(rcarrier);
-  rightShipsContainer.appendChild(rbattleship);
-  rightShipsContainer.appendChild(rdestroyer);
-  rightShipsContainer.appendChild(rsubmarine);
-  rightShipsContainer.appendChild(rpatrol);
+  shipsContainers.forEach((container) => {
+    const childNodes = container.childNodes;
+    
+    childNodes.forEach((ship) => {
+      if (ship.id.includes("carrier")) {
+        addDivs(5, ship);
+        ship.style.left = "10vw";
+        if (ship.id.includes("rcarrier")) {
+          ship.style.left = "57.5vw";
+        }
+      }
+      if (ship.id.includes("battleship")) {
+        addDivs(4, ship);
+        ship.style.left = "17.5vw";
+        if (ship.id.includes("rbattleship")) {
+          ship.style.left = "65vw";
+        }
+      }
+      if (ship.id.includes("destroyer")) {
+        addDivs(3, ship);
+        ship.style.left = "25vw";
+        if (ship.id.includes("rdestroyer")) {
+          ship.style.left = "72.5vw";
+        }
+      }
+      if (ship.id.includes("submarine")) {
+        addDivs(3, ship);
+        ship.style.left = "32.5vw";
+        if (ship.id.includes("rsubmarine")) {
+          ship.style.left = "80vw";
+        }
+      }
+      if (ship.id.includes("patrol")) {
+        addDivs(2, ship);
+        ship.style.left = "40vw";
+        if (ship.id.includes("rpatrol")) {
+          ship.style.left = "87.5vw";
+        }
+      }
+    });
+  });
 
-  const source = document.querySelector("#left-row + div");
+  const sizeSource = document.querySelector("#left-row + div");
   const targets = document.querySelectorAll(".ship");
 
   function matchSize() {
-    const rect = source.getBoundingClientRect();
+    const rect = sizeSource.getBoundingClientRect();
+    const rectWidth = rect.width - 3;
     targets.forEach((target) => {
-      target.style.width = `${rect.width}px`;
-      target.style.height = `${rect.width}px`;
+      target.style.width = `${rectWidth}px`;
+      target.style.height = `${rectWidth}px`;
     });
   }
-
   matchSize();
   window.addEventListener("resize", matchSize);
 
   if (newGame === true) {
     const leftShips = document.querySelectorAll("#left-ships > div");
-
     leftShips.forEach((ship) => {
-      ship.style.position = "relative";
       dragHandler(ship.id);
     });
   }
 
-  leftplayer.ships.forEach((ship) => {
-    if (ship.isSunk()) {
-      if (ship.name === "carrier") {
-        lcarrier.style.backgroundColor = "red";
-      }
-      if (ship.name === "battleship") {
-        lbattleship.style.backgroundColor = "red";
-      }
-      if (ship.name === "destroyer") {
-        ldestroyer.style.backgroundColor = "red";
-      }
-      if (ship.name === "submarine") {
-        lsubmarine.style.backgroundColor = "red";
-      }
-      if (ship.name === "patrol") {
-        lpatrol.style.backgroundColor = "red";
-      }
-    }
-  });
-
-  rightplayer.ships.forEach((ship) => {
-    if (ship.isSunk()) {
-      if (ship.name === "carrier") {
-        rcarrier.style.backgroundColor = "red";
-      }
-      if (ship.name === "battleship") {
-        rbattleship.style.backgroundColor = "red";
-      }
-      if (ship.name === "destroyer") {
-        rdestroyer.style.backgroundColor = "red";
-      }
-      if (ship.name === "submarine") {
-        rsubmarine.style.backgroundColor = "red";
-      }
-      if (ship.name === "patrol") {
-        rpatrol.style.backgroundColor = "red";
-      }
-    }
-  });
-
   function dragHandler(elementId) {
     const draggable = document.getElementById(`${elementId}`);
-    const container = draggable.parentNode;
+    const draggableParent = draggable.parentNode;
 
     let isDragging = false;
-    let offsetX = 0;
-    let offsetY = 0;
+    let originalX, originalY;
+
+    originalX = draggable.style.left
+    originalY = draggable.style.top
 
     draggable.addEventListener("mousedown", (e) => {
       isDragging = true;
-
-      const rect = draggable.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-
-      offsetX = e.clientX;
-      offsetY = e.clientY;
 
       draggable.style.transition = "";
 
@@ -274,21 +249,39 @@ export function renderShips(leftplayer, rightplayer, newGame) {
     });
 
     document.addEventListener("mousemove", (e) => {
+      const rect = sizeSource.getBoundingClientRect();
       if (!isDragging) return;
 
-      const newLeft = e.clientX - offsetX;
-      const newTop = e.clientY - offsetY;
-
-      draggable.style.left = `${newLeft}px`;
-      draggable.style.top = `${newTop}px`;
+      draggable.style.left = `${e.clientX - rect.width / 2}px`;
+      draggable.style.top = `${e.clientY - rect.width / 2}px`;
     });
 
     document.addEventListener("mouseup", (e) => {
       if (!isDragging) return;
       isDragging = false;
+      let snapped = false;
 
-      draggable.style.left = `0px`;
-      draggable.style.top = `0px`;
+      const boardDivs = document.querySelectorAll("#left-board div");
+
+      boardDivs.forEach((cell) => {
+        const rect = cell.getBoundingClientRect();
+        const parentRect = draggableParent.getBoundingClientRect();
+        if (
+          e.clientX >= rect.left &&
+          e.clientX <= rect.right &&
+          e.clientY >= rect.top &&
+          e.clientY <= rect.bottom
+        ) {
+          draggable.style.left = `${rect.left}px`;
+          draggable.style.top = `${rect.top}px`;
+          snapped = true;
+        }
+      });
+
+      if (!snapped) {
+        draggable.style.left = `${originalX}`;
+        draggable.style.top = `${originalY}`;
+      }
 
       draggable.style.transition = "left 0.3s ease, top 0.3s ease";
 

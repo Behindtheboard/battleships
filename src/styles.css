@@ -264,26 +264,23 @@ h1 {
 #left-ships > div,
 #right-ships > div {
   flex-direction: column;
-  margin: 20px;
+  background-color: green;
   border: 1px black solid;
   width: fit-content;
   height: fit-content;
-}
-
-#draggable {
-  transition: left 0.3s ease, top 0.3s ease;
+  position: absolute;
 }
 
 #left-ships,
 #right-ships {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  justify-content: start;
+  align-items: start;
 }
 
 .ship {
-  border-bottom: 1px grey solid;
+  border-bottom: solid 1px black;
 }
 
 /* Dialog */
