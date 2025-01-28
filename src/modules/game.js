@@ -33,7 +33,7 @@ function initComputerGame() {
 
   renderBoard(person);
   renderBoard(computer);
-  renderShips();
+  renderShips(person, computer, true);
 
   document.getElementById("right-board").addEventListener("click", (e) => {
     if (person.turn) {

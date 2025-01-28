@@ -263,13 +263,15 @@ h1 {
 
 #left-ships > div,
 #right-ships > div {
-  display: flex;
   flex-direction: column;
-  justify-content: center;
   margin: 20px;
   border: 1px black solid;
   width: fit-content;
   height: fit-content;
+}
+
+#draggable {
+  transition: left 0.3s ease, top 0.3s ease;
 }
 
 #left-ships,

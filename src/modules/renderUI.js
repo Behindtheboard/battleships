@@ -129,7 +129,7 @@ export function renderBoard(player) {
   });
 }
 
-export function renderShips() {
+export function renderShips(leftplayer, rightplayer, newGame) {
   function addDivs(amount, parentDiv) {
     for (let i = 0; i < amount; i++) {
       const newDiv = document.createElement("div");
@@ -138,18 +138,18 @@ export function renderShips() {
     }
   }
 
-  const leftShips = document.getElementById("left-ships");
-  const rightShips = document.getElementById("right-ships");
+  const leftShipsContainer = document.getElementById("left-ships");
+  const rightShipsContainer = document.getElementById("right-ships");
 
-  leftShips.innerHTML = ''
-  rightShips.innerHTML = ''
+  leftShipsContainer.innerHTML = "";
+  rightShipsContainer.innerHTML = "";
 
   const lcarrier = document.createElement("div");
   addDivs(5, lcarrier);
   lcarrier.id = "lcarrier";
   const lbattleship = document.createElement("div");
   addDivs(4, lbattleship);
-  lbattleship.id = "lbattleship'";
+  lbattleship.id = "lbattleship";
   const ldestroyer = document.createElement("div");
   addDivs(3, ldestroyer);
   ldestroyer.id = "ldestroyer";
@@ -160,11 +160,11 @@ export function renderShips() {
   addDivs(2, lpatrol);
   lpatrol.id = "lpatrol";
 
-  leftShips.appendChild(lcarrier);
-  leftShips.appendChild(lbattleship);
-  leftShips.appendChild(ldestroyer);
-  leftShips.appendChild(lsubmarine);
-  leftShips.appendChild(lpatrol);
+  leftShipsContainer.appendChild(lcarrier);
+  leftShipsContainer.appendChild(lbattleship);
+  leftShipsContainer.appendChild(ldestroyer);
+  leftShipsContainer.appendChild(lsubmarine);
+  leftShipsContainer.appendChild(lpatrol);
 
   const rcarrier = document.createElement("div");
   addDivs(5, rcarrier);
@@ -182,11 +182,11 @@ export function renderShips() {
   addDivs(2, rpatrol);
   rpatrol.id = "rpatrol";
 
-  rightShips.appendChild(rcarrier);
-  rightShips.appendChild(rbattleship);
-  rightShips.appendChild(rdestroyer);
-  rightShips.appendChild(rsubmarine);
-  rightShips.appendChild(rpatrol);
+  rightShipsContainer.appendChild(rcarrier);
+  rightShipsContainer.appendChild(rbattleship);
+  rightShipsContainer.appendChild(rdestroyer);
+  rightShipsContainer.appendChild(rsubmarine);
+  rightShipsContainer.appendChild(rpatrol);
 
   const source = document.querySelector("#left-row + div");
   const targets = document.querySelectorAll(".ship");
@@ -201,6 +201,100 @@ export function renderShips() {
 
   matchSize();
   window.addEventListener("resize", matchSize);
+
+  if (newGame === true) {
+    const leftShips = document.querySelectorAll("#left-ships > div");
+
+    leftShips.forEach((ship) => {
+      ship.style.position = "relative";
+      dragHandler(ship.id);
+    });
+  }
+
+  leftplayer.ships.forEach((ship) => {
+    if (ship.isSunk()) {
+      if (ship.name === "carrier") {
+        lcarrier.style.backgroundColor = "red";
+      }
+      if (ship.name === "battleship") {
+        lbattleship.style.backgroundColor = "red";
+      }
+      if (ship.name === "destroyer") {
+        ldestroyer.style.backgroundColor = "red";
+      }
+      if (ship.name === "submarine") {
+        lsubmarine.style.backgroundColor = "red";
+      }
+      if (ship.name === "patrol") {
+        lpatrol.style.backgroundColor = "red";
+      }
+    }
+  });
+
+  rightplayer.ships.forEach((ship) => {
+    if (ship.isSunk()) {
+      if (ship.name === "carrier") {
+        rcarrier.style.backgroundColor = "red";
+      }
+      if (ship.name === "battleship") {
+        rbattleship.style.backgroundColor = "red";
+      }
+      if (ship.name === "destroyer") {
+        rdestroyer.style.backgroundColor = "red";
+      }
+      if (ship.name === "submarine") {
+        rsubmarine.style.backgroundColor = "red";
+      }
+      if (ship.name === "patrol") {
+        rpatrol.style.backgroundColor = "red";
+      }
+    }
+  });
+
+  function dragHandler(elementId) {
+    const draggable = document.getElementById(`${elementId}`);
+    const container = draggable.parentNode;
+
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    draggable.addEventListener("mousedown", (e) => {
+      isDragging = true;
+
+      const rect = draggable.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+
+      offsetX = e.clientX;
+      offsetY = e.clientY;
+
+      draggable.style.transition = "";
+
+      e.preventDefault();
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+
+      const newLeft = e.clientX - offsetX;
+      const newTop = e.clientY - offsetY;
+
+      draggable.style.left = `${newLeft}px`;
+      draggable.style.top = `${newTop}px`;
+    });
+
+    document.addEventListener("mouseup", (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+
+      draggable.style.left = `0px`;
+      draggable.style.top = `0px`;
+
+      draggable.style.transition = "left 0.3s ease, top 0.3s ease";
+
+      draggable.style.cursor = "grab";
+    });
+  }
 }
 
 export function renderWin(wonPlayer) {
