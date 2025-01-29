@@ -261,8 +261,8 @@ h1 {
   grid-column: 2;
 }
 
-#left-ships > div,
-#right-ships > div {
+.ships {
+  display: flex;
   flex-direction: column;
   background-color: green;
   border: 1px black solid;
@@ -271,16 +271,16 @@ h1 {
   position: absolute;
 }
 
-#left-ships,
-#right-ships {
+.ships-container {
   display: flex;
   flex-direction: row;
   justify-content: start;
   align-items: start;
 }
 
-.ship {
+.shipBox {
   border-bottom: solid 1px black;
+  border-right: solid 1px black;
 }
 
 /* Dialog */

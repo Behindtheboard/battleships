@@ -133,11 +133,27 @@ export function renderBoard(player, needShips) {
   });
 }
 
-export function renderShips(leftplayer, rightplayer, newGame) {
-  function addDivs(amount, parentDiv) {
-    for (let i = 0; i < amount; i++) {
+export function renderShips(leftplayer, rightplayer) {
+  function addLength(ship, parentDiv) {
+    let length;
+    if (ship.includes("carrier")) {
+      length = 5;
+    }
+    if (ship.includes("battleship")) {
+      length = 4;
+    }
+    if (ship.includes("destroyer")) {
+      length = 3;
+    }
+    if (ship.includes("submarine")) {
+      length = 3;
+    }
+    if (ship.includes("patrol")) {
+      length = 2;
+    }
+    for (let i = 0; i < length; i++) {
       const newDiv = document.createElement("div");
-      newDiv.className = "ship";
+      newDiv.className = "shipBox";
       parentDiv.appendChild(newDiv);
     }
   }
@@ -153,7 +169,7 @@ export function renderShips(leftplayer, rightplayer, newGame) {
   ];
   battleShips.forEach((playerShips, index) => {
     playerShips.forEach((ship) => {
-      const newDiv = document.createElement("div");
+      const newShip = document.createElement("div");
       let side;
       let sideContainer;
       if (index === 0) {
@@ -163,73 +179,42 @@ export function renderShips(leftplayer, rightplayer, newGame) {
         side = "r";
         sideContainer = rightShipsContainer;
       }
-      newDiv.id = `${side}${ship}`;
-      sideContainer.appendChild(newDiv);
+      newShip.id = `${side}${ship}`;
+      newShip.classList.add("ships");
+      addLength(ship, newShip);
+      sideContainer.appendChild(newShip);
     });
   });
 
-  const shipsContainers = document.querySelectorAll(".ships-container");
-  shipsContainers.forEach((container) => {
-    const childNodes = container.childNodes;
-
-    childNodes.forEach((ship) => {
-      if (ship.id.includes("carrier")) {
-        addDivs(5, ship);
-        ship.style.left = "7vw";
-        if (ship.id.includes("rcarrier")) {
-          ship.style.left = "55vw";
-        }
+  const ships = document.querySelectorAll(".ships");
+  let dir = "column";
+  let pos = 6;
+  let rightShips = false;
+  ships.forEach((ship) => {
+    ship.style.flexDirection = `${dir}`;
+    ship.style.left = `${pos}vw`;
+    pos += 5;
+    if (ship.id.includes("lp")) {
+      if (rightShips) {
+        return;
       }
-      if (ship.id.includes("battleship")) {
-        addDivs(4, ship);
-        ship.style.left = "12vw";
-        if (ship.id.includes("rbattleship")) {
-          ship.style.left = "60vw";
-        }
-      }
-      if (ship.id.includes("destroyer")) {
-        addDivs(3, ship);
-        ship.style.left = "17vw";
-        if (ship.id.includes("rdestroyer")) {
-          ship.style.left = "65vw";
-        }
-      }
-      if (ship.id.includes("submarine")) {
-        addDivs(3, ship);
-        ship.style.left = "22vw";
-        if (ship.id.includes("rsubmarine")) {
-          ship.style.left = "70vw";
-        }
-      }
-      if (ship.id.includes("patrol")) {
-        addDivs(2, ship);
-        ship.style.left = "27vw";
-        if (ship.id.includes("rpatrol")) {
-          ship.style.left = "75vw";
-        }
-      }
-    });
+      pos = pos + 23;
+      rightShips = true;
+    }
   });
 
   const sizeSource = document.querySelector("#left-row + div");
-  const targets = document.querySelectorAll(".ship");
+  const shipBoxes = document.querySelectorAll(".shipBox");
   function matchSize() {
     const rect = sizeSource.getBoundingClientRect();
     const rectWidth = rect.width - 3;
-    targets.forEach((target) => {
-      target.style.width = `${rectWidth}px`;
-      target.style.height = `${rectWidth}px`;
+    shipBoxes.forEach((shipBox) => {
+      shipBox.style.width = `${rectWidth}px`;
+      shipBox.style.height = `${rectWidth}px`;
     });
   }
   matchSize();
   window.addEventListener("resize", matchSize);
-
-  if (newGame === true) {
-    const leftShips = document.querySelectorAll("#left-ships > div");
-    leftShips.forEach((ship) => {
-      placeShipHandler(ship.id, leftplayer);
-    });
-  }
 }
 
 export function renderWin(wonPlayer) {

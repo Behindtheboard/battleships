@@ -6,7 +6,7 @@ import {
   renderWin,
   renderStart,
   replaceRightBoard,
-  renderShips
+  renderShips,
 } from "./renderUI";
 
 renderXY();
@@ -21,7 +21,7 @@ function win(wonPlayer) {
       resetHitsList();
       dialog.close();
       dialog.remove();
-      return renderStart(renderStartHandler);
+      return renderStart(startHandler);
     }
   });
 }
@@ -33,7 +33,12 @@ function initComputerGame() {
 
   renderBoard(person, true);
   renderBoard(computer);
-  renderShips(person, computer, true);
+  renderShips(person, computer);
+
+  const leftShips = document.querySelectorAll("#left-ships > div");
+  leftShips.forEach((ship) => {
+    placeShipHandler(ship.id, person);
+  });
 
   document.getElementById("right-board").addEventListener("click", (e) => {
     if (person.turn) {
@@ -92,6 +97,7 @@ export function placeShipHandler(elementId, board) {
 
   let isDragging = false;
   let originalX, originalY;
+  let isVertical;
 
   originalX = draggable.style.left;
   originalY = draggable.style.top;
@@ -105,7 +111,9 @@ export function placeShipHandler(elementId, board) {
 
   document.addEventListener("mousemove", (e) => {
     e.preventDefault();
-    const rect = document.querySelector("#left-row + div").getBoundingClientRect();
+    const rect = document
+      .querySelector("#left-row + div")
+      .getBoundingClientRect();
     if (!isDragging) return;
 
     const scrollX = window.scrollX;
@@ -192,5 +200,5 @@ function startHandler() {
 
 export default function init() {
   // renderStart(startHandler);
-  initComputerGame()
+  initComputerGame();
 }
