@@ -177,37 +177,37 @@ export function renderShips(leftplayer, rightplayer, newGame) {
     childNodes.forEach((ship) => {
       if (ship.id.includes("carrier")) {
         addDivs(5, ship);
-        ship.style.left = "10vw";
+        ship.style.left = "7vw";
         if (ship.id.includes("rcarrier")) {
-          ship.style.left = "57.5vw";
+          ship.style.left = "55vw";
         }
       }
       if (ship.id.includes("battleship")) {
         addDivs(4, ship);
-        ship.style.left = "17.5vw";
+        ship.style.left = "12vw";
         if (ship.id.includes("rbattleship")) {
-          ship.style.left = "65vw";
+          ship.style.left = "60vw";
         }
       }
       if (ship.id.includes("destroyer")) {
         addDivs(3, ship);
-        ship.style.left = "25vw";
+        ship.style.left = "17vw";
         if (ship.id.includes("rdestroyer")) {
-          ship.style.left = "72.5vw";
+          ship.style.left = "65vw";
         }
       }
       if (ship.id.includes("submarine")) {
         addDivs(3, ship);
-        ship.style.left = "32.5vw";
+        ship.style.left = "22vw";
         if (ship.id.includes("rsubmarine")) {
-          ship.style.left = "80vw";
+          ship.style.left = "70vw";
         }
       }
       if (ship.id.includes("patrol")) {
         addDivs(2, ship);
-        ship.style.left = "40vw";
+        ship.style.left = "27vw";
         if (ship.id.includes("rpatrol")) {
-          ship.style.left = "87.5vw";
+          ship.style.left = "75vw";
         }
       }
     });
@@ -310,6 +310,7 @@ export function renderShips(leftplayer, rightplayer, newGame) {
       if (!snapped) {
         draggable.style.left = `${originalX}`;
         draggable.style.top = `${originalY}`;
+        leftplayer.removeShip(elementId.slice(1));
       }
 
       draggable.style.transition = "left 0.3s ease, top 0.3s ease";
