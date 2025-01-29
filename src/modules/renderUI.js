@@ -1,3 +1,5 @@
+import { placeShipHandler } from "./game";
+
 function createDialog(titleTxt, leftbtn, rightbtn) {
   const modalContainer = document.getElementById("modal-container");
 
@@ -31,11 +33,9 @@ function createDialog(titleTxt, leftbtn, rightbtn) {
   }
 
   buttonContainer.appendChild(leftBtn);
-
   dialog.appendChild(buttonContainer);
 
   modalContainer.appendChild(dialog);
-
   dialog.showModal();
 }
 
@@ -151,7 +151,6 @@ export function renderShips(leftplayer, rightplayer, newGame) {
     ["carrier", "battleship", "destroyer", "submarine", "patrol"],
     ["carrier", "battleship", "destroyer", "submarine", "patrol"],
   ];
-
   battleShips.forEach((playerShips, index) => {
     playerShips.forEach((ship) => {
       const newDiv = document.createElement("div");
@@ -170,7 +169,6 @@ export function renderShips(leftplayer, rightplayer, newGame) {
   });
 
   const shipsContainers = document.querySelectorAll(".ships-container");
-
   shipsContainers.forEach((container) => {
     const childNodes = container.childNodes;
 
@@ -215,7 +213,6 @@ export function renderShips(leftplayer, rightplayer, newGame) {
 
   const sizeSource = document.querySelector("#left-row + div");
   const targets = document.querySelectorAll(".ship");
-
   function matchSize() {
     const rect = sizeSource.getBoundingClientRect();
     const rectWidth = rect.width - 3;
@@ -230,92 +227,7 @@ export function renderShips(leftplayer, rightplayer, newGame) {
   if (newGame === true) {
     const leftShips = document.querySelectorAll("#left-ships > div");
     leftShips.forEach((ship) => {
-      placeShipHandler(ship.id);
-    });
-  }
-
-  function placeShipHandler(elementId) {
-    const draggable = document.getElementById(`${elementId}`);
-    const draggableParent = draggable.parentNode;
-
-    let isDragging = false;
-    let originalX, originalY;
-
-    originalX = draggable.style.left;
-    originalY = draggable.style.top;
-
-    draggable.addEventListener("mousedown", (e) => {
-      e.preventDefault();
-      isDragging = true;
-
-      draggable.style.transition = "";
-    });
-
-    document.addEventListener("mousemove", (e) => {
-      e.preventDefault();
-      const rect = sizeSource.getBoundingClientRect();
-      if (!isDragging) return;
-
-      const scrollX = window.scrollX;
-      const scrollY = window.scrollY;
-
-      draggable.style.left = `${e.clientX + scrollX - rect.width / 2}px`;
-      draggable.style.top = `${e.clientY + scrollY - rect.width / 2}px`;
-    });
-
-    document.addEventListener("mouseup", (e) => {
-      if (!isDragging) return;
-      isDragging = false;
-      let snapped = false;
-
-      const boardDivs = document.querySelectorAll("#left-board div");
-
-      const scrollX = window.scrollX;
-      const scrollY = window.scrollY;
-
-      boardDivs.forEach((cell) => {
-        const rect = cell.getBoundingClientRect();
-        const parentRect = draggableParent.getBoundingClientRect();
-        if (
-          e.clientX >= rect.left &&
-          e.clientX <= rect.right &&
-          e.clientY >= rect.top &&
-          e.clientY <= rect.bottom
-        ) {
-          try {
-            if (elementId.includes("carrier")) {
-              leftplayer.placeCarrier(cell.id, true);
-            }
-            if (elementId.includes("battleship")) {
-              leftplayer.placeBattleship(cell.id, true);
-            }
-            if (elementId.includes("destroyer")) {
-              leftplayer.placeDestroyer(cell.id, true);
-            }
-            if (elementId.includes("submarine")) {
-              leftplayer.placeSubmarine(cell.id, true);
-            }
-            if (elementId.includes("patrol")) {
-              leftplayer.placePatrol(cell.id, true);
-            }
-            draggable.style.left = `${rect.left + scrollX}px`;
-            draggable.style.top = `${rect.top + scrollY}px`;
-            snapped = true;
-          } catch (error) {
-            alert(error.message);
-          }
-        }
-      });
-
-      if (!snapped) {
-        draggable.style.left = `${originalX}`;
-        draggable.style.top = `${originalY}`;
-        leftplayer.removeShip(elementId.slice(1));
-      }
-
-      draggable.style.transition = "left 0.3s ease, top 0.3s ease";
-
-      draggable.style.cursor = "grab";
+      placeShipHandler(ship.id, leftplayer);
     });
   }
 }

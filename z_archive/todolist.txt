@@ -1,1 +1,7 @@
-- Ship class and test
+- organize handlers
+- make isVertical show for ships
+- make game flow for renderShips
+
+
+------done------
+- make remove ship for ui
