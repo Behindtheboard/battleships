@@ -230,11 +230,11 @@ export function renderShips(leftplayer, rightplayer, newGame) {
   if (newGame === true) {
     const leftShips = document.querySelectorAll("#left-ships > div");
     leftShips.forEach((ship) => {
-      dragHandler(ship.id);
+      placeShipHandler(ship.id);
     });
   }
 
-  function dragHandler(elementId) {
+  function placeShipHandler(elementId) {
     const draggable = document.getElementById(`${elementId}`);
     const draggableParent = draggable.parentNode;
 
@@ -282,6 +282,23 @@ export function renderShips(leftplayer, rightplayer, newGame) {
           e.clientY >= rect.top &&
           e.clientY <= rect.bottom
         ) {
+          if (elementId.includes("carrier")) {
+            leftplayer.placeCarrier(cell.id, true);
+            console.log(leftplayer.board.board)
+          }
+          if (elementId.includes("battleship")) {
+            leftplayer.placeBattleship(cell.id, true);
+          }
+          if (elementId.includes("destroyer")) {
+            leftplayer.placeDestroyer(cell.id, true);
+          }
+          if (elementId.includes("submarine")) {
+            leftplayer.placeSubmarine(cell.id, true);
+          }
+          if (elementId.includes("patrol")) {
+            leftplayer.placePatrol(cell.id, true);
+          }
+
           draggable.style.left = `${rect.left + scrollX}px`;
           draggable.style.top = `${rect.top + scrollY}px`;
           snapped = true;
@@ -297,26 +314,6 @@ export function renderShips(leftplayer, rightplayer, newGame) {
 
       draggable.style.cursor = "grab";
     });
-
-    // document.getElementById("left-board").addEventListener("mouseup", (e) => {
-    //   if (!isDragging) return;
-    //   console.log(e.target.id);
-    //   if (elementId.includes("carrier")) {
-    //     leftplayer.placeCarrier(e.target.id, false);
-    //   }
-    //   if (elementId.includes("battleship")) {
-    //     leftplayer.placeBattleship(e.target.id, false);
-    //   }
-    //   if (elementId.includes("destroyer")) {
-    //     leftplayer.placeDestroyer(e.target.id, false);
-    //   }
-    //   if (elementId.includes("submarine")) {
-    //     leftplayer.placeSubmarine(e.target.id, false);
-    //   }
-    //   if (elementId.includes("patrol")) {
-    //     leftplayer.placePatrol(e.target.id, false);
-    //   }
-    // });
   }
 }
 

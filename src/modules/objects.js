@@ -50,6 +50,16 @@ export class Gameboard {
     let ob;
     ship.isVertical ? (ob = row + length) : (ob = col + length);
 
+    this.board.forEach((row, rindex) => {
+      row.forEach((col, cindex) => {
+        if (col !== null) {
+          if (col.name === ship.name) {
+            this.board[rindex][cindex] = null;
+          }
+        }
+      });
+    });
+
     if (ob > 10) {
       throw new Error("out of bounds");
     }
