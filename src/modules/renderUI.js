@@ -282,26 +282,28 @@ export function renderShips(leftplayer, rightplayer, newGame) {
           e.clientY >= rect.top &&
           e.clientY <= rect.bottom
         ) {
-          if (elementId.includes("carrier")) {
-            leftplayer.placeCarrier(cell.id, true);
-            console.log(leftplayer.board.board)
+          try {
+            if (elementId.includes("carrier")) {
+              leftplayer.placeCarrier(cell.id, true);
+            }
+            if (elementId.includes("battleship")) {
+              leftplayer.placeBattleship(cell.id, true);
+            }
+            if (elementId.includes("destroyer")) {
+              leftplayer.placeDestroyer(cell.id, true);
+            }
+            if (elementId.includes("submarine")) {
+              leftplayer.placeSubmarine(cell.id, true);
+            }
+            if (elementId.includes("patrol")) {
+              leftplayer.placePatrol(cell.id, true);
+            }
+            draggable.style.left = `${rect.left + scrollX}px`;
+            draggable.style.top = `${rect.top + scrollY}px`;
+            snapped = true;
+          } catch (error) {
+            alert(error.message);
           }
-          if (elementId.includes("battleship")) {
-            leftplayer.placeBattleship(cell.id, true);
-          }
-          if (elementId.includes("destroyer")) {
-            leftplayer.placeDestroyer(cell.id, true);
-          }
-          if (elementId.includes("submarine")) {
-            leftplayer.placeSubmarine(cell.id, true);
-          }
-          if (elementId.includes("patrol")) {
-            leftplayer.placePatrol(cell.id, true);
-          }
-
-          draggable.style.left = `${rect.left + scrollX}px`;
-          draggable.style.top = `${rect.top + scrollY}px`;
-          snapped = true;
         }
       });
 
