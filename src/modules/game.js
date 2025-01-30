@@ -9,6 +9,7 @@ import {
   renderShips,
   renderShipFlip,
 } from "./renderUI";
+import randomizeShipPlacement from "./randomizeShipPlacement";
 
 renderXY();
 
@@ -40,6 +41,8 @@ function initComputerGame() {
   leftShips.forEach((ship) => {
     placeShipHandler(ship.id, person);
   });
+
+  randomizeShipPlacement(computer);
 
   document.getElementById("right-board").addEventListener("click", (e) => {
     if (person.turn) {
