@@ -1,7 +1,7 @@
-- organize handlers
 - make isVertical show for ships
 - make game flow for renderShips
 
 
 ------done------
+- organize handlers
 - make remove ship for ui

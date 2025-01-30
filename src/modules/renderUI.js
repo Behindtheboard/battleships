@@ -1,5 +1,3 @@
-import { placeShipHandler } from "./game";
-
 function createDialog(titleTxt, leftbtn, rightbtn) {
   const modalContainer = document.getElementById("modal-container");
 
@@ -186,22 +184,7 @@ export function renderShips(leftplayer, rightplayer) {
     });
   });
 
-  const ships = document.querySelectorAll(".ships");
-  let dir = "column";
-  let pos = 6;
-  let rightShips = false;
-  ships.forEach((ship) => {
-    ship.style.flexDirection = `${dir}`;
-    ship.style.left = `${pos}vw`;
-    pos += 5;
-    if (ship.id.includes("lp")) {
-      if (rightShips) {
-        return;
-      }
-      pos = pos + 23;
-      rightShips = true;
-    }
-  });
+  renderShipFlip(false);
 
   const sizeSource = document.querySelector("#left-row + div");
   const shipBoxes = document.querySelectorAll(".shipBox");
@@ -215,6 +198,61 @@ export function renderShips(leftplayer, rightplayer) {
   }
   matchSize();
   window.addEventListener("resize", matchSize);
+}
+
+export function renderShipFlip(
+  isVertical,
+  elementId,
+  isDragging,
+  player = null
+) {
+  const ships = document.querySelectorAll(".ships");
+  let dir;
+  let leftPos;
+  let topPos;
+  let rightShips = false;
+  let isPlaced;
+
+  if (isVertical) {
+    dir = "column";
+    leftPos = 6;
+  } else {
+    dir = "row";
+    leftPos = 6;
+    topPos = 70;
+  }
+
+  ships.forEach((ship) => {
+    if (ship.id === elementId && isDragging === true) return;
+    isPlaced = false;
+    if (player !== null) {
+      if (rightShips) return;
+      player.board.fleet.forEach((shipObject) => {
+        if (shipObject.name === ship.id.slice(1)) isPlaced = true;
+      });
+    }
+    if (isPlaced) return;
+    if (isVertical) {
+      ship.style.left = `${leftPos}vw`;
+      ship.style.top = `70vh`;
+      leftPos += 5;
+    } else {
+      ship.style.left = `${leftPos}vw`;
+      ship.style.top = `${topPos}vh`;
+      topPos += 6;
+    }
+    ship.style.flexDirection = `${dir}`;
+    if (ship.id.includes("lp")) {
+      if (rightShips) return;
+      if (isVertical) {
+        leftPos = leftPos + 23;
+      } else {
+        leftPos = 53;
+        topPos = 70;
+      }
+      rightShips = true;
+    }
+  });
 }
 
 export function renderWin(wonPlayer) {

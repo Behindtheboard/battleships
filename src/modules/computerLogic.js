@@ -22,8 +22,7 @@ export function computerLogic(opponentBoard) {
   }
 
   function generateCoordinate() {
-    let i = 0;
-    while (i < 1) {
+    while (true) {
       const row = Math.floor(Math.random() * 10).toString();
       const col = Math.floor(Math.random() * 10).toString();
       const coord = row + col;

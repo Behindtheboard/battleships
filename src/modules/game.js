@@ -7,6 +7,7 @@ import {
   renderStart,
   replaceRightBoard,
   renderShips,
+  renderShipFlip,
 } from "./renderUI";
 
 renderXY();
@@ -91,13 +92,13 @@ function initComputerGame() {
   if (gameover) return;
 }
 
-export function placeShipHandler(elementId, board) {
+export function placeShipHandler(elementId, player) {
   const draggable = document.getElementById(`${elementId}`);
   const draggableParent = draggable.parentNode;
 
   let isDragging = false;
   let originalX, originalY;
-  let isVertical;
+  let isVertical = false;
 
   originalX = draggable.style.left;
   originalY = draggable.style.top;
@@ -105,16 +106,29 @@ export function placeShipHandler(elementId, board) {
   draggable.addEventListener("mousedown", (e) => {
     e.preventDefault();
     isDragging = true;
+    player.removeShip(elementId.slice(1));
 
     draggable.style.transition = "";
   });
 
+  document.addEventListener("keydown", (e) => {
+    if (e.key === " ") {
+      if (isVertical) {
+        renderShipFlip(false, elementId, isDragging, player);
+        isVertical = false;
+      } else {
+        renderShipFlip(true, elementId, isDragging, player);
+        isVertical = true;
+      }
+    }
+  });
+
   document.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
     e.preventDefault();
     const rect = document
       .querySelector("#left-row + div")
       .getBoundingClientRect();
-    if (!isDragging) return;
 
     const scrollX = window.scrollX;
     const scrollY = window.scrollY;
@@ -125,6 +139,7 @@ export function placeShipHandler(elementId, board) {
 
   document.addEventListener("mouseup", (e) => {
     if (!isDragging) return;
+    e.preventDefault();
     isDragging = false;
     let snapped = false;
 
@@ -144,19 +159,19 @@ export function placeShipHandler(elementId, board) {
       ) {
         try {
           if (elementId.includes("carrier")) {
-            board.placeCarrier(cell.id, true);
+            player.placeCarrier(cell.id, isVertical);
           }
           if (elementId.includes("battleship")) {
-            board.placeBattleship(cell.id, true);
+            player.placeBattleship(cell.id, isVertical);
           }
           if (elementId.includes("destroyer")) {
-            board.placeDestroyer(cell.id, true);
+            player.placeDestroyer(cell.id, isVertical);
           }
           if (elementId.includes("submarine")) {
-            board.placeSubmarine(cell.id, true);
+            player.placeSubmarine(cell.id, isVertical);
           }
           if (elementId.includes("patrol")) {
-            board.placePatrol(cell.id, true);
+            player.placePatrol(cell.id, isVertical);
           }
           draggable.style.left = `${rect.left + scrollX}px`;
           draggable.style.top = `${rect.top + scrollY}px`;
@@ -170,8 +185,11 @@ export function placeShipHandler(elementId, board) {
     if (!snapped) {
       draggable.style.left = `${originalX}`;
       draggable.style.top = `${originalY}`;
-      board.removeShip(elementId.slice(1));
+      // player.removeShip(elementId.slice(1));
+      renderShipFlip(isVertical, elementId, isDragging, player);
     }
+
+    console.log(player.board.board);
 
     draggable.style.transition = "left 0.3s ease, top 0.3s ease";
 
