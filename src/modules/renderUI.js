@@ -131,7 +131,16 @@ export function renderBoard(player, needShips) {
   });
 }
 
-export function renderShips(leftplayer, rightplayer) {
+export function renderStartBattleBtn() {
+  const leftShips = document.getElementById("left-ships");
+  const startBattleBtn = document.createElement("button");
+  startBattleBtn.id = "start-battle-btn";
+  startBattleBtn.textContent = "Start Battle";
+  startBattleBtn.style.display = "none";
+  leftShips.appendChild(startBattleBtn);
+}
+
+export function renderShips(isNewGame) {
   function addLength(ship, parentDiv) {
     let length;
     if (ship.includes("carrier")) {
@@ -184,7 +193,18 @@ export function renderShips(leftplayer, rightplayer) {
     });
   });
 
-  renderShipFlip(false);
+  if (isNewGame) {
+    renderShipFlip(false);
+    renderStartBattleBtn();
+    document.querySelectorAll(".ships").forEach((ship) => {
+      ship.style.position = "absolute";
+    });
+  } else {
+    document.querySelectorAll(".ships").forEach((ship) => {
+      ship.style.marginBottom = "20px";
+      ship.style.position = "none";
+    });
+  }
 
   const sizeSource = document.querySelector("#left-row + div");
   const shipBoxes = document.querySelectorAll(".shipBox");

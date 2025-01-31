@@ -147,7 +147,7 @@ export class Player {
     this.board.fleet.forEach((ship, index) => {
       if (ship.name === shipID) {
         this.board.fleet.splice(index, 1);
-        console.log(this.board.fleet)
+        console.log(this.board.fleet);
       }
     });
   }

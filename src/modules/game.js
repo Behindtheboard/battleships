@@ -35,7 +35,7 @@ function initComputerGame() {
 
   renderBoard(person, true);
   renderBoard(computer);
-  renderShips(person, computer);
+  renderShips(true);
 
   const leftShips = document.querySelectorAll("#left-ships > div");
   leftShips.forEach((ship) => {
@@ -188,11 +188,25 @@ export function placeShipHandler(elementId, player) {
     if (!snapped) {
       draggable.style.left = `${originalX}`;
       draggable.style.top = `${originalY}`;
-      // player.removeShip(elementId.slice(1));
       renderShipFlip(isVertical, elementId, isDragging, player);
     }
 
     console.log(player.board.board);
+
+    const startBattleBtn = document.getElementById("start-battle-btn");
+    if (player.board.fleet.length === 5) {
+      const shipsContainer = document.querySelector(".ships-container");
+      startBattleBtn.style.display = "block";
+      console.log(player.board.fleet);
+      startBattleBtn.addEventListener("click", () => {
+        shipsContainer.innerHTML = "";
+        renderShips(false);
+        renderBoard(player);
+        return;
+      });
+    } else {
+      startBattleBtn.style.display = "none";
+    }
 
     draggable.style.transition = "left 0.3s ease, top 0.3s ease";
 
