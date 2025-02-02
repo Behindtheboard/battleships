@@ -1,8 +1,5 @@
+------ToDo------
 
-- make button to start the game which disables any listener on ships
-    - add the button on the end of the placeship handler maybe
-    - gets rid of ship elements on board
-- make game flow for renderShips
 
 
 
@@ -12,3 +9,7 @@
 - organize handlers
 - make remove ship for ui
 - make random ship placement for computer
+- make button to start the game which disables any listener on ships
+    - add the button on the end of the placeship handler maybe
+    - gets rid of ship elements on board
+- make game flow for renderShips

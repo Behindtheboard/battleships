@@ -190,9 +190,6 @@ export function placeShipHandler(elementId, player) {
       draggable.style.top = `${originalY}`;
       renderShipFlip(isVertical, elementId, isDragging, player);
     }
-
-    console.log(player.board.board);
-
     const startBattleBtn = document.getElementById("start-battle-btn");
     if (player.board.fleet.length === 5) {
       const shipsContainer = document.querySelector(".ships-container");
@@ -234,6 +231,6 @@ function startHandler() {
 }
 
 export default function init() {
-  // renderStart(startHandler);
-  initComputerGame();
+  renderStart(startHandler);
+  // initComputerGame();
 }
