@@ -1,5 +1,3 @@
-// import { Ship } from "./ship";
-
 class Gameboard {
   constructor() {
     this.board = this.createBoard(10);
@@ -48,6 +46,25 @@ class Gameboard {
     this.fleet.push(ship);
   }
 
+  removeShip(shipID) {
+    this.board.forEach((row, rindex) => {
+      row.forEach((col, cindex) => {
+        if (col !== null) {
+          if (col.name === shipID) {
+            this.board.board[rindex][cindex] = null;
+          }
+        }
+      });
+    });
+
+    this.board.fleet.forEach((ship, index) => {
+      if (ship.name === shipID) {
+        this.board.fleet.splice(index, 1);
+        console.log(this.board.fleet);
+      }
+    });
+  }
+
   receiveAttack(coordinate) {
     const hitBox = this.board[coordinate[0]][coordinate[1]];
     if (hitBox === null) {
@@ -68,30 +85,11 @@ class Gameboard {
   }
 }
 
-class Player {
+class Player extends Gameboard {
   constructor(name, turn) {
+    super()
     this.name = name;
-    this.board = new Gameboard();
     this.turn = turn;
-  }
-
-  removeShip(shipID) {
-    this.board.board.forEach((row, rindex) => {
-      row.forEach((col, cindex) => {
-        if (col !== null) {
-          if (col.name === shipID) {
-            this.board.board[rindex][cindex] = null;
-          }
-        }
-      });
-    });
-
-    this.board.fleet.forEach((ship, index) => {
-      if (ship.name === shipID) {
-        this.board.fleet.splice(index, 1);
-        console.log(this.board.fleet);
-      }
-    });
   }
 }
 

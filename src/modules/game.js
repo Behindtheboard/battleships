@@ -1,4 +1,4 @@
-import { Ship, Gameboard, Player } from "./objects";
+// import { Ship, Gameboard, Player } from "./gameboard";
 import { computerLogic, resetHitsList, autoWin } from "./computerLogic";
 import {
   renderXY,
@@ -109,7 +109,7 @@ export function placeShipHandler(elementId, player) {
   draggable.addEventListener("mousedown", (e) => {
     e.preventDefault();
     isDragging = true;
-    player.removeShip(elementId.slice(1));
+    player.board.board.removeShip(elementId.slice(1));
 
     draggable.style.transition = "";
   });
