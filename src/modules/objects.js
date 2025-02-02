@@ -1,39 +1,6 @@
-export class Ship {
-  constructor(name, isVertical) {
-    this.name = name;
-    this.length = this.calcLength();
-    this.isVertical = isVertical;
-    this.damage = 0;
-  }
+// import { Ship } from "./ship";
 
-  calcLength() {
-    switch (this.name) {
-      case "carrier":
-        return 5;
-      case "battleship":
-        return 4;
-      case "destroyer":
-        return 3;
-      case "submarine":
-        return 3;
-      case "patrol":
-        return 2;
-    }
-  }
-
-  isSunk() {
-    return this.length === this.damage;
-  }
-
-  hit() {
-    if (!this.isSunk()) {
-      this.damage++;
-      this.isSunk();
-    }
-  }
-}
-
-export class Gameboard {
+class Gameboard {
   constructor() {
     this.board = this.createBoard(10);
     this.fleet = [];
@@ -101,36 +68,11 @@ export class Gameboard {
   }
 }
 
-export class Player {
+class Player {
   constructor(name, turn) {
     this.name = name;
     this.board = new Gameboard();
     this.turn = turn;
-  }
-
-  placeCarrier(coordinate, isVertical) {
-    const carrier = new Ship("carrier", isVertical);
-    this.board.placeShip(coordinate, carrier);
-  }
-
-  placeBattleship(coordinate, isVertical) {
-    const battleship = new Ship("battleship", isVertical);
-    this.board.placeShip(coordinate, battleship);
-  }
-
-  placeDestroyer(coordinate, isVertical) {
-    const destroyer = new Ship("destroyer", isVertical);
-    this.board.placeShip(coordinate, destroyer);
-  }
-
-  placeSubmarine(coordinate, isVertical) {
-    const submarine = new Ship("submarine", isVertical);
-    this.board.placeShip(coordinate, submarine);
-  }
-
-  placePatrol(coordinate, isVertical) {
-    const patrol = new Ship("patrol", isVertical);
-    this.board.placeShip(coordinate, patrol);
   }
 
   removeShip(shipID) {
@@ -153,4 +95,4 @@ export class Player {
   }
 }
 
-// module.exports = { Ship, Gameboard, Player };
+module.exports = { Gameboard, Player };

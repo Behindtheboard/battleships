@@ -1,33 +1,6 @@
-const { Ship, Gameboard, Player } = require("../objects");
+const { Gameboard, Player } = require("../objects");
 
-describe("Ship object class methods and properties", () => {
-  let ship;
-
-  beforeEach(() => {
-    ship = new Ship("carrier", true);
-  });
-
-  it("should output the name", () => {
-    expect(ship.name).toBe("carrier");
-  });
-
-  it("should have length of 5", () => {
-    expect(ship.length).toEqual(5);
-  });
-
-  test("isSunk() should be false", () => {
-    expect(ship.isSunk()).toBeFalsy();
-  });
-
-  test("hit() should add to damage property", () => {
-    ship.hit();
-    expect(ship.damage).toEqual(1);
-  });
-
-  test("isVertical should be true", () => {
-    expect(ship.isVertical).toBeTruthy();
-  });
-});
+const { Carrier, Battleship, Destroyer } = require("../ship");
 
 describe("Gameboard object class methods and properties", () => {
   let gameboard;
@@ -36,8 +9,8 @@ describe("Gameboard object class methods and properties", () => {
 
   beforeEach(() => {
     gameboard = new Gameboard();
-    carrier = new Ship("carrier", false);
-    battleship = new Ship("battleship", true);
+    carrier = new Carrier(false);
+    battleship = new Battleship(true);
     gameboard.placeShip("00", carrier);
     gameboard.placeShip("20", battleship);
   });
@@ -65,7 +38,7 @@ describe("Gameboard object class methods and properties", () => {
   });
 
   test("should return error when trying to place ship on another ship", () => {
-    let destroyer = new Ship("destroyer", true);
+    let destroyer = new Destroyer(true);
     expect(() => {
       gameboard.placeShip("01", destroyer);
     }).toThrow("ship already there");
@@ -85,10 +58,9 @@ describe("Gameboard object class methods and properties", () => {
 
   test("receiveattack should return false if miss", () => {
     gameboard.receiveAttack("99");
-    console.log(gameboard.board)
-    expect(gameboard.board[9][9]).toBe('missed');
+    expect(gameboard.board[9][9]).toBe("missed");
   });
-  
+
   test("receiveAttack should be true", () => {
     gameboard.receiveAttack("00");
     gameboard.receiveAttack("01");
@@ -98,8 +70,8 @@ describe("Gameboard object class methods and properties", () => {
     gameboard.receiveAttack("20");
     gameboard.receiveAttack("30");
     gameboard.receiveAttack("40");
-    expect(gameboard.receiveAttack("50")).toBeTruthy()
-  })
+    expect(gameboard.receiveAttack("50")).toBeTruthy();
+  });
 
   test("fleetSunk should be true", () => {
     gameboard.receiveAttack("00");
@@ -111,22 +83,17 @@ describe("Gameboard object class methods and properties", () => {
     gameboard.receiveAttack("30");
     gameboard.receiveAttack("40");
     gameboard.receiveAttack("50");
-    expect(gameboard.fleetSunk()).toBeTruthy()
-  })
+    expect(gameboard.fleetSunk()).toBeTruthy();
+  });
 
-describe("Player object class methods and properties", () => {
-  let person
-  beforeEach(() => {
-    person = new Player('person');
-  })
+  describe("Player object class methods and properties", () => {
+    let person;
+    beforeEach(() => {
+      person = new Player("person");
+    });
 
-  test('person.board should be a new gameboard by finding fleet array', () => {
-    expect(person.board.fleet.length).toBe(0)
-  })
-
-  test('placeCarrier should make a new ship with carrier named carrier', () => {
-    person.placeCarrier('00', false)
-    expect(person.board.board[0][0].name).toBe('carrier')
-  })
-})
+    test("person.board should be a new gameboard by finding fleet array", () => {
+      expect(person.board.fleet.length).toBe(0);
+    });
+  });
 });
