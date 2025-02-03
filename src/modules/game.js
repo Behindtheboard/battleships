@@ -4,7 +4,7 @@ import { computerLogic, resetHitsList, autoWin } from "./computerLogic";
 import {
   renderXY,
   renderBoard,
-  renderWin,
+  renderWinnerMenu,
   renderStartMenu,
   replaceRightBoard,
   renderShips,
@@ -15,7 +15,7 @@ import randomizeShipPlacement from "./randomizeShipPlacement";
 renderXY();
 
 function win(wonPlayer) {
-  renderWin(wonPlayer);
+  renderWinnerMenu(wonPlayer);
   const dialog = document.getElementById("modal");
   document.getElementById("button-container").addEventListener("click", (e) => {
     if (e.target.id === "left-btn") {

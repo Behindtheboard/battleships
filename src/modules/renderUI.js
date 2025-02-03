@@ -1,4 +1,4 @@
-// Start Menu
+// Start Menu UI
 
 export function renderStartMenu(handler) {
   createDialog("Computer or 1v1?", "Computer", "1v1");
@@ -68,6 +68,8 @@ export function renderXY() {
   });
 }
 
+// Board Grid UI
+
 export function renderBoard(player, needShips) {
   const leftBoard = document.getElementById("left-board");
   const rightBoard = document.getElementById("right-board");
@@ -115,14 +117,7 @@ export function renderBoard(player, needShips) {
   });
 }
 
-export function renderStartBattleBtn() {
-  const leftShips = document.getElementById("left-ships");
-  const startBattleBtn = document.createElement("button");
-  startBattleBtn.id = "start-battle-btn";
-  startBattleBtn.textContent = "Start Battle";
-  startBattleBtn.style.display = "none";
-  leftShips.appendChild(startBattleBtn);
-}
+// Ship UI
 
 export function renderShips(isNewGame) {
   function addLength(ship, parentDiv) {
@@ -259,7 +254,18 @@ export function renderShipFlip(
   });
 }
 
-export function renderWin(wonPlayer) {
+export function renderStartBattleBtn() {
+  const leftShips = document.getElementById("left-ships");
+  const startBattleBtn = document.createElement("button");
+  startBattleBtn.id = "start-battle-btn";
+  startBattleBtn.textContent = "Start Battle";
+  startBattleBtn.style.display = "none";
+  leftShips.appendChild(startBattleBtn);
+}
+
+// Winner Menu UI
+
+export function renderWinnerMenu(wonPlayer) {
   createDialog(`${wonPlayer.name} wins! Start new game?`, "Yes!", "No");
 }
 
