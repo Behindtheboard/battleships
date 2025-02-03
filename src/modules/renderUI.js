@@ -1,13 +1,16 @@
+// Start Menu
+
+export function renderStartMenu(handler) {
+  createDialog("Computer or 1v1?", "Computer", "1v1");
+  createOverlay();
+  handler();
+}
+
 function createDialog(titleTxt, leftbtn, rightbtn) {
   const modalContainer = document.getElementById("modal-container");
 
   const dialog = document.createElement("dialog");
   dialog.id = "modal";
-  dialog.style.zIndex = "1000";
-  dialog.style.padding = "20px";
-  dialog.style.borderRadius = "10px";
-  dialog.style.width = "300px";
-  dialog.style.textAlign = "center";
 
   const title = document.createElement("h2");
   title.id = "modal-title";
@@ -16,8 +19,6 @@ function createDialog(titleTxt, leftbtn, rightbtn) {
 
   const buttonContainer = document.createElement("div");
   buttonContainer.id = "button-container";
-  buttonContainer.style.textAlign = "center";
-  buttonContainer.style.marginTop = "20px";
 
   const leftBtn = document.createElement("button");
   leftBtn.id = "left-btn";
@@ -40,13 +41,6 @@ function createDialog(titleTxt, leftbtn, rightbtn) {
 function createOverlay() {
   const overlay = document.createElement("div");
   overlay.id = "modal-overlay";
-  overlay.style.position = "fixed";
-  overlay.style.top = "0";
-  overlay.style.left = "0";
-  overlay.style.width = "100vw";
-  overlay.style.height = "100vh";
-  overlay.style.backgroundColor = "rgba(255, 255, 255)";
-  overlay.style.zIndex = "999";
   document.body.appendChild(overlay);
 }
 
@@ -76,12 +70,6 @@ export function renderXY() {
     leftCol.appendChild(letterDiv);
     rightCol.appendChild(letterDiv.cloneNode(true));
   });
-}
-
-export function renderStart(handler) {
-  createDialog("Computer or 1v1?", "Computer", "1v1");
-  createOverlay();
-  handler();
 }
 
 export function renderBoard(player, needShips) {

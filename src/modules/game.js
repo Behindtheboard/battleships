@@ -5,7 +5,7 @@ import {
   renderXY,
   renderBoard,
   renderWin,
-  renderStart,
+  renderStartMenu,
   replaceRightBoard,
   renderShips,
   renderShipFlip,
@@ -24,7 +24,7 @@ function win(wonPlayer) {
       resetHitsList();
       dialog.close();
       dialog.remove();
-      return renderStart(startHandler);
+      return renderStartMenu(startHandler);
     }
   });
 }
@@ -231,6 +231,6 @@ function startHandler() {
 }
 
 export default function init() {
-  // renderStart(startHandler);
-  initComputerGame();
+  renderStartMenu(startHandler);
+  // initComputerGame();
 }
