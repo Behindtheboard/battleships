@@ -88,7 +88,7 @@ export function renderBoard(player, needShips) {
   const leftBoard = document.getElementById("left-board");
   const rightBoard = document.getElementById("right-board");
 
-  const board = player.board.board;
+  const board = player.board;
   let computer;
 
   if (player.name === "computer") {
@@ -247,7 +247,7 @@ export function renderShipFlip(
     isPlaced = false;
     if (player !== null) {
       if (rightShips) return;
-      player.board.fleet.forEach((shipObject) => {
+      player.fleet.forEach((shipObject) => {
         if (shipObject.name === ship.id.slice(1)) isPlaced = true;
       });
     }

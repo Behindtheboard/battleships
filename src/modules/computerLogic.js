@@ -1,8 +1,8 @@
 const hits = [];
 const hitShips = [];
 
-export function computerLogic(opponentBoard) {
-  const oppBoard = opponentBoard.board;
+export function computerLogic(opponent) {
+  const oppBoard = opponent.board;
   function checkMissed(coordinate) {
     const [row, col] = coordinate.split("").map((n) => Number(n));
     if (oppBoard[row][col] === "missed") {
@@ -106,7 +106,7 @@ export function resetHitsList() {
 
 export function autoWin(player) {
   const hits = [];
-  player.board.board.forEach((row, rindex) => {
+  player.board.forEach((row, rindex) => {
     row.forEach((col, cindex) => {
       if (
         col !== "missed" &&
@@ -115,7 +115,7 @@ export function autoWin(player) {
         !hits.includes(`${rindex}${cindex}`)
       ) {
         hits.push(`${rindex}${cindex}`);
-        player.board.receiveAttack(`${rindex}${cindex}`);
+        player.receiveAttack(`${rindex}${cindex}`);
       }
     });
   });

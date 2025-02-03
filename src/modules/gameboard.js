@@ -51,16 +51,16 @@ class Gameboard {
       row.forEach((col, cindex) => {
         if (col !== null) {
           if (col.name === shipID) {
-            this.board.board[rindex][cindex] = null;
+            this.board[rindex][cindex] = null;
           }
         }
       });
     });
 
-    this.board.fleet.forEach((ship, index) => {
+    this.fleet.forEach((ship, index) => {
       if (ship.name === shipID) {
-        this.board.fleet.splice(index, 1);
-        console.log(this.board.fleet);
+        this.fleet.splice(index, 1);
+        console.log(this.fleet);
       }
     });
   }
@@ -85,7 +85,7 @@ class Gameboard {
   }
 }
 
-class Player extends Gameboard {
+export default class Player extends Gameboard {
   constructor(name, turn) {
     super()
     this.name = name;
@@ -93,4 +93,4 @@ class Player extends Gameboard {
   }
 }
 
-module.exports = { Gameboard, Player };
+// module.exports = { Gameboard, Player };

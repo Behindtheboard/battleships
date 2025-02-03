@@ -1,4 +1,4 @@
- class Ship {
+class Ship {
   constructor(isVertical) {
     this.isVertical = isVertical;
     this.damage = 0;
@@ -16,7 +16,9 @@
   }
 }
 
- class Carrier extends Ship {
+// Ship SubClasses with lengths
+
+export class Carrier extends Ship {
   constructor(isVertical) {
     super(isVertical);
     this.name = "carrier";
@@ -24,7 +26,7 @@
   }
 }
 
- class Battleship extends Ship {
+export class Battleship extends Ship {
   constructor(isVertical) {
     super(isVertical);
     this.name = "battleship";
@@ -32,7 +34,7 @@
   }
 }
 
- class Destroyer extends Ship {
+export class Destroyer extends Ship {
   constructor(isVertical) {
     super(isVertical);
     this.name = "destroyer";
@@ -40,7 +42,7 @@
   }
 }
 
- class Submarine extends Ship {
+export class Submarine extends Ship {
   constructor(isVertical) {
     super(isVertical);
     this.name = "submarine";
@@ -48,7 +50,7 @@
   }
 }
 
- class Patrol extends Ship {
+export class Patrol extends Ship {
   constructor(isVertical) {
     super(isVertical);
     this.name = "patrol";
@@ -56,4 +58,4 @@
   }
 }
 
-module.exports = { Ship, Carrier, Battleship, Destroyer, Submarine, Patrol };
+// module.exports = { Ship, Carrier, Battleship, Destroyer, Submarine, Patrol };

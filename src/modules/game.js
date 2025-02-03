@@ -1,4 +1,5 @@
-// import { Ship, Gameboard, Player } from "./gameboard";
+import Player from "./gameboard";
+import { Carrier, Battleship, Destroyer, Submarine, Patrol } from "./ship";
 import { computerLogic, resetHitsList, autoWin } from "./computerLogic";
 import {
   renderXY,
@@ -51,7 +52,7 @@ function initComputerGame() {
       let i = true;
       while (i) {
         try {
-          computer.board.receiveAttack(coordinate);
+          computer.receiveAttack(coordinate);
         } catch (error) {
           return alert(error.message);
         }
@@ -60,7 +61,7 @@ function initComputerGame() {
 
       renderBoard(computer);
 
-      if (computer.board.fleetSunk()) {
+      if (computer.fleetSunk()) {
         gameover = true;
         return win(person);
       }
@@ -69,11 +70,11 @@ function initComputerGame() {
       person.turn = false;
     }
     if (computer.turn) {
-      const coordinate = computerLogic(person.board);
+      const coordinate = computerLogic(person);
 
       setTimeout(() => {
         try {
-          person.board.receiveAttack(coordinate);
+          person.receiveAttack(coordinate);
           // autoWin(person)
         } catch (error) {
           alert(error.message);
@@ -82,7 +83,7 @@ function initComputerGame() {
         renderBoard(person);
       }, 200);
 
-      if (person.board.fleetSunk()) {
+      if (person.fleetSunk()) {
         gameover = true;
         return win(computer);
       }
@@ -109,7 +110,7 @@ export function placeShipHandler(elementId, player) {
   draggable.addEventListener("mousedown", (e) => {
     e.preventDefault();
     isDragging = true;
-    player.board.board.removeShip(elementId.slice(1));
+    player.removeShip(elementId.slice(1));
 
     draggable.style.transition = "";
   });
@@ -162,19 +163,19 @@ export function placeShipHandler(elementId, player) {
       ) {
         try {
           if (elementId.includes("carrier")) {
-            player.placeCarrier(cell.id, isVertical);
+            player.placeShip(cell.id, new Carrier(isVertical));
           }
           if (elementId.includes("battleship")) {
-            player.placeBattleship(cell.id, isVertical);
+            player.placeShip(cell.id, new Battleship(isVertical));
           }
           if (elementId.includes("destroyer")) {
-            player.placeDestroyer(cell.id, isVertical);
+            player.placeShip(cell.id, new Destroyer(isVertical));
           }
           if (elementId.includes("submarine")) {
-            player.placeSubmarine(cell.id, isVertical);
+            player.placeShip(cell.id, new Submarine(isVertical));
           }
           if (elementId.includes("patrol")) {
-            player.placePatrol(cell.id, isVertical);
+            player.placeShip(cell.id, new Patrol(isVertical));
           }
           draggable.style.left = `${rect.left + scrollX}px`;
           draggable.style.top = `${rect.top + scrollY}px`;
@@ -191,10 +192,9 @@ export function placeShipHandler(elementId, player) {
       renderShipFlip(isVertical, elementId, isDragging, player);
     }
     const startBattleBtn = document.getElementById("start-battle-btn");
-    if (player.board.fleet.length === 5) {
-      const shipsContainer = document.querySelector(".ships-container");
+    if (player.fleet.length === 5) {
+      const shipsContainer = document.querySelector(".ships-containers");
       startBattleBtn.style.display = "block";
-      console.log(player.board.fleet);
       startBattleBtn.addEventListener("click", () => {
         shipsContainer.innerHTML = "";
         renderShips(false);
@@ -231,6 +231,6 @@ function startHandler() {
 }
 
 export default function init() {
-  renderStart(startHandler);
-  // initComputerGame();
+  // renderStart(startHandler);
+  initComputerGame();
 }
