@@ -44,6 +44,8 @@ function createOverlay() {
   document.body.appendChild(overlay);
 }
 
+// Board Grid Letter and Numbers
+
 export function renderXY() {
   const leftRow = document.querySelector("div#left-row");
   const rightRow = document.querySelector("div#right-row");
@@ -51,9 +53,6 @@ export function renderXY() {
   row.forEach((letter) => {
     const letterDiv = document.createElement("div");
     letterDiv.textContent = letter;
-    letterDiv.style.display = "flex";
-    letterDiv.style.justifyContent = "center";
-    letterDiv.style.alignItems = "center";
     leftRow.appendChild(letterDiv);
     rightRow.appendChild(letterDiv.cloneNode(true));
   });
@@ -64,9 +63,6 @@ export function renderXY() {
   col.forEach((letter) => {
     const letterDiv = document.createElement("div");
     letterDiv.textContent = letter;
-    letterDiv.style.display = "flex";
-    letterDiv.style.justifyContent = "center";
-    letterDiv.style.alignItems = "center";
     leftCol.appendChild(letterDiv);
     rightCol.appendChild(letterDiv.cloneNode(true));
   });

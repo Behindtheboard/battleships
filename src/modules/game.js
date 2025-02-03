@@ -231,6 +231,6 @@ function startHandler() {
 }
 
 export default function init() {
-  renderStartMenu(startHandler);
-  // initComputerGame();
+  // renderStartMenu(startHandler);
+  initComputerGame();
 }
