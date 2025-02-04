@@ -1,6 +1,10 @@
+---current working tree
+Add 2player feature to renderBoard
 ------ToDo------
+-renderBoard shoul take player and needShips
+
 renderShips should take player property and newgame property
-same with render board
+
 
 
 make 2 player game

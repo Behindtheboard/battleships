@@ -87,10 +87,11 @@ class Gameboard {
 }
 
 export default class Player extends Gameboard {
-  constructor(name, turn) {
+  constructor(name, alt, turn) {
     super();
     this.name = name;
     this.turn = turn;
+    this.alt = alt;
   }
 }
 

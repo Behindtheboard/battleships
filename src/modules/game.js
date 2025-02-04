@@ -31,22 +31,22 @@ function win(wonPlayer) {
 
 function initComputerGame() {
   let gameover = false;
-  const person = new Player("person", true);
-  const computer = new Player("computer", false);
+  const player1 = new Player("player1", '1', true);
+  const computer = new Player("computer", 'robo', false);
 
-  renderBoard(person, true);
-  renderBoard(computer);
-  renderShips(true);
+  renderBoard(player1, true);
+  renderBoard(computer, true);
+  renderShips(player1, true);
 
   const leftShips = document.querySelectorAll("#left-ships > div");
   leftShips.forEach((ship) => {
-    placeShipHandler(ship.id, person);
+    placeShipHandler(ship.id, player1, computer);
   });
 
   randomizeShipPlacement(computer);
 
   document.getElementById("right-board").addEventListener("click", (e) => {
-    if (person.turn) {
+    if (player1.turn) {
       const coordinate = e.target.id;
 
       let i = true;
@@ -63,32 +63,32 @@ function initComputerGame() {
 
       if (computer.fleetSunk()) {
         gameover = true;
-        return win(person);
+        return win(player1);
       }
 
       computer.turn = true;
-      person.turn = false;
+      player1.turn = false;
     }
     if (computer.turn) {
-      const coordinate = computerLogic(person);
+      const coordinate = computerLogic(player1);
 
       setTimeout(() => {
         try {
-          person.receiveAttack(coordinate);
-          // autoWin(person)
+          player1.receiveAttack(coordinate);
+          // autoWin(player1)
         } catch (error) {
           alert(error.message);
         }
 
-        renderBoard(person);
+        renderBoard(player1);
       }, 200);
 
-      if (person.fleetSunk()) {
+      if (player1.fleetSunk()) {
         gameover = true;
         return win(computer);
       }
 
-      person.turn = true;
+      player1.turn = true;
       computer.turn = false;
     }
   });
@@ -96,7 +96,7 @@ function initComputerGame() {
   if (gameover) return;
 }
 
-export function placeShipHandler(elementId, player) {
+export function placeShipHandler(elementId, player1, player2) {
   const draggable = document.getElementById(`${elementId}`);
   const draggableParent = draggable.parentNode;
 
@@ -110,7 +110,7 @@ export function placeShipHandler(elementId, player) {
   draggable.addEventListener("mousedown", (e) => {
     e.preventDefault();
     isDragging = true;
-    player.removeShip(elementId.slice(1));
+    player1.removeShip(elementId.slice(1));
 
     draggable.style.transition = "";
   });
@@ -119,10 +119,10 @@ export function placeShipHandler(elementId, player) {
     if (e.target.classList.contains("shipBox")) {
       e.preventDefault()
       if (isVertical) {
-        renderShipFlip(false, elementId, isDragging, player);
+        renderShipFlip(false, elementId, isDragging, player1);
         isVertical = false;
       } else {
-        renderShipFlip(true, elementId, isDragging, player);
+        renderShipFlip(true, elementId, isDragging, player1);
         isVertical = true;
       }
     }
@@ -164,19 +164,19 @@ export function placeShipHandler(elementId, player) {
       ) {
         try {
           if (elementId.includes("carrier")) {
-            player.placeShip(cell.id, new Carrier(isVertical));
+            player1.placeShip(cell.id, new Carrier(isVertical));
           }
           if (elementId.includes("battleship")) {
-            player.placeShip(cell.id, new Battleship(isVertical));
+            player1.placeShip(cell.id, new Battleship(isVertical));
           }
           if (elementId.includes("destroyer")) {
-            player.placeShip(cell.id, new Destroyer(isVertical));
+            player1.placeShip(cell.id, new Destroyer(isVertical));
           }
           if (elementId.includes("submarine")) {
-            player.placeShip(cell.id, new Submarine(isVertical));
+            player1.placeShip(cell.id, new Submarine(isVertical));
           }
           if (elementId.includes("patrol")) {
-            player.placeShip(cell.id, new Patrol(isVertical));
+            player1.placeShip(cell.id, new Patrol(isVertical));
           }
           draggable.style.left = `${rect.left + scrollX}px`;
           draggable.style.top = `${rect.top + scrollY}px`;
@@ -190,16 +190,17 @@ export function placeShipHandler(elementId, player) {
     if (!snapped) {
       draggable.style.left = `${originalX}`;
       draggable.style.top = `${originalY}`;
-      renderShipFlip(isVertical, elementId, isDragging, player);
+      renderShipFlip(isVertical, elementId, isDragging, player1);
     }
     const startBattleBtn = document.getElementById("start-battle-btn");
-    if (player.fleet.length === 5) {
+    if (player1.fleet.length === 5) {
       const shipsContainer = document.querySelector(".ships-containers");
       startBattleBtn.style.display = "block";
       startBattleBtn.addEventListener("click", () => {
         shipsContainer.innerHTML = "";
-        renderShips(false);
-        renderBoard(player);
+        renderShips(player1, false);
+        renderBoard(player1, false);
+        renderBoard(player2, false);
         return;
       });
     } else {

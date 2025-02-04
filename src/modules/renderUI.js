@@ -72,20 +72,15 @@ export function renderXY() {
 
 // Board Grid UI
 
-export function renderBoard(player, needShips) {
+export function renderBoard(player, isNewGame) {
   const leftBoard = document.getElementById("left-board");
   const rightBoard = document.getElementById("right-board");
 
   const board = player.board;
   let computer;
+  let playerAlt = player.alt;
 
-  if (player.name === "computer") {
-    computer = true;
-    rightBoard.innerHTML = "";
-  } else {
-    computer = false;
-    leftBoard.innerHTML = "";
-  }
+  playerAlt === "1" ? (leftBoard.innerHTML = "") : rightBoard.innerHTML == "";
 
   board.forEach((row, rindex) => {
     row.forEach((col, cindex) => {
@@ -106,14 +101,19 @@ export function renderBoard(player, needShips) {
           : (boxDiv.style.backgroundColor = "green");
       }
 
-      if (computer) {
-        boxDiv.id = `${rindex}${cindex}`;
-        rightBoard.appendChild(boxDiv);
-      } else {
-        if (needShips) {
-          boxDiv.id = `${rindex}${cindex}`;
-        }
-        leftBoard.appendChild(boxDiv);
+      switch (playerAlt) {
+        case "robo":
+          if (!isNewGame) boxDiv.id = `${rindex}${cindex}`;
+          rightBoard.appendChild(boxDiv);
+          break;
+        case "1":
+          if (isNewGame) boxDiv.id = `${rindex}${cindex}`;
+          leftBoard.appendChild(boxDiv);
+          break;
+        case "2":
+          if (isNewGame) boxDiv.id = `${rindex}${cindex}`;
+          rightBoard.appendChild(boxDiv);
+          break;
       }
     });
   });
@@ -121,7 +121,7 @@ export function renderBoard(player, needShips) {
 
 // Ship UI
 
-export function renderShips(isNewGame) {
+export function renderShips(player, isNewGame) {
   const shipsContainers = document.querySelectorAll(".ship-containers");
   shipsContainers.forEach((container) => {
     container.innerHTML = "";
