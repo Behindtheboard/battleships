@@ -232,7 +232,7 @@ h1 {
 /* --- Board Letters and Numbers */
 
 #left-row,
-#right-row, 
+#right-row,
 #left-col,
 #right-col {
   display: flex;
@@ -245,7 +245,7 @@ h1 {
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: 1fr;
   grid-row: 1;
-  grid-column: 2 / span 10;  
+  grid-column: 2 / span 10;
 }
 
 #left-col,

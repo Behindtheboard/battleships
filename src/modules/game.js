@@ -37,6 +37,7 @@ function initComputerGame() {
   renderBoard(player1, true);
   renderBoard(computer, true);
   renderShips(player1, true);
+  renderShips(computer, true);
 
   const leftShips = document.querySelectorAll("#left-ships > div");
   leftShips.forEach((ship) => {

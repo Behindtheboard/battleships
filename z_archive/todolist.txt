@@ -1,7 +1,6 @@
 ---current working tree
-Add 2player feature to renderBoard
+- Add 2player feature to renderShips
 ------ToDo------
--renderBoard shoul take player and needShips
 
 renderShips should take player property and newgame property
 
@@ -14,6 +13,8 @@ make computer smarter
 
 
 ------done------
+-Add 2player feature to renderBoard
+-renderBoard shoul take player and newgame
 - make isVertical show for ships
 - organize handlers
 - make remove ship for ui

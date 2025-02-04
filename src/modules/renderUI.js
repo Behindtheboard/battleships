@@ -77,8 +77,8 @@ export function renderBoard(player, isNewGame) {
   const rightBoard = document.getElementById("right-board");
 
   const board = player.board;
+  const playerAlt = player.alt;
   let computer;
-  let playerAlt = player.alt;
 
   playerAlt === "1" ? (leftBoard.innerHTML = "") : rightBoard.innerHTML == "";
 
@@ -122,31 +122,20 @@ export function renderBoard(player, isNewGame) {
 // Ship UI
 
 export function renderShips(player, isNewGame) {
-  const shipsContainers = document.querySelectorAll(".ship-containers");
-  shipsContainers.forEach((container) => {
-    container.innerHTML = "";
-  });
-
-  // Render ships and ship lengths in each container
   const leftShipsContainer = document.getElementById("left-ships");
   const rightShipsContainer = document.getElementById("right-ships");
-  const battleShips = [
-    [Carrier, Battleship, Destroyer, Submarine, Patrol],
-    [Carrier, Battleship, Destroyer, Submarine, Patrol],
-  ];
-  battleShips.forEach((playerShips, index) => {
-    playerShips.forEach((ship) => {
+  const playerAlt = player.alt;
+
+  playerAlt === "1"
+    ? (leftShipsContainer.innerHTML = "")
+    : rightShipsContainer.innerHTML == "";
+
+  // Render ships and # of inner boxes
+  function buildShips(side, sideContainer) {
+    const shipClasses = [Carrier, Battleship, Destroyer, Submarine, Patrol];
+    shipClasses.forEach((ship) => {
       const shipName = ship.name[0].toLowerCase() + ship.name.slice(1);
       const newShip = document.createElement("div");
-      let side;
-      let sideContainer;
-      if (index === 0) {
-        side = "l";
-        sideContainer = leftShipsContainer;
-      } else {
-        side = "r";
-        sideContainer = rightShipsContainer;
-      }
       newShip.id = `${side}${shipName}`;
       newShip.classList.add("ships");
       for (let i = 0; i < ship.divLength; i++) {
@@ -156,34 +145,55 @@ export function renderShips(player, isNewGame) {
       }
       sideContainer.appendChild(newShip);
     });
-  });
+  }
 
-  // Inner ship boxes dynamically match board boxes
-  const sizeSource = document.querySelector("#left-row + div");
-  const shipBoxes = document.querySelectorAll(".shipBox");
-  function matchSize() {
-    const rect = sizeSource.getBoundingClientRect();
-    const rectWidth = rect.width - 3;
+  // Allow ship grab and flip
+  function activeSelect(isNewGame, side) {
+    if (isNewGame) {
+      document.querySelectorAll(`#${side}-ships .ships`).forEach((ship) => {
+        ship.style.position = "absolute";
+      });
+      renderShipFlip(false);
+      renderStartBattleBtn();
+    } else {
+      document.querySelectorAll(`#${side}-ships .ships`).forEach((ship) => {
+        ship.style.marginBottom = "20px";
+        ship.style.position = "none";
+      });
+    }
+  }
+
+  // Ship inner boxes dynamically match board boxes
+  function shipBoxSize(side) {
+    const sourceSize = document.querySelector("#left-row > :first-child");
+    const shipBoxes = document.querySelectorAll(`#${side}-ships .shipBox`);
+    const rect = sourceSize.getBoundingClientRect();
     shipBoxes.forEach((shipBox) => {
-      shipBox.style.width = `${rectWidth}px`;
-      shipBox.style.height = `${rectWidth}px`;
+      shipBox.style.width = `${rect.width-3}px`;
+      shipBox.style.height = `${rect.height-3}px`;
     });
   }
-  matchSize();
-  window.addEventListener("resize", matchSize);
 
-  const ships = document.querySelectorAll(".ships");
-  if (isNewGame) {
-    renderShipFlip(false);
-    renderStartBattleBtn();
-    ships.forEach((ship) => {
-      ship.style.position = "absolute";
-    });
-  } else {
-    ships.forEach((ship) => {
-      ship.style.marginBottom = "20px";
-      ship.style.position = "none";
-    });
+  // Ship features depending on player
+  switch (playerAlt) {
+    case "robo":
+      buildShips("r", rightShipsContainer);
+      shipBoxSize("right");
+      activeSelect(false, "right");
+      window.addEventListener("resize", shipBoxSize("right"));
+      break;
+    case "1":
+      buildShips("l", leftShipsContainer);
+      shipBoxSize("left");
+      activeSelect(isNewGame, "left");
+      window.addEventListener("resize", shipBoxSize("left"));
+      break;
+    case "2":
+      buildShips("r", rightShipsContainer);
+      shipBoxSize("right");
+      activeSelect(isNewGame, "right");
+      window.addEventListener("resize", shipBoxSize("right"));
+      break;
   }
 }
 
