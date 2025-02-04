@@ -1,3 +1,5 @@
+import { Carrier, Battleship, Destroyer, Submarine, Patrol } from "./ship";
+
 // Start Menu UI
 
 export function renderStartMenu(handler) {
@@ -120,41 +122,21 @@ export function renderBoard(player, needShips) {
 // Ship UI
 
 export function renderShips(isNewGame) {
-  function addLength(ship, parentDiv) {
-    let length;
-    if (ship.includes("carrier")) {
-      length = 5;
-    }
-    if (ship.includes("battleship")) {
-      length = 4;
-    }
-    if (ship.includes("destroyer")) {
-      length = 3;
-    }
-    if (ship.includes("submarine")) {
-      length = 3;
-    }
-    if (ship.includes("patrol")) {
-      length = 2;
-    }
-    for (let i = 0; i < length; i++) {
-      const newDiv = document.createElement("div");
-      newDiv.className = "shipBox";
-      parentDiv.appendChild(newDiv);
-    }
-  }
+  const shipsContainers = document.querySelectorAll(".ship-containers");
+  shipsContainers.forEach((container) => {
+    container.innerHTML = "";
+  });
 
+  // Render ships and ship lengths in each container
   const leftShipsContainer = document.getElementById("left-ships");
   const rightShipsContainer = document.getElementById("right-ships");
-  leftShipsContainer.innerHTML = "";
-  rightShipsContainer.innerHTML = "";
-
   const battleShips = [
-    ["carrier", "battleship", "destroyer", "submarine", "patrol"],
-    ["carrier", "battleship", "destroyer", "submarine", "patrol"],
+    [Carrier, Battleship, Destroyer, Submarine, Patrol],
+    [Carrier, Battleship, Destroyer, Submarine, Patrol],
   ];
   battleShips.forEach((playerShips, index) => {
     playerShips.forEach((ship) => {
+      const shipName = ship.name[0].toLowerCase() + ship.name.slice(1);
       const newShip = document.createElement("div");
       let side;
       let sideContainer;
@@ -165,26 +147,31 @@ export function renderShips(isNewGame) {
         side = "r";
         sideContainer = rightShipsContainer;
       }
-      newShip.id = `${side}${ship}`;
+      newShip.id = `${side}${shipName}`;
       newShip.classList.add("ships");
-      addLength(ship, newShip);
+      for (let i = 0; i < ship.divLength; i++) {
+        const newDiv = document.createElement("div");
+        newDiv.className = "shipBox";
+        newShip.appendChild(newDiv);
+      }
       sideContainer.appendChild(newShip);
     });
   });
 
+  const ships = document.querySelectorAll(".ships");
   if (isNewGame) {
     renderShipFlip(false);
     renderStartBattleBtn();
-    document.querySelectorAll(".ships").forEach((ship) => {
+    ships.forEach((ship) => {
       ship.style.position = "absolute";
     });
   } else {
-    document.querySelectorAll(".ships").forEach((ship) => {
+    ships.forEach((ship) => {
       ship.style.marginBottom = "20px";
       ship.style.position = "none";
     });
   }
-
+  // Inner ship boxes dynamically match board boxes
   const sizeSource = document.querySelector("#left-row + div");
   const shipBoxes = document.querySelectorAll(".shipBox");
   function matchSize() {
@@ -253,6 +240,8 @@ export function renderShipFlip(
     }
   });
 }
+
+// Start Battle Button UI
 
 export function renderStartBattleBtn() {
   const leftShips = document.getElementById("left-ships");
