@@ -158,19 +158,6 @@ export function renderShips(isNewGame) {
     });
   });
 
-  const ships = document.querySelectorAll(".ships");
-  if (isNewGame) {
-    renderShipFlip(false);
-    renderStartBattleBtn();
-    ships.forEach((ship) => {
-      ship.style.position = "absolute";
-    });
-  } else {
-    ships.forEach((ship) => {
-      ship.style.marginBottom = "20px";
-      ship.style.position = "none";
-    });
-  }
   // Inner ship boxes dynamically match board boxes
   const sizeSource = document.querySelector("#left-row + div");
   const shipBoxes = document.querySelectorAll(".shipBox");
@@ -184,6 +171,20 @@ export function renderShips(isNewGame) {
   }
   matchSize();
   window.addEventListener("resize", matchSize);
+
+  const ships = document.querySelectorAll(".ships");
+  if (isNewGame) {
+    renderShipFlip(false);
+    renderStartBattleBtn();
+    ships.forEach((ship) => {
+      ship.style.position = "absolute";
+    });
+  } else {
+    ships.forEach((ship) => {
+      ship.style.marginBottom = "20px";
+      ship.style.position = "none";
+    });
+  }
 }
 
 export function renderShipFlip(
@@ -210,14 +211,14 @@ export function renderShipFlip(
 
   ships.forEach((ship) => {
     if (ship.id === elementId && isDragging === true) return;
-    isPlaced = false;
+    isPlaced = true;
     if (player !== null) {
       if (rightShips) return;
       player.fleet.forEach((shipObject) => {
-        if (shipObject.name === ship.id.slice(1)) isPlaced = true;
+        if (shipObject.name === ship.id.slice(1)) isPlaced = false;
       });
     }
-    if (isPlaced) return;
+    if (!isPlaced) return;
     if (isVertical) {
       ship.style.left = `${leftPos}vw`;
       ship.style.top = `70vh`;

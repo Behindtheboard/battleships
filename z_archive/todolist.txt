@@ -1,5 +1,10 @@
 ------ToDo------
+renderShips should take player property and newgame property
+same with render board
 
+
+make 2 player game
+make computer smarter
 
 
 

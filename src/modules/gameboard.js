@@ -44,6 +44,7 @@ class Gameboard {
     }
 
     this.fleet.push(ship);
+    console.log(this.board);
   }
 
   removeShip(shipID) {
@@ -87,7 +88,7 @@ class Gameboard {
 
 export default class Player extends Gameboard {
   constructor(name, turn) {
-    super()
+    super();
     this.name = name;
     this.turn = turn;
   }

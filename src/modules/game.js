@@ -115,8 +115,9 @@ export function placeShipHandler(elementId, player) {
     draggable.style.transition = "";
   });
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === " ") {
+  document.addEventListener("contextmenu", (e) => {
+    if (e.target.classList.contains("shipBox")) {
+      e.preventDefault()
       if (isVertical) {
         renderShipFlip(false, elementId, isDragging, player);
         isVertical = false;
@@ -231,6 +232,6 @@ function startHandler() {
 }
 
 export default function init() {
-  renderStartMenu(startHandler);
-  // initComputerGame();
+  // renderStartMenu(startHandler);
+  initComputerGame();
 }
