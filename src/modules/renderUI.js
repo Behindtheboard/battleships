@@ -2,10 +2,9 @@ import { Carrier, Battleship, Destroyer, Submarine, Patrol } from "./ship";
 
 // Start Menu UI
 
-export function renderStartMenu(handler) {
+export function renderStartMenu() {
   createDialog("Computer or 1v1?", "Computer", "1v1");
   createOverlay();
-  handler();
 }
 
 function createDialog(titleTxt, leftbtn, rightbtn) {
@@ -25,6 +24,7 @@ function createDialog(titleTxt, leftbtn, rightbtn) {
   const leftBtn = document.createElement("button");
   leftBtn.id = "left-btn";
   leftBtn.textContent = `${leftbtn}`;
+  buttonContainer.appendChild(leftBtn);
 
   if (rightbtn !== "No") {
     const rightBtn = document.createElement("button");
@@ -32,8 +32,6 @@ function createDialog(titleTxt, leftbtn, rightbtn) {
     rightBtn.textContent = `${rightbtn}`;
     buttonContainer.appendChild(rightBtn);
   }
-
-  buttonContainer.appendChild(leftBtn);
   dialog.appendChild(buttonContainer);
   modalContainer.appendChild(dialog);
   dialog.showModal();

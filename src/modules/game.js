@@ -11,25 +11,27 @@ import {
   flipShip,
 } from "./renderUI";
 import randomizeShipPlacement from "./randomizeShipPlacement";
+import EventManager from "./eventManager";
 
-renderXY();
+const eventManager = new EventManager();
 
-function win(wonPlayer) {
-  renderWinnerMenu(wonPlayer);
-  const dialog = document.getElementById("modal");
-  document.getElementById("button-container").addEventListener("click", (e) => {
-    if (e.target.id === "left-btn") {
-      e.preventDefault();
-      replaceRightBoard();
-      resetHitsList();
-      dialog.close();
-      dialog.remove();
-      return renderStartMenu(startHandler);
-    }
-  });
+export default function init() {
+  renderXY();
+  renderStartMenu();
+  // initComputerGame();
 }
 
+function startComputerGame() {
+  const dialog = document.getElementById("modal");
+  dialog.close();
+  dialog.remove();
+  document.getElementById("modal-overlay").remove();
+  return initComputerGame();
+}
+eventManager.addListener('#left-btn', 'click', startComputerGame)
+
 function initComputerGame() {
+  eventManager.removeListener('#left-btn', 'click', startComputerGame)
   let gameover = false;
   const player1 = new Player("player1", "1", true);
   const computer = new Player("computer", "robo", false);
@@ -206,28 +208,19 @@ export function placeShipHandler(elementId, player1, player2) {
   });
 }
 
-function startHandler() {
+function win(wonPlayer) {
+  renderWinnerMenu(wonPlayer);
   const dialog = document.getElementById("modal");
-
   document.getElementById("button-container").addEventListener("click", (e) => {
     if (e.target.id === "left-btn") {
       e.preventDefault();
+      replaceRightBoard();
+      resetHitsList();
       dialog.close();
       dialog.remove();
-      document.getElementById("modal-overlay").remove();
-      return initComputerGame();
-    }
-
-    if (e.target.id === "right-btn") {
-      e.preventDefault();
-      return console.log("computer game only available");
+      return renderStartMenu(startHandler);
     }
   });
-}
-
-export default function init() {
-  // renderStartMenu(startHandler);
-  initComputerGame();
 }
 
 // window.addEventListener("mousemove", (event) => {
