@@ -193,6 +193,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 0.15fr 1fr 0.5fr;
+  gap: 20px;
 }
 
 #left-box {
@@ -216,7 +217,6 @@ h1 {
   height: 30vw;
   border: solid 2px grey;
   border-radius: 1rem;
-  margin: 40px;
 }
 
 #left-box div,

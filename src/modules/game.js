@@ -155,7 +155,6 @@ export function placeShipHandler(elementId, player1, player2) {
 
     boardDivs.forEach((cell) => {
       const rect = cell.getBoundingClientRect();
-      const parentRect = draggableParent.getBoundingClientRect();
       if (
         e.clientX >= rect.left &&
         e.clientX <= rect.right &&
@@ -190,7 +189,6 @@ export function placeShipHandler(elementId, player1, player2) {
     if (!snapped) {
       draggable.style.left = `${originalX}`;
       draggable.style.top = `${originalY}`;
-      renderShipFlip(isVertical, elementId, isDragging, player1);
     }
     const startBattleBtn = document.getElementById("start-battle-btn");
     if (player1.fleet.length === 5) {
@@ -237,3 +235,7 @@ export default function init() {
   // renderStartMenu(startHandler);
   initComputerGame();
 }
+
+// window.addEventListener("mousemove", (event) => {
+//   console.log(`Mouse X: ${event.clientX}, Mouse Y: ${event.clientY}`);
+// });
