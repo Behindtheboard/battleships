@@ -80,7 +80,7 @@ export function renderBoard(player, isNewGame) {
   const playerAlt = player.alt;
   let computer;
 
-  playerAlt === "1" ? (leftBoard.innerHTML = "") : rightBoard.innerHTML == "";
+  playerAlt === "1" ? (leftBoard.innerHTML = "") : (rightBoard.innerHTML = "");
 
   board.forEach((row, rindex) => {
     row.forEach((col, cindex) => {
@@ -96,7 +96,7 @@ export function renderBoard(player, isNewGame) {
         boxDiv.textContent = "X";
       }
       if (col !== null && col !== "hit" && col !== "missed") {
-        computer
+        playerAlt === "robo"
           ? (boxDiv.style.backgroundColor = "grey")
           : (boxDiv.style.backgroundColor = "green");
       }
@@ -169,8 +169,8 @@ export function renderShips(player, isNewGame) {
     const shipBoxes = document.querySelectorAll(`#${side}-ships .shipBox`);
     const rect = sourceSize.getBoundingClientRect();
     shipBoxes.forEach((shipBox) => {
-      shipBox.style.width = `${rect.width-3}px`;
-      shipBox.style.height = `${rect.height-3}px`;
+      shipBox.style.width = `${rect.width - 3}px`;
+      shipBox.style.height = `${rect.height - 3}px`;
     });
   }
 

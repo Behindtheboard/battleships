@@ -37,7 +37,6 @@ function initComputerGame() {
   renderBoard(player1, true);
   renderBoard(computer, true);
   renderShips(player1, true);
-  renderShips(computer, true);
 
   const leftShips = document.querySelectorAll("#left-ships > div");
   leftShips.forEach((ship) => {
@@ -200,6 +199,7 @@ export function placeShipHandler(elementId, player1, player2) {
       startBattleBtn.addEventListener("click", () => {
         shipsContainer.innerHTML = "";
         renderShips(player1, false);
+        renderShips(player2, false);
         renderBoard(player1, false);
         renderBoard(player2, false);
         return;

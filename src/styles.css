@@ -210,8 +210,8 @@ h1 {
   display: grid;
   grid-template-columns: repeat(11, 1fr);
   grid-template-rows: repeat(11, 1fr);
-  min-width: 450px;
-  min-height: 450px;
+  min-width: 400px;
+  min-height: 400px;
   width: 30vw;
   height: 30vw;
   border: solid 2px grey;
@@ -281,6 +281,7 @@ h1 {
   flex-direction: column;
   justify-content: space-between;
   align-items: start;
+  padding: 40px;
 }
 
 .ships {
