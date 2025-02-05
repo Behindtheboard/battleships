@@ -8,7 +8,7 @@ import {
   renderStartMenu,
   replaceRightBoard,
   renderShips,
-  renderShipFlip,
+  flipShip,
 } from "./renderUI";
 import randomizeShipPlacement from "./randomizeShipPlacement";
 
@@ -31,14 +31,14 @@ function win(wonPlayer) {
 
 function initComputerGame() {
   let gameover = false;
-  const player1 = new Player("player1", '1', true);
-  const computer = new Player("computer", 'robo', false);
+  const player1 = new Player("player1", "1", true);
+  const computer = new Player("computer", "robo", false);
 
   renderBoard(player1, true);
   renderBoard(computer, true);
   renderShips(player1, true);
 
-  const leftShips = document.querySelectorAll("#left-ships > div");
+  const leftShips = document.querySelectorAll("#left-ships .ships");
   leftShips.forEach((ship) => {
     placeShipHandler(ship.id, player1, computer);
   });
@@ -116,16 +116,8 @@ export function placeShipHandler(elementId, player1, player2) {
   });
 
   document.addEventListener("contextmenu", (e) => {
-    if (e.target.classList.contains("shipBox")) {
-      e.preventDefault()
-      if (isVertical) {
-        renderShipFlip(false, elementId, isDragging, player1);
-        isVertical = false;
-      } else {
-        renderShipFlip(true, elementId, isDragging, player1);
-        isVertical = true;
-      }
-    }
+    e.preventDefault();
+    isVertical ? (isVertical = false) : (isVertical = true);
   });
 
   document.addEventListener("mousemove", (e) => {
@@ -180,6 +172,8 @@ export function placeShipHandler(elementId, player1, player2) {
           draggable.style.left = `${rect.left + scrollX}px`;
           draggable.style.top = `${rect.top + scrollY}px`;
           snapped = true;
+          console.log(player1.fleet);
+          flipShip(isVertical, e.target.parentElement.id, player1);
         } catch (error) {
           alert(error.message);
         }
@@ -190,6 +184,7 @@ export function placeShipHandler(elementId, player1, player2) {
       draggable.style.left = `${originalX}`;
       draggable.style.top = `${originalY}`;
     }
+
     const startBattleBtn = document.getElementById("start-battle-btn");
     if (player1.fleet.length === 5) {
       const shipsContainer = document.querySelector(".ships-containers");
@@ -207,7 +202,6 @@ export function placeShipHandler(elementId, player1, player2) {
     }
 
     draggable.style.transition = "left 0.3s ease, top 0.3s ease";
-
     draggable.style.cursor = "grab";
   });
 }

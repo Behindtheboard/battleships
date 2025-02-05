@@ -45,6 +45,7 @@ class Gameboard {
 
     this.fleet.push(ship);
     console.log(this.board);
+    console.log(this.fleet);
   }
 
   removeShip(shipID) {
@@ -61,7 +62,6 @@ class Gameboard {
     this.fleet.forEach((ship, index) => {
       if (ship.name === shipID) {
         this.fleet.splice(index, 1);
-        console.log(this.fleet);
       }
     });
   }

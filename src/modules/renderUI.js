@@ -201,64 +201,21 @@ export function renderShips(player, isNewGame) {
     activeSelect(isNewGame, side);
   }
   shipBoxSize(side);
+  // Resize and reposition ships when window resizes
   if (isNewGame) window.addEventListener("resize", () => shipPosition(side));
   window.addEventListener("resize", () => shipBoxSize(side));
 }
 
 // Flip ship vertically or horizontally
-export function renderShipFlip(
-  isVertical,
-  elementId,
-  isDragging,
-  player = null
-) {
-  const ships = document.querySelectorAll(".ships");
+export function flipShip(isVertical, elementId, player) {
   let dir;
-  let leftPos;
-  let topPos;
-  let rightShips = false;
-  let isPlaced;
-
-  if (isVertical) {
-    dir = "column";
-    leftPos = 6;
-  } else {
-    dir = "row";
-    leftPos = 6;
-    topPos = 70;
-  }
-
-  ships.forEach((ship) => {
-    if (ship.id === elementId && isDragging === true) return;
-    isPlaced = true;
-    if (player !== null) {
-      if (rightShips) return;
-      player.fleet.forEach((shipObject) => {
-        if (shipObject.name === ship.id.slice(1)) isPlaced = false;
-      });
-    }
-    if (!isPlaced) return;
-    if (isVertical) {
-      ship.style.left = `${leftPos}vw`;
-      ship.style.top = `70vh`;
-      leftPos += 5;
-    } else {
-      ship.style.left = `${leftPos}vw`;
-      ship.style.top = `${topPos}vh`;
-      topPos += 6;
-    }
-    ship.style.flexDirection = `${dir}`;
-    if (ship.id.includes("lp")) {
-      if (rightShips) return;
-      if (isVertical) {
-        leftPos = leftPos + 23;
-      } else {
-        leftPos = 53;
-        topPos = 70;
-      }
-      rightShips = true;
-    }
+  let isPlaced = false;
+  isVertical ? (dir = "column") : (dir = "row");
+  player.fleet.forEach((shipObject) => {
+    if (shipObject.name === elementId.slice(1)) isPlaced = true;
   });
+  if (!isPlaced) return;
+  document.getElementById(`${elementId}`).style.flexDirection = `${dir}`;
 }
 
 // Start Battle Button UI
