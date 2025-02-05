@@ -35,7 +35,6 @@ function createDialog(titleTxt, leftbtn, rightbtn) {
 
   buttonContainer.appendChild(leftBtn);
   dialog.appendChild(buttonContainer);
-
   modalContainer.appendChild(dialog);
   dialog.showModal();
 }
@@ -173,14 +172,12 @@ export function renderShips(player, isNewGame) {
     const source = document.getElementById(`${side}-box`);
     const rect = source.getBoundingClientRect();
     const squareHeight = (rect.bottom - rect.top) / 11;
-    const boardWidth = rect.right - rect.left;
-    const boardCenter = boardWidth / 3.6 + rect.left;
-    const bottom = rect.bottom + squareHeight;
-    let topPos = bottom;
+    const bottom = rect.bottom + 20;
+    let leftPos = rect.left + squareHeight;
     document.querySelectorAll(`#${side}-ships .ships`).forEach((ship) => {
-      ship.style.top = `${topPos}px`;
-      ship.style.left = `${boardCenter}px`;
-      topPos += (squareHeight / 1.25) * 2;
+      ship.style.top = `${bottom}px`;
+      ship.style.left = `${leftPos}px`;
+      leftPos += (squareHeight) * 2;
     });
   }
   // Ship features depending on player

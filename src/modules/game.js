@@ -102,7 +102,7 @@ export function placeShipHandler(elementId, player1, player2) {
 
   let isDragging = false;
   let originalX, originalY;
-  let isVertical = false;
+  let isVertical = true;
 
   originalX = draggable.style.left;
   originalY = draggable.style.top;
