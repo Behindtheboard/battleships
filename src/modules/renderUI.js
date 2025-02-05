@@ -164,8 +164,8 @@ export function renderShips(player, isNewGame) {
     const shipBoxes = document.querySelectorAll(`#${side}-ships .shipBox`);
     const rect = sourceSize.getBoundingClientRect();
     shipBoxes.forEach((shipBox) => {
-      shipBox.style.width = `${rect.width - 3}px`;
-      shipBox.style.height = `${rect.height - 3}px`;
+      shipBox.style.width = `${rect.width - 2}px`;
+      shipBox.style.height = `${rect.height - 1}px`;
     });
   }
   // Dynamically position grabbable ships dynamically relative to board

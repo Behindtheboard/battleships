@@ -211,12 +211,12 @@ h1 {
   display: grid;
   grid-template-columns: repeat(11, 1fr);
   grid-template-rows: repeat(11, 1fr);
-  min-width: 400px;
-  min-height: 400px;
-  width: 30vw;
-  height: 30vw;
+  min-width: 250px;
+  min-height: 250px;
+  width: 35vw;
+  height: 35vw;
   border: solid 2px grey;
-  border-radius: 1rem;
+  border-radius: 1rem 1rem 0 1rem;
 }
 
 #left-box div,
@@ -224,7 +224,6 @@ h1 {
   display: grid;
   justify-content: center;
   align-items: center;
-  border: 1px solid lightgrey;
   width: 100%;
   height: 100%;
 }
@@ -264,6 +263,21 @@ h1 {
   grid-column: 2 / span 10;
 }
 
+#left-board div,
+#right-board div {
+  border: 1px solid lightgrey;
+}
+
+#left-col div,
+#right-col div {
+  border-top: 1px lightgrey solid;
+}
+
+#left-row div,
+#right-row div {
+  border-left: 1px lightgrey solid;
+}
+
 /* Ships */
 
 #left-ships {
@@ -288,17 +302,16 @@ h1 {
   display: flex;
   background-color: green;
   border: 1px white solid;
+  border-bottom: none;
+  border-right: none;
   width: fit-content;
   height: fit-content;
   /* position: absolute; */
 }
 
 .shipBox {
-  border-right: solid 1px lightgrey;
-}
-
-.ships .shipBox:last-child {
-  border-right: none;
+  border-right: solid 1px white;
+  border-bottom: solid 1px white;
 }
 
 /*----Start Battle Button */
