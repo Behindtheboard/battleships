@@ -25,9 +25,12 @@ export function playerShipPlacement(player1, player2) {
     });
     player1.removeShip(elementId.slice(1));
     draggable.style.transition = "";
+
+    document.addEventListener("mousemove", dragShip);
+    document.addEventListener("mouseup", shipDrop);
+    document.addEventListener("contextmenu", toggleVertical);
   }
 
-  document.addEventListener("mousemove", dragShip);
   function dragShip(e) {
     e.preventDefault();
     if (!isDragging) return;
@@ -47,7 +50,6 @@ export function playerShipPlacement(player1, player2) {
     isVertical ? (isVertical = false) : (isVertical = true);
   }
 
-  document.addEventListener("mouseup", shipDrop);
   function shipDrop(e) {
     e.preventDefault();
     if (!isDragging) return;
@@ -68,20 +70,19 @@ export function playerShipPlacement(player1, player2) {
         e.clientY <= rect.bottom
       ) {
         try {
-          document.addEventListener("contextmenu", toggleVertical);
           if (elementId.includes("carrier")) {
             player1.placeShip(cell.id, new Carrier(isVertical));
-        }
-        if (elementId.includes("battleship")) {
+          }
+          if (elementId.includes("battleship")) {
             player1.placeShip(cell.id, new Battleship(isVertical));
-        }
-        if (elementId.includes("destroyer")) {
+          }
+          if (elementId.includes("destroyer")) {
             player1.placeShip(cell.id, new Destroyer(isVertical));
-        }
-        if (elementId.includes("submarine")) {
+          }
+          if (elementId.includes("submarine")) {
             player1.placeShip(cell.id, new Submarine(isVertical));
-        }
-        if (elementId.includes("patrol")) {
+          }
+          if (elementId.includes("patrol")) {
             player1.placeShip(cell.id, new Patrol(isVertical));
           }
           draggable.style.left = `${rect.left + scrollX}px`;
@@ -89,6 +90,7 @@ export function playerShipPlacement(player1, player2) {
           snapped = true;
           flipShip(isVertical, elementId, player1);
         } catch (error) {
+          snapped = false;
           alert(error.message);
         }
       }
@@ -108,6 +110,7 @@ export function playerShipPlacement(player1, player2) {
         renderShips(player2, false);
         renderBoard(player1, false);
         renderBoard(player2, false);
+        player1.turn = true;
         return;
       });
     } else {

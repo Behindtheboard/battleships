@@ -35,6 +35,8 @@ export function initComputerGame() {
         gameover = true;
         return win(player1);
       }
+      player1.turn = false;
+      computer.turn = true;
     }
     if (computer.turn) {
       const coordinate = computerLogic(player1);
@@ -50,12 +52,14 @@ export function initComputerGame() {
         gameover = true;
         return win(computer);
       }
+      computer.turn = false;
+      player1.turn = true;
     }
     if (gameover) return;
   }
   document
     .getElementById("right-board")
-    .addEventListener("click", turnSequence);
+    .addEventListener("mousedown", turnSequence);
 }
 
 const hits = [];
