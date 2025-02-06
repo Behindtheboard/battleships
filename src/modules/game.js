@@ -11,8 +11,8 @@ const eventManager = new EventManager();
 // Game initialization
 export default function init() {
   renderXY();
-  renderStartMenu();
-  // initComputerGame();
+  // renderStartMenu();
+  initComputerGame();
 }
 // Start computer game when "computer" button pressed
 function startComputerGame() {

@@ -131,6 +131,7 @@ export function renderShips(player, isNewGame) {
       const shipName = ship.name[0].toLowerCase() + ship.name.slice(1);
       const newShip = document.createElement("div");
       newShip.id = `${letter}${shipName}`;
+      newShip.style.cursor = "grab";
       newShip.classList.add("ships");
       for (let i = 0; i < ship.divLength; i++) {
         const newDiv = document.createElement("div");
@@ -175,7 +176,7 @@ export function renderShips(player, isNewGame) {
     document.querySelectorAll(`#${side}-ships .ships`).forEach((ship) => {
       ship.style.top = `${bottom}px`;
       ship.style.left = `${leftPos}px`;
-      leftPos += (squareHeight) * 2;
+      leftPos += squareHeight * 2;
     });
   }
   // Ship features depending on player
@@ -206,8 +207,8 @@ export function flipShip(isVertical, elementId, player) {
   let dir;
   let isPlaced = false;
   isVertical ? (dir = "column") : (dir = "row");
-  player.fleet.forEach((shipObject) => {
-    if (shipObject.name === elementId.slice(1)) isPlaced = true;
+  player.fleet.forEach((ship) => {
+      if (ship.name.includes(elementId.slice(1))) isPlaced = true;
   });
   if (!isPlaced) return;
   document.getElementById(`${elementId}`).style.flexDirection = `${dir}`;
