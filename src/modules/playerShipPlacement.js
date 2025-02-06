@@ -2,6 +2,7 @@ import { flipShip } from "./renderUI";
 import Player from "./gameboard";
 import { renderBoard, renderShips } from "./renderUI";
 
+// Handles ship drag and drop
 export function playerShipPlacement(player1, player2) {
   const shipsContainer = document.querySelector(".ships-containers");
   let originalX, originalY;
@@ -9,7 +10,7 @@ export function playerShipPlacement(player1, player2) {
   let isVertical = true;
   let draggable;
   let elementId;
-
+  // Grab ship in ships container
   shipsContainer.addEventListener("mousedown", grabShip);
   function grabShip(e) {
     e.preventDefault();
@@ -30,7 +31,7 @@ export function playerShipPlacement(player1, player2) {
     document.addEventListener("mouseup", shipDrop);
     document.addEventListener("contextmenu", toggleVertical);
   }
-
+  // Position dragging ship element to cursor
   function dragShip(e) {
     e.preventDefault();
     if (!isDragging) return;
@@ -44,12 +45,12 @@ export function playerShipPlacement(player1, player2) {
     draggable.style.left = `${e.clientX + scrollX - rect.width / 2}px`;
     draggable.style.top = `${e.clientY + scrollY - rect.width / 2}px`;
   }
-
+  // Toggle ship vertical or horizontal
   function toggleVertical(e) {
     e.preventDefault();
     isVertical ? (isVertical = false) : (isVertical = true);
   }
-
+  // Place ship into grid with instantiated classes
   function shipDrop(e) {
     e.preventDefault();
     if (!isDragging) return;
@@ -70,7 +71,7 @@ export function playerShipPlacement(player1, player2) {
         e.clientY <= rect.bottom
       ) {
         try {
-          const shipIdToClass = Player.shipIdToClass
+          const shipIdToClass = Player.shipIdToClass;
           const shipKey = elementId.slice(1);
           const shipType = Object.keys(shipIdToClass).find((type) =>
             shipKey.includes(type)
