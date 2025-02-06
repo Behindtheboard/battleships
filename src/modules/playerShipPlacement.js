@@ -111,51 +111,39 @@ export function playerShipPlacement(player, opponent) {
     if (!snapped) {
       draggable.style.left = `${originalPositions[elementId]}px`;
       draggable.style.top = `${originalY}px`;
-      draggable.style.flexDirection = 'column'
+      draggable.style.flexDirection = "column";
       draggable.style.transition = "left 0.3s ease, top 0.3s ease";
     }
 
     showStartBattleBtn(player, opponent);
   }
-}
 
-// Show startBattleButton when play fleet full
-function showStartBattleBtn(player, opponent) {
-  const players = [player, opponent];
-  const startBattleBtn = document.getElementById("start-battle-btn");
-  if (player.fleet.length === 5) {
-    const shipsContainer = document.querySelector(".ships-containers");
-    startBattleBtn.style.display = "block";
-    startBattleBtn.addEventListener("click", () => {
-      shipsContainer.innerHTML = "";
-      players.forEach((player) => {
-        renderShips(player, false);
-        renderBoard(player, false);
+  // Show startBattleButton when play fleet full
+  function showStartBattleBtn(player, opponent) {
+    const players = [player, opponent];
+    const startBattleBtn = document.getElementById("start-battle-btn");
+    if (player.fleet.length === 5) {
+      const shipsContainer = document.querySelector(".ships-containers");
+      startBattleBtn.style.display = "block";
+      startBattleBtn.addEventListener("click", () => {
+        shipsContainer.removeEventListener("mousedown", grabShip);
+        document.removeEventListener("mousemove", dragShip);
+        document.removeEventListener("mouseup", shipDrop);
+        document.removeEventListener("contextmenu", toggleVertical);
+
+        shipsContainer.innerHTML = "";
+        shipsContainer.style.flexDirection = "row";
+        shipsContainer.style.zIndex = "1";
+        shipsContainer.style.position = "none";
+        players.forEach((el) => {
+          renderShips(el, false);
+          renderBoard(el, false);
+        });
+        player.turn = true;
+        return;
       });
-      player.turn = true;
-      return;
-    });
-  } else {
-    startBattleBtn.style.display = "none";
+    } else {
+      startBattleBtn.style.display = "none";
+    }
   }
-}
-
-export function unplacedShipPos(side, player) {
-  const source = document.getElementById(`${side}-box`);
-  const rect = source.getBoundingClientRect();
-  const squareHeight = (rect.bottom - rect.top) / 11;
-  const bottom = rect.bottom + 20;
-  let leftPos = rect.left + squareHeight;
-  let skip;
-  document.querySelectorAll(`.ships`).forEach((ship) => {
-    player.fleet.forEach((shipObj) => {
-      if (ship.id.includes(shipObj.name)) skip = true;
-    });
-    if (skip) return;
-    console.log(bottom)
-    ship.style.top = `${bottom}px`;
-    ship.style.left = `${leftPos}px`;
-    ship.style.flexDirection = "column";
-    leftPos += squareHeight * 2;
-  });
 }

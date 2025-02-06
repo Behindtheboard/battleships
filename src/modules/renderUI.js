@@ -119,10 +119,10 @@ export function renderShips(player, isNewGame) {
   const leftShipsContainer = document.getElementById("left-ships");
   const rightShipsContainer = document.getElementById("right-ships");
   const playerAlt = player.alt;
-
   playerAlt === "1"
     ? (leftShipsContainer.innerHTML = "")
     : (rightShipsContainer.innerHTML = "");
+
   // Render ships and # of inner boxes
   function buildShips(side, sideContainer) {
     const letter = side[0];
@@ -152,7 +152,7 @@ export function renderShips(player, isNewGame) {
     } else {
       document.querySelectorAll(`#${side}-ships .ships`).forEach((ship) => {
         ship.style.marginBottom = "20px";
-        ship.style.cursor = "none";
+        ship.style.cursor = "auto";
         ship.style.position = "none";
       });
     }
