@@ -1,0 +1,119 @@
+import { flipShip } from "./renderUI";
+import { Carrier, Battleship, Destroyer, Submarine, Patrol } from "./ship";
+import { renderBoard, renderShips } from "./renderUI";
+
+export function playerShipPlacement(player1, player2) {
+  const shipsContainer = document.querySelector(".ships-containers");
+  let originalX, originalY;
+  let isDragging = false;
+  let isVertical = true;
+  let draggable;
+  let elementId;
+
+  shipsContainer.addEventListener("mousedown", grabShip);
+  function grabShip(e) {
+    e.preventDefault();
+    draggable = document.getElementById(e.target.parentNode.id);
+    elementId = e.target.parentNode.id;
+    originalX = draggable.style.left;
+    originalY = draggable.style.top;
+    isDragging = true;
+    player1.fleet.forEach((ship) => {
+      elementId.includes(ship.name)
+        ? (isVertical = ship.isVertical)
+        : (isVertical = true);
+    });
+    player1.removeShip(elementId.slice(1));
+    draggable.style.transition = "";
+  }
+
+  document.addEventListener("mousemove", dragShip);
+  function dragShip(e) {
+    e.preventDefault();
+    if (!isDragging) return;
+    const rect = document
+      .querySelector("#left-row + div")
+      .getBoundingClientRect();
+
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+
+    draggable.style.left = `${e.clientX + scrollX - rect.width / 2}px`;
+    draggable.style.top = `${e.clientY + scrollY - rect.width / 2}px`;
+  }
+
+  function toggleVertical(e) {
+    e.preventDefault();
+    isVertical ? (isVertical = false) : (isVertical = true);
+  }
+
+  document.addEventListener("mouseup", shipDrop);
+  function shipDrop(e) {
+    e.preventDefault();
+    if (!isDragging) return;
+    isDragging = false;
+    let snapped = false;
+
+    const boardDivs = document.querySelectorAll("#left-board div");
+
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+
+    boardDivs.forEach((cell) => {
+      const rect = cell.getBoundingClientRect();
+      if (
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
+      ) {
+        try {
+          document.addEventListener("contextmenu", toggleVertical);
+          if (elementId.includes("carrier")) {
+            player1.placeShip(cell.id, new Carrier(isVertical));
+        }
+        if (elementId.includes("battleship")) {
+            player1.placeShip(cell.id, new Battleship(isVertical));
+        }
+        if (elementId.includes("destroyer")) {
+            player1.placeShip(cell.id, new Destroyer(isVertical));
+        }
+        if (elementId.includes("submarine")) {
+            player1.placeShip(cell.id, new Submarine(isVertical));
+        }
+        if (elementId.includes("patrol")) {
+            player1.placeShip(cell.id, new Patrol(isVertical));
+          }
+          draggable.style.left = `${rect.left + scrollX}px`;
+          draggable.style.top = `${rect.top + scrollY}px`;
+          snapped = true;
+          flipShip(isVertical, elementId, player1);
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+    });
+    if (!snapped) {
+      draggable.style.left = `${originalX}`;
+      draggable.style.top = `${originalY}`;
+    }
+
+    const startBattleBtn = document.getElementById("start-battle-btn");
+    if (player1.fleet.length === 5) {
+      const shipsContainer = document.querySelector(".ships-containers");
+      startBattleBtn.style.display = "block";
+      startBattleBtn.addEventListener("click", () => {
+        shipsContainer.innerHTML = "";
+        renderShips(player1, false);
+        renderShips(player2, false);
+        renderBoard(player1, false);
+        renderBoard(player2, false);
+        return;
+      });
+    } else {
+      startBattleBtn.style.display = "none";
+    }
+
+    draggable.style.transition = "left 0.3s ease, top 0.3s ease";
+  }
+}
