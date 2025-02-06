@@ -55,7 +55,12 @@ export function initComputerGame() {
       computer.turn = false;
       player1.turn = true;
     }
-    if (gameover) return;
+    if (gameover) {
+      document
+        .getElementById("right-board")
+        .removeEventListener("mousedown", turnSequence);
+      return;
+    }
   }
   document
     .getElementById("right-board")

@@ -32,7 +32,6 @@ export default class EventManager {
         if (this.eventListeners.has(key)) {
             this.eventListeners.delete(key);
             
-            // If no more listeners for this event type, remove document listener
             if (![...this.eventListeners.keys()].some(k => k.endsWith(`|${eventType}`))) {
                 document.removeEventListener(eventType, this.handleEvent, true);
             }

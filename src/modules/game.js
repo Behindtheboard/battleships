@@ -11,8 +11,9 @@ const eventManager = new EventManager();
 // Game initialization
 export default function init() {
   renderXY();
-  // renderStartMenu();
-  initComputerGame();
+  renderStartMenu();
+  eventManager.addListener("#left-btn", "click", startComputerGame);
+  // initComputerGame();
 }
 // Start computer game when "computer" button pressed
 function startComputerGame() {
@@ -20,23 +21,26 @@ function startComputerGame() {
   dialog.close();
   dialog.remove();
   document.getElementById("modal-overlay").remove();
+  eventManager.removeListener("#left-btn", "click");
   return initComputerGame();
 }
-eventManager.addListener("#left-btn", "click", startComputerGame);
 
 export function win(wonPlayer) {
   renderWinnerMenu(wonPlayer);
   const dialog = document.getElementById("modal");
-  document.getElementById("button-container").addEventListener("click", (e) => {
-    if (e.target.id === "left-btn") {
-      e.preventDefault();
-      replaceRightBoard();
-      resetHitsList();
-      dialog.close();
-      dialog.remove();
-      return renderStartMenu(startHandler);
-    }
-  });
+  eventManager.addListener("#left-btn", "click", reset);
+
+  function reset() {
+    document.querySelectorAll;
+    resetHitsList();
+    dialog.close();
+    dialog.remove();
+    eventManager.removeListener("#left-btn", "click");
+    setTimeout(() => {
+      eventManager.addListener("#left-btn", "click", startComputerGame);
+    }, 100);
+    return renderStartMenu();
+  }
 }
 
 // window.addEventListener("mousemove", (event) => {
