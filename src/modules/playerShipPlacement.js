@@ -97,23 +97,28 @@ export function playerShipPlacement(player1, player2) {
       draggable.style.top = `${originalY}`;
     }
 
-    const startBattleBtn = document.getElementById("start-battle-btn");
-    if (player1.fleet.length === 5) {
-      const shipsContainer = document.querySelector(".ships-containers");
-      startBattleBtn.style.display = "block";
-      startBattleBtn.addEventListener("click", () => {
-        shipsContainer.innerHTML = "";
-        renderShips(player1, false);
-        renderShips(player2, false);
-        renderBoard(player1, false);
-        renderBoard(player2, false);
-        player1.turn = true;
-        return;
-      });
-    } else {
-      startBattleBtn.style.display = "none";
-    }
-
+    showStartBattleBtn(player1, player2);
     draggable.style.transition = "left 0.3s ease, top 0.3s ease";
+  }
+}
+
+// Show startBattleButton when play fleet full
+function showStartBattleBtn(player1, player2) {
+  const players = [player1, player2]
+  const startBattleBtn = document.getElementById("start-battle-btn");
+  if (player1.fleet.length === 5) {
+    const shipsContainer = document.querySelector(".ships-containers");
+    startBattleBtn.style.display = "block";
+    startBattleBtn.addEventListener("click", () => {
+      shipsContainer.innerHTML = "";
+      players.forEach(player => {
+        renderShips(player, false)
+        renderBoard(player, false)
+      })
+      player1.turn = true;
+      return;
+    });
+  } else {
+    startBattleBtn.style.display = "none";
   }
 }
