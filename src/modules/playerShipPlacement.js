@@ -1,30 +1,42 @@
 import { flipShip } from "./renderUI";
 import Player from "./gameboard";
-import { renderBoard, renderShips } from "./renderUI";
+import { renderBoard, renderShips, shipPosition } from "./renderUI";
 
 // Handles ship drag and drop
-export function playerShipPlacement(player1, player2) {
+export function playerShipPlacement(player, opponent) {
   const shipsContainer = document.querySelector(".ships-containers");
-  let originalX, originalY;
+  let originalY;
   let isDragging = false;
   let isVertical = true;
   let draggable;
   let elementId;
+  let side;
+  player.alt === "1" ? (side = "left") : (side = "right");
+
+  // Save original ship positions
+  const originalPositions = {};
+  function saveShipPos() {
+    document.querySelectorAll(`#${side}-ships > div`).forEach((ship) => {
+      const rect = ship.getBoundingClientRect();
+      originalY = rect.y;
+      originalPositions[ship.id] = rect.x;
+    });
+  }
+  saveShipPos()
+  window.addEventListener("resize", saveShipPos);
   // Grab ship in ships container
   shipsContainer.addEventListener("mousedown", grabShip);
   function grabShip(e) {
     e.preventDefault();
     draggable = document.getElementById(e.target.parentNode.id);
     elementId = e.target.parentNode.id;
-    originalX = draggable.style.left;
-    originalY = draggable.style.top;
     isDragging = true;
-    player1.fleet.forEach((ship) => {
+    player.fleet.forEach((ship) => {
       elementId.includes(ship.name)
         ? (isVertical = ship.isVertical)
         : (isVertical = true);
     });
-    player1.removeShip(elementId.slice(1));
+    player.removeShip(elementId.slice(1));
     draggable.style.transition = "";
 
     document.addEventListener("mousemove", dragShip);
@@ -57,7 +69,7 @@ export function playerShipPlacement(player1, player2) {
     isDragging = false;
     let snapped = false;
 
-    const boardDivs = document.querySelectorAll("#left-board div");
+    const boardDivs = document.querySelectorAll(`#${side}-board div`);
 
     const scrollX = window.scrollX;
     const scrollY = window.scrollY;
@@ -77,7 +89,7 @@ export function playerShipPlacement(player1, player2) {
             shipKey.includes(type)
           );
           if (shipType) {
-            player1.placeShip(
+            player.placeShip(
               cell.id,
               Reflect.construct(shipIdToClass[shipType], [isVertical])
             );
@@ -85,7 +97,7 @@ export function playerShipPlacement(player1, player2) {
           draggable.style.left = `${rect.left + scrollX}px`;
           draggable.style.top = `${rect.top + scrollY}px`;
           snapped = true;
-          flipShip(isVertical, elementId, player1);
+          flipShip(isVertical, elementId, player);
         } catch (error) {
           snapped = false;
           alert(error.message);
@@ -93,29 +105,30 @@ export function playerShipPlacement(player1, player2) {
       }
     });
     if (!snapped) {
-      draggable.style.left = `${originalX}`;
-      draggable.style.top = `${originalY}`;
+      draggable.style.left = `${originalPositions[elementId]}px`;
+      draggable.style.top = `${originalY}px`;
+      draggable.style.transition = "left 0.3s ease, top 0.3s ease";
     }
 
-    showStartBattleBtn(player1, player2);
-    draggable.style.transition = "left 0.3s ease, top 0.3s ease";
+    showStartBattleBtn(player, opponent);
+    // draggable.style.transition = "left 0.3s ease, top 0.3s ease";
   }
 }
 
 // Show startBattleButton when play fleet full
-function showStartBattleBtn(player1, player2) {
-  const players = [player1, player2]
+function showStartBattleBtn(player, opponent) {
+  const players = [player, opponent];
   const startBattleBtn = document.getElementById("start-battle-btn");
-  if (player1.fleet.length === 5) {
+  if (player.fleet.length === 5) {
     const shipsContainer = document.querySelector(".ships-containers");
     startBattleBtn.style.display = "block";
     startBattleBtn.addEventListener("click", () => {
       shipsContainer.innerHTML = "";
-      players.forEach(player => {
-        renderShips(player, false)
-        renderBoard(player, false)
-      })
-      player1.turn = true;
+      players.forEach((player) => {
+        renderShips(player, false);
+        renderBoard(player, false);
+      });
+      player.turn = true;
       return;
     });
   } else {

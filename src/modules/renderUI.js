@@ -141,7 +141,7 @@ export function renderShips(player, isNewGame) {
       sideContainer.appendChild(newShip);
     });
   }
-  // Allow ship grab and flip
+  // Allow ship to be grabbable and flippable by changing style to absolute
   function activeSelect(isNewGame, side) {
     if (isNewGame) {
       document.querySelectorAll(`#${side}-ships .ships`).forEach((ship) => {
@@ -152,6 +152,7 @@ export function renderShips(player, isNewGame) {
     } else {
       document.querySelectorAll(`#${side}-ships .ships`).forEach((ship) => {
         ship.style.marginBottom = "20px";
+        ship.style.cursor = 'none'
         ship.style.position = "none";
       });
     }
@@ -164,19 +165,6 @@ export function renderShips(player, isNewGame) {
     shipBoxes.forEach((shipBox) => {
       shipBox.style.width = `${rect.width - 2}px`;
       shipBox.style.height = `${rect.height - 1}px`;
-    });
-  }
-  // Dynamically position grabbable ships dynamically relative to board
-  function shipPosition(side) {
-    const source = document.getElementById(`${side}-box`);
-    const rect = source.getBoundingClientRect();
-    const squareHeight = (rect.bottom - rect.top) / 11;
-    const bottom = rect.bottom + 20;
-    let leftPos = rect.left + squareHeight;
-    document.querySelectorAll(`#${side}-ships .ships`).forEach((ship) => {
-      ship.style.top = `${bottom}px`;
-      ship.style.left = `${leftPos}px`;
-      leftPos += squareHeight * 2;
     });
   }
   // Ship features depending on player
@@ -198,8 +186,23 @@ export function renderShips(player, isNewGame) {
   }
   shipBoxSize(side);
   // Resize and reposition ships when window resizes
-  if (isNewGame) window.addEventListener("resize", () => shipPosition(side));
+  // if (isNewGame) window.addEventListener("resize", () => shipPosition(side));
   window.addEventListener("resize", () => shipBoxSize(side));
+}
+
+// Dynamically position grabbable ships relative to board
+export function shipPosition(side) {
+  const source = document.getElementById(`${side}-box`);
+  const rect = source.getBoundingClientRect();
+  const squareHeight = (rect.bottom - rect.top) / 11;
+  const bottom = rect.bottom + 20;
+  let leftPos = rect.left + squareHeight;
+  document.querySelectorAll(`#${side}-ships .ships`).forEach((ship) => {
+    ship.style.top = `${bottom}px`;
+    ship.style.left = `${leftPos}px`;
+    ship.style.flexDirection = "column";
+    leftPos += squareHeight * 2;
+  });
 }
 
 // Flip ship vertically or horizontally
@@ -208,7 +211,7 @@ export function flipShip(isVertical, elementId, player) {
   let isPlaced = false;
   isVertical ? (dir = "column") : (dir = "row");
   player.fleet.forEach((ship) => {
-      if (ship.name.includes(elementId.slice(1))) isPlaced = true;
+    if (ship.name.includes(elementId.slice(1))) isPlaced = true;
   });
   if (!isPlaced) return;
   document.getElementById(`${elementId}`).style.flexDirection = `${dir}`;
