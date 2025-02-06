@@ -6,10 +6,10 @@ export default class EventManager {
     handleEvent = (e) => {
         e.preventDefault()
         for (const [key, eventListener] of this.eventListeners) {
-            const matchingElement = event.target.closest(eventListener.selector);
+            const matchingElement = e.target.closest(eventListener.selector);
             
-            if (matchingElement && event.type === eventListener.eventType) {
-                eventListener.handler.call(this, matchingElement, event);
+            if (matchingElement && e.type === eventListener.eventType) {
+                eventListener.handler.call(this, matchingElement, e);
             }
         }
     }

@@ -1,5 +1,5 @@
 import { flipShip } from "./renderUI";
-import { Carrier, Battleship, Destroyer, Submarine, Patrol } from "./ship";
+import Player from "./gameboard";
 import { renderBoard, renderShips } from "./renderUI";
 
 export function playerShipPlacement(player1, player2) {
@@ -70,21 +70,15 @@ export function playerShipPlacement(player1, player2) {
         e.clientY <= rect.bottom
       ) {
         try {
-          const shipClasses = {
-            carrier: Carrier,
-            battleship: Battleship,
-            destroyer: Destroyer,
-            submarine: Submarine,
-            patrol: Patrol,
-          };
+          const shipIdToClass = Player.shipIdToClass
           const shipKey = elementId.slice(1);
-          const shipType = Object.keys(shipClasses).find((type) =>
+          const shipType = Object.keys(shipIdToClass).find((type) =>
             shipKey.includes(type)
           );
           if (shipType) {
             player1.placeShip(
               cell.id,
-              Reflect.construct(shipClasses[shipType], [isVertical])
+              Reflect.construct(shipIdToClass[shipType], [isVertical])
             );
           }
           draggable.style.left = `${rect.left + scrollX}px`;

@@ -1,3 +1,5 @@
+import { Carrier, Battleship, Destroyer, Submarine, Patrol } from "./ship";
+
 class Gameboard {
   constructor() {
     this.board = this.createBoard(10);
@@ -104,6 +106,17 @@ export default class Player extends Gameboard {
     this.name = name;
     this.turn = turn;
     this.alt = alt;
+  }
+  static shipIdToClass = {
+    carrier: Carrier,
+    battleship: Battleship,
+    destroyer: Destroyer,
+    submarine: Submarine,
+    patrol: Patrol,
+  };
+
+  get shipClasses() {
+    return this.shipClasses
   }
 }
 

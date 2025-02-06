@@ -1,4 +1,4 @@
-import { Carrier, Battleship, Destroyer, Submarine, Patrol } from "./ship";
+import Player from "./gameboard";
 
 export default function randomizeShipPlacement(player) {
   function generateCoordinate() {
@@ -14,34 +14,21 @@ export default function randomizeShipPlacement(player) {
     random === 1 ? (isVertical = true) : (isVertical = false);
   }
 
-  while (true) {
-    const coord = generateCoordinate();
-    generateOrientation();
-    try {
-      if (player.fleet.length === 0) {
-        player.placeShip(coord, new Carrier(isVertical));
+  const shipIdToClass = Player.shipIdToClass;
+
+  for (let key in shipIdToClass) {
+    while (true) {
+      const coord = generateCoordinate();
+      generateOrientation();
+      try {
+        player.placeShip(
+          coord,
+          Reflect.construct(shipIdToClass[key], [isVertical])
+        );
+      } catch (error) {
         continue;
       }
-      if (player.fleet.length === 1) {
-        player.placeShip(coord, new Battleship(isVertical));
-        continue;
-      }
-      if (player.fleet.length === 2) {
-        player.placeShip(coord, new Destroyer(isVertical));
-        continue;
-      }
-      if (player.fleet.length === 3) {
-        player.placeShip(coord, new Submarine(isVertical));
-        continue;
-      }
-      if (player.fleet.length === 4) {
-        player.placeShip(coord, new Patrol(isVertical));
-        continue;
-      }
-    } catch {
-      continue;
+      break;
     }
-    console.log(player.board)
-    if (player.fleet.length === 5) return;
   }
 }
