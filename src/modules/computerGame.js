@@ -16,7 +16,7 @@ export function initComputerGame() {
   renderShips(player1, true);
 
   playerShipPlacement(player1, computer);
-  randomizeShipPlacement(computer);
+  // randomizeShipPlacement(computer);
 
   function turnSequence(e) {
     if (player1.turn) {

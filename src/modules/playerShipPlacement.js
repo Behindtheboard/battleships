@@ -70,20 +70,22 @@ export function playerShipPlacement(player1, player2) {
         e.clientY <= rect.bottom
       ) {
         try {
-          if (elementId.includes("carrier")) {
-            player1.placeShip(cell.id, new Carrier(isVertical));
-          }
-          if (elementId.includes("battleship")) {
-            player1.placeShip(cell.id, new Battleship(isVertical));
-          }
-          if (elementId.includes("destroyer")) {
-            player1.placeShip(cell.id, new Destroyer(isVertical));
-          }
-          if (elementId.includes("submarine")) {
-            player1.placeShip(cell.id, new Submarine(isVertical));
-          }
-          if (elementId.includes("patrol")) {
-            player1.placeShip(cell.id, new Patrol(isVertical));
+          const shipClasses = {
+            carrier: Carrier,
+            battleship: Battleship,
+            destroyer: Destroyer,
+            submarine: Submarine,
+            patrol: Patrol,
+          };
+          const shipKey = elementId.slice(1);
+          const shipType = Object.keys(shipClasses).find((type) =>
+            shipKey.includes(type)
+          );
+          if (shipType) {
+            player1.placeShip(
+              cell.id,
+              Reflect.construct(shipClasses[shipType], [isVertical])
+            );
           }
           draggable.style.left = `${rect.left + scrollX}px`;
           draggable.style.top = `${rect.top + scrollY}px`;

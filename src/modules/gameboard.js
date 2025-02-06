@@ -44,6 +44,7 @@ class Gameboard {
     }
 
     this.fleet.push(ship);
+
     console.log(this.board);
     console.log(this.fleet);
   }
