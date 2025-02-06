@@ -43,7 +43,7 @@ class Gameboard {
       this.board[r][c] = ship;
     }
 
-    this.fleet.push(ship);
+    if (!this.isInFleet(ship)) this.fleet.push(ship);
 
     console.log(this.board);
     console.log(this.fleet);
@@ -84,6 +84,17 @@ class Gameboard {
     return this.fleet.every((ship) => {
       return ship.isSunk() === true;
     });
+  }
+
+  isInFleet(ship) {
+    const length = this.fleet.length;
+    if (this.fleet.length === 0) return false;
+    for (let i = 0; i < length; i++) {
+      if (this.fleet[i].name === ship.name) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 
