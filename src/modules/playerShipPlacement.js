@@ -20,10 +20,14 @@ export function playerShipPlacement(player, opponent) {
       const rect = ship.getBoundingClientRect();
       originalY = rect.y;
       originalPositions[ship.id] = rect.x;
+      console.log(originalPositions[ship.id]);
     });
   }
-  saveShipPos()
+  saveShipPos();
+  window.addEventListener("resize", () => unplacedShipPos(side, player));
   window.addEventListener("resize", saveShipPos);
+  // Dynamically reposition ships when window resizes
+
   // Grab ship in ships container
   shipsContainer.addEventListener("mousedown", grabShip);
   function grabShip(e) {
@@ -107,11 +111,11 @@ export function playerShipPlacement(player, opponent) {
     if (!snapped) {
       draggable.style.left = `${originalPositions[elementId]}px`;
       draggable.style.top = `${originalY}px`;
+      draggable.style.flexDirection = 'column'
       draggable.style.transition = "left 0.3s ease, top 0.3s ease";
     }
 
     showStartBattleBtn(player, opponent);
-    // draggable.style.transition = "left 0.3s ease, top 0.3s ease";
   }
 }
 
@@ -134,4 +138,24 @@ function showStartBattleBtn(player, opponent) {
   } else {
     startBattleBtn.style.display = "none";
   }
+}
+
+export function unplacedShipPos(side, player) {
+  const source = document.getElementById(`${side}-box`);
+  const rect = source.getBoundingClientRect();
+  const squareHeight = (rect.bottom - rect.top) / 11;
+  const bottom = rect.bottom + 20;
+  let leftPos = rect.left + squareHeight;
+  let skip;
+  document.querySelectorAll(`.ships`).forEach((ship) => {
+    player.fleet.forEach((shipObj) => {
+      if (ship.id.includes(shipObj.name)) skip = true;
+    });
+    if (skip) return;
+    console.log(bottom)
+    ship.style.top = `${bottom}px`;
+    ship.style.left = `${leftPos}px`;
+    ship.style.flexDirection = "column";
+    leftPos += squareHeight * 2;
+  });
 }
