@@ -24,7 +24,7 @@ export function playerShipPlacement(player, opponent) {
     });
   }
   saveShipPos();
-  window.addEventListener("resize", () => unplacedShipPos(side, player));
+  window.addEventListener("resize", () => shipPosition(side, player));
   window.addEventListener("resize", saveShipPos);
   // Dynamically reposition ships when window resizes
 

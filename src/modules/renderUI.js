@@ -152,7 +152,7 @@ export function renderShips(player, isNewGame) {
     } else {
       document.querySelectorAll(`#${side}-ships .ships`).forEach((ship) => {
         ship.style.marginBottom = "20px";
-        ship.style.cursor = 'none'
+        ship.style.cursor = "none";
         ship.style.position = "none";
       });
     }
@@ -186,18 +186,24 @@ export function renderShips(player, isNewGame) {
   }
   shipBoxSize(side);
   // Resize and reposition ships when window resizes
-  // if (isNewGame) window.addEventListener("resize", () => shipPosition(side));
   window.addEventListener("resize", () => shipBoxSize(side));
 }
 
 // Dynamically position grabbable ships relative to board
-export function shipPosition(side) {
+export function shipPosition(side, player) {
   const source = document.getElementById(`${side}-box`);
   const rect = source.getBoundingClientRect();
   const squareHeight = (rect.bottom - rect.top) / 11;
   const bottom = rect.bottom + 20;
   let leftPos = rect.left + squareHeight;
-  document.querySelectorAll(`#${side}-ships .ships`).forEach((ship) => {
+  let skip;
+  document.querySelectorAll(`.ships`).forEach((ship) => {
+    if (player) {
+      player.fleet.forEach((shipObj) => {
+        if (ship.id.includes(shipObj.name)) skip = true;
+      });
+    }
+    if (skip) return;
     ship.style.top = `${bottom}px`;
     ship.style.left = `${leftPos}px`;
     ship.style.flexDirection = "column";
