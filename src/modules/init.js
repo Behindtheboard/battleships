@@ -3,8 +3,8 @@ import {
   renderXY,
   renderWinnerMenu,
   renderStartMenu,
-  replaceRightBoard,
 } from "./renderUI";
+import { initPvP } from "./PvP";
 import EventManager from "./eventManager";
 
 const eventManager = new EventManager();
@@ -13,6 +13,7 @@ export default function init() {
   renderXY();
   renderStartMenu();
   eventManager.addListener("#left-btn", "click", startComputerGame);
+  eventManager.addListener("#right-btn", "click", startPvP);
   // initComputerGame();
 }
 // Start computer game when "computer" button pressed
@@ -25,6 +26,16 @@ function startComputerGame() {
   return initComputerGame();
 }
 
+function startPvP() {
+  const dialog = document.getElementById("modal");
+  dialog.close();
+  dialog.remove();
+  document.getElementById("modal-overlay").remove();
+  eventManager.removeListener("#right-btn", "click");
+  return initPvP();
+}
+
+// Menu pops up when a player wins
 export function win(wonPlayer) {
   renderWinnerMenu(wonPlayer);
   const dialog = document.getElementById("modal");

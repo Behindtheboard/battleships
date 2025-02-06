@@ -3,7 +3,7 @@ import { renderBoard, renderShips } from "./renderUI";
 import EventManager from "./eventManager";
 import randomizeShipPlacement from "./randomizeShipPlacement";
 import { playerShipPlacement } from "./playerShipPlacement";
-import { win } from "./game";
+import { win } from "./init";
 
 // Battleship Game with computer as opponent
 export function initComputerGame() {

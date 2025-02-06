@@ -1,6 +1,5 @@
-import { flipShip } from "./renderUI";
 import Player from "./gameboard";
-import { renderBoard, renderShips, shipPosition } from "./renderUI";
+import { renderBoard, renderShips, shipPosition, flipShip } from "./renderUI";
 
 // Handles ship drag and drop
 export function playerShipPlacement(player, opponent) {
@@ -133,8 +132,8 @@ export function playerShipPlacement(player, opponent) {
 
         shipsContainer.innerHTML = "";
         shipsContainer.style.flexDirection = "row";
-        shipsContainer.style.zIndex = "1";
         shipsContainer.style.position = "none";
+        shipsContainer.style.transition = "none";
         players.forEach((el) => {
           renderShips(el, false);
           renderBoard(el, false);
