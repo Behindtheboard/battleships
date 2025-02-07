@@ -148,7 +148,6 @@ export function renderShips(player, isNewGame) {
         ship.style.position = "absolute";
       });
       shipPosition(side);
-      renderStartBattleBtn();
     } else {
       document.querySelectorAll(`#${side}-ships .ships`).forEach((ship) => {
         ship.style.marginBottom = "20px";
@@ -224,14 +223,15 @@ export function flipShip(isVertical, elementId, player) {
 }
 
 // Start Battle Button UI
-export function renderStartBattleBtn() {
-  const leftShips = document.getElementById("left-ships");
+export function renderButtonUnderBoard(side, btnText) {
+  const shipsContainer = document.getElementById(`${side}-ships`);
   const startBattleBtn = document.createElement("button");
-  startBattleBtn.id = "start-battle-btn";
-  startBattleBtn.textContent = "Start Battle";
-  startBattleBtn.style.display = "none";
-  leftShips.appendChild(startBattleBtn);
+  startBattleBtn.id = "btn-under-board";
+  startBattleBtn.textContent = `${btnText}`;
+  // startBattleBtn.style.display = "none";
+  shipsContainer.appendChild(startBattleBtn);
 }
+
 
 // Winner Menu UI
 export function renderWinnerMenu(wonPlayer) {

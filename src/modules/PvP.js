@@ -11,15 +11,19 @@ const eventManager = new EventManager();
 export function initPvP() {
   let gameover = false;
   const player1 = new Player("player1", "1", false);
-  const computer = new Player("computer", "robo", false);
+  const player2 = new Player("player2", "2", false);
 
+  // Player 1 place ships
   renderBoard(player1, true);
-  renderBoard(computer, true);
   renderShips(player1, true);
+  playerShipPlacement(player1, player2);
 
-  playerShipPlacement(player1, computer);
-  randomizeShipPlacement(computer);
 
+// Player 2 place ships
+  
+// Player 1 turn
+
+// Player 2 turn
   function turnSequence(e) {
     if (player1.turn) {
       const coordinate = e.target.id;
