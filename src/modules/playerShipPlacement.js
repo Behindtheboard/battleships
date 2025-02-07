@@ -6,6 +6,7 @@ import {
   shipPosition,
   flipShip,
   renderButtonUnderBoard,
+  renderPassDevice
 } from "./renderUI";
 
 const shipEventManager = new EventManager();
@@ -175,6 +176,7 @@ export function playerShipPlacement(player, opponent) {
         shipsContainer.style.transition = "none";
         player.turn = true;
         startBattleBtn.remove();
+        renderPassDevice()
         return;
       });
     }

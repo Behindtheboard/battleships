@@ -26,7 +26,7 @@ function createDialog(titleTxt, leftbtn, rightbtn) {
   leftBtn.textContent = `${leftbtn}`;
   buttonContainer.appendChild(leftBtn);
 
-  if (rightbtn !== "No") {
+  if (rightbtn) {
     const rightBtn = document.createElement("button");
     rightBtn.id = "right-btn";
     rightBtn.textContent = `${rightbtn}`;
@@ -232,10 +232,15 @@ export function renderButtonUnderBoard(side, btnText) {
   shipsContainer.appendChild(startBattleBtn);
 }
 
+export function renderPassDevice() {
+  createDialog('Click done when passed', 'Done')
+  createOverlay()
+}
+
 
 // Winner Menu UI
 export function renderWinnerMenu(wonPlayer) {
-  createDialog(`${wonPlayer.name} wins! Start new game?`, "Yes!", "No");
+  createDialog(`${wonPlayer.name} wins! Start new game?`, "Yes!");
 }
 
 export function replaceRightBoard() {
