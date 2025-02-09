@@ -6,7 +6,7 @@ import {
   shipPosition,
   flipShip,
   renderButtonUnderBoard,
-  renderPassDevice
+  renderPassDevice,
 } from "./renderUI";
 
 const shipEventManager = new EventManager();
@@ -36,11 +36,12 @@ export function playerShipPlacement(player, opponent) {
   window.addEventListener("resize", () => shipPosition(side, player));
   window.addEventListener("resize", saveShipPos);
 
-  // Grab ship in ships container
+  // Grab ship in ships container and starts dragShip, shipDrop, and toggleVertical
   shipsContainer.addEventListener("mousedown", grabShip);
   function grabShip(e) {
     e.preventDefault();
     draggable = document.getElementById(e.target.parentNode.id);
+    if (e.target.parentNode.id === "boards-container") return;
     elementId = e.target.parentNode.id;
     isDragging = true;
     player.fleet.forEach((ship) => {
@@ -75,7 +76,7 @@ export function playerShipPlacement(player, opponent) {
     e.preventDefault();
     isVertical ? (isVertical = false) : (isVertical = true);
   }
-  // Place ship into grid with instantiated classes
+  // Place ship into grid with instantiated ship classes
   function shipDrop(e) {
     e.preventDefault();
     if (!isDragging) return;
@@ -123,11 +124,13 @@ export function playerShipPlacement(player, opponent) {
       draggable.style.flexDirection = "column";
       draggable.style.transition = "left 0.3s ease, top 0.3s ease";
     }
-    if (player.alt === "1" && opponent.alt === "robo") {
-      showStartBattleBtn();
-    } else {
-      showDonePlacingBtn();
+    // Once all five ships are placed, either start game or pass to player 2
+    if (player.fleet.length === 5) {
+      player.alt === "1" && opponent.alt === "2"
+        ? showDonePlacingBtn()
+        : showStartBattleBtn();
     }
+    return;
   }
   // Remove all listeners used in shipPlacement function
   function removeListeners() {
@@ -138,47 +141,80 @@ export function playerShipPlacement(player, opponent) {
     window.removeEventListener("resize", () => shipPosition(side, player));
     window.removeEventListener("resize", saveShipPos);
   }
+  // Reset styling for ships to disable grabbable
+  function resetContainerStyle() {
+    const sideShipsContainer = document.getElementById(`${side}-ships`);
+    sideShipsContainer.innerHTML = "";
+    sideShipsContainer.style.flexDirection = "row";
+    sideShipsContainer.style.position = "none";
+    sideShipsContainer.style.transition = "none";
+  }
 
   // Show startBattleButton when play fleet full
   function showStartBattleBtn() {
     const players = [player, opponent];
-    const shipsContainer = document.querySelector(".ships-containers");
     if (player.fleet.length === 5) {
       renderButtonUnderBoard(side, "Start Battle");
       const startBattleBtn = document.getElementById("btn-under-board");
-      startBattleBtn.addEventListener("click", () => {
-        removeListeners();
-        shipsContainer.innerHTML = "";
-        shipsContainer.style.flexDirection = "row";
-        shipsContainer.style.position = "none";
-        shipsContainer.style.transition = "none";
-        players.forEach((el) => {
-          renderShips(el, false);
-          renderBoard(el, false);
-        });
-        player.turn = true;
-        startBattleBtn.remove();
-        return;
-      });
+      startBattleBtn.addEventListener(
+        "click",
+        () => {
+          removeListeners();
+          resetContainerStyle();
+          players.forEach((el) => {
+            renderShips(el, false);
+            renderBoard(el, false);
+          });
+          player.turn = true;
+          startBattleBtn.remove();
+          return;
+        },
+        true
+      );
+    } else {
+      const startBattleBtn = document.getElementById("btn-under-board");
+      if (startBattleBtn) startBattleBtn.remove();
     }
   }
-
+  // Show when player is done placing all 5 ships into board
   function showDonePlacingBtn() {
-    const shipsContainer = document.getElementById(`${side}-ships`);
     if (player.fleet.length === 5) {
       renderButtonUnderBoard(side, "Done Placing");
-      const startBattleBtn = document.getElementById("btn-under-board");
-      startBattleBtn.addEventListener("click", () => {
-        removeListeners();
-        shipsContainer.innerHTML = "";
-        shipsContainer.style.flexDirection = "row";
-        shipsContainer.style.position = "none";
-        shipsContainer.style.transition = "none";
-        player.turn = true;
-        startBattleBtn.remove();
-        renderPassDevice()
-        return;
-      });
+      const donePlaceBtn = document.getElementById("btn-under-board");
+      donePlaceBtn.addEventListener(
+        "click",
+        (e) => {
+          e.stopImmediatePropagation();
+          donePlaceBtn.remove();
+          removeListeners();
+          resetContainerStyle();
+          if (player.alt === "1") {
+            document.getElementById("left-board").innerHTML = "";
+            renderPassDevice();
+            document
+              .getElementById("left-btn")
+              .addEventListener("click", player2ShipPlacement);
+          } else {
+            opponent.turn = true;
+          }
+          return;
+        },
+        true
+      );
+    } else {
+      const donePlaceBtn = document.getElementById("btn-under-board");
+      if (donePlaceBtn) donePlaceBtn.remove();
     }
+    return;
+  }
+
+  function player2ShipPlacement() {
+    const dialog = document.getElementById("modal");
+    dialog.close();
+    dialog.remove();
+    document.getElementById("modal-overlay").remove();
+    renderBoard(opponent, true);
+    renderShips(opponent, true);
+    playerShipPlacement(opponent, player);
   }
 }

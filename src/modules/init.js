@@ -22,16 +22,16 @@ function startComputerGame() {
   dialog.close();
   dialog.remove();
   document.getElementById("modal-overlay").remove();
-  eventManager.removeListener("#left-btn", "click");
+  eventManager.cleanup()
   return initComputerGame();
 }
-
+// Start player vs player game when "1v1" button pressed
 function startPvP() {
   const dialog = document.getElementById("modal");
   dialog.close();
   dialog.remove();
   document.getElementById("modal-overlay").remove();
-  eventManager.removeListener("#right-btn", "click");
+  eventManager.cleanup()
   return initPvP();
 }
 
@@ -46,7 +46,7 @@ export function win(wonPlayer) {
     resetHitsList();
     dialog.close();
     dialog.remove();
-    eventManager.removeListener("#left-btn", "click");
+    eventManager.cleanup()
     setTimeout(() => {
       eventManager.addListener("#left-btn", "click", startComputerGame);
     }, 100);

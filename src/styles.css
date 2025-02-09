@@ -314,9 +314,9 @@ h1 {
   border-bottom: solid 1px white;
 }
 
-/*----Start Battle Button */
+/*----Button under board to start game or finish placing ship */
 
-#start-battle-btn {
+#btn-under-board {
   width: fit-content;
   height: 2rem;
   border-radius: 50px;

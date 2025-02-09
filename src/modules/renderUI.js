@@ -228,10 +228,9 @@ export function renderButtonUnderBoard(side, btnText) {
   const startBattleBtn = document.createElement("button");
   startBattleBtn.id = "btn-under-board";
   startBattleBtn.textContent = `${btnText}`;
-  // startBattleBtn.style.display = "none";
   shipsContainer.appendChild(startBattleBtn);
 }
-
+// Blocks screen while player passes device to opponent
 export function renderPassDevice() {
   createDialog('Click done when passed', 'Done')
   createOverlay()
