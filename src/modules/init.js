@@ -8,6 +8,7 @@ import { initPvP } from "./PvP";
 import EventManager from "./eventManager";
 
 const eventManager = new EventManager();
+
 // Game initialization
 export default function init() {
   renderXY();

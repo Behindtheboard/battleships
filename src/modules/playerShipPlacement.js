@@ -1,4 +1,3 @@
-import EventManager from "./eventManager";
 import Player from "./gameboard";
 import {
   renderBoard,
@@ -9,11 +8,8 @@ import {
   renderPassDevice,
 } from "./renderUI";
 
-const shipEventManager = new EventManager();
-
 // Handles ship drag and drop
 export function playerShipPlacement(player, opponent) {
-  const shipsContainer = document.querySelector(".ships-containers");
   let originalY;
   let isDragging = false;
   let isVertical = true;
@@ -21,6 +17,7 @@ export function playerShipPlacement(player, opponent) {
   let elementId;
   let side;
   player.alt === "1" ? (side = "left") : (side = "right");
+  const shipsContainer = document.getElementById(`${side}-ships`);
 
   // Save original ship positions
   const originalPositions = {};
@@ -191,24 +188,23 @@ export function playerShipPlacement(player, opponent) {
           renderPassDevice();
           document
             .getElementById("left-btn")
-            .addEventListener("click", player2ShipPlacement);
+            .addEventListener("click", () =>
+              player2ShipPlacement(opponent, player)
+            );
         } else {
           opponent.turn = true;
         }
-        return;
       },
       true
     );
-    return;
   }
-
-  function player2ShipPlacement() {
-    const dialog = document.getElementById("modal");
-    dialog.close();
-    dialog.remove();
-    document.getElementById("modal-overlay").remove();
-    renderBoard(opponent, true);
-    renderShips(opponent, true);
-    playerShipPlacement(opponent, player);
-  }
+}
+function player2ShipPlacement(player2, player1) {
+  const dialog = document.getElementById("modal");
+  dialog.close();
+  dialog.remove();
+  document.getElementById("modal-overlay").remove();
+  renderBoard(player2, true);
+  renderShips(player2, true);
+  playerShipPlacement(player2, player1);
 }
