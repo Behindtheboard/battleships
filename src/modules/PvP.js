@@ -17,9 +17,6 @@ export function initPvP() {
   renderBoard(player1, true);
   renderShips(player1, true);
   playerShipPlacement(player1, player2);
-
-
-// Player 2 place ships
   
 // Player 1 turn
 
@@ -68,7 +65,7 @@ export function initPvP() {
       return;
     }
   }
-  document
-    .getElementById("right-board")
-    .addEventListener("mousedown", turnSequence);
+  // document
+  //   .getElementById("right-board")
+  //   .addEventListener("mousedown", turnSequence);
 }

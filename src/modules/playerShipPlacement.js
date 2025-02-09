@@ -126,11 +126,15 @@ export function playerShipPlacement(player, opponent) {
     }
     // Once all five ships are placed, either start game or pass to player 2
     if (player.fleet.length === 5) {
+      const btnUnderBoard = document.getElementById("btn-under-board");
+      if (btnUnderBoard) return;
       player.alt === "1" && opponent.alt === "2"
         ? showDonePlacingBtn()
         : showStartBattleBtn();
+    } else {
+      const btnUnderBoard = document.getElementById("btn-under-board");
+      if (btnUnderBoard) btnUnderBoard.remove();
     }
-    return;
   }
   // Remove all listeners used in shipPlacement function
   function removeListeners() {
@@ -153,58 +157,48 @@ export function playerShipPlacement(player, opponent) {
   // Show startBattleButton when play fleet full
   function showStartBattleBtn() {
     const players = [player, opponent];
-    if (player.fleet.length === 5) {
-      renderButtonUnderBoard(side, "Start Battle");
-      const startBattleBtn = document.getElementById("btn-under-board");
-      startBattleBtn.addEventListener(
-        "click",
-        () => {
-          removeListeners();
-          resetContainerStyle();
-          players.forEach((el) => {
-            renderShips(el, false);
-            renderBoard(el, false);
-          });
-          player.turn = true;
-          startBattleBtn.remove();
-          return;
-        },
-        true
-      );
-    } else {
-      const startBattleBtn = document.getElementById("btn-under-board");
-      if (startBattleBtn) startBattleBtn.remove();
-    }
+    renderButtonUnderBoard(side, "Start Battle");
+    const startBattleBtn = document.getElementById("btn-under-board");
+    startBattleBtn.addEventListener(
+      "click",
+      () => {
+        removeListeners();
+        resetContainerStyle();
+        players.forEach((el) => {
+          renderShips(el, false);
+          renderBoard(el, false);
+        });
+        player.turn = true;
+        startBattleBtn.remove();
+        return;
+      },
+      true
+    );
   }
   // Show when player is done placing all 5 ships into board
   function showDonePlacingBtn() {
-    if (player.fleet.length === 5) {
-      renderButtonUnderBoard(side, "Done Placing");
-      const donePlaceBtn = document.getElementById("btn-under-board");
-      donePlaceBtn.addEventListener(
-        "click",
-        (e) => {
-          e.stopImmediatePropagation();
-          donePlaceBtn.remove();
-          removeListeners();
-          resetContainerStyle();
-          if (player.alt === "1") {
-            document.getElementById("left-board").innerHTML = "";
-            renderPassDevice();
-            document
-              .getElementById("left-btn")
-              .addEventListener("click", player2ShipPlacement);
-          } else {
-            opponent.turn = true;
-          }
-          return;
-        },
-        true
-      );
-    } else {
-      const donePlaceBtn = document.getElementById("btn-under-board");
-      if (donePlaceBtn) donePlaceBtn.remove();
-    }
+    renderButtonUnderBoard(side, "Done Placing");
+    const donePlaceBtn = document.getElementById("btn-under-board");
+    donePlaceBtn.addEventListener(
+      "click",
+      (e) => {
+        e.stopImmediatePropagation();
+        donePlaceBtn.remove();
+        removeListeners();
+        resetContainerStyle();
+        if (player.alt === "1") {
+          document.getElementById("left-board").innerHTML = "";
+          renderPassDevice();
+          document
+            .getElementById("left-btn")
+            .addEventListener("click", player2ShipPlacement);
+        } else {
+          opponent.turn = true;
+        }
+        return;
+      },
+      true
+    );
     return;
   }
 
