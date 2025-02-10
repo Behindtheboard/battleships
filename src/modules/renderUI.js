@@ -249,7 +249,10 @@ export function renderPlayerStart(player) {
 }
 
 export function renderDoneTurn() {
-  
+  createDialog(
+    `Let me know when you're done with the turn`,
+    "Done"
+  );
 }
 
 // Winner Menu UI

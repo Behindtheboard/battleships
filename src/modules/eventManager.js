@@ -5,7 +5,6 @@ export default class EventManager {
 
     handleEvent = (e) => {
         e.preventDefault()
-        e.stopImmediatePropagation();
         for (const [key, eventListener] of this.eventListeners) {
             const matchingElement = e.target.closest(eventListener.selector);
             

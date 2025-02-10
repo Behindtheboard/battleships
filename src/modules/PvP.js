@@ -4,6 +4,7 @@ import {
   renderShips,
   renderPassDevice,
   renderPlayerStart,
+  renderDoneTurn,
 } from "./renderUI";
 import EventManager from "./eventManager";
 import { playerShipPlacement } from "./playerShipPlacement";
@@ -49,8 +50,9 @@ export function initPvP() {
         pvpEventManager.addListener(`#${div.id}`, "mousedown", turnSequence);
         // div.addEventListener("click", (e) => turnSequence(e));
       });
-      console.log(pvpEventManager.eventListeners);
-
+      setTimeout(() => {
+        pvpEventManager.addListener("#left-btn", "click", passDevice);
+      }, 200);
       player1.turn = true;
     }
   }
@@ -76,6 +78,7 @@ export function initPvP() {
         return win(player1);
       }
       player1.turn = false;
+      renderDoneTurn();
     }
     if (player2.turn) {
       const coordinate = e.target.id;
@@ -94,13 +97,49 @@ export function initPvP() {
         return win(computer);
       }
       player2.turn = false;
-      player1.turn = true;
+      renderDoneTurn();
     }
     if (gameover) {
       document
         .getElementById("right-board")
         .removeEventListener("mousedown", turnSequence);
       return;
+    }
+    return;
+  }
+
+  function passDevice(matchingElement, e) {
+    if (matchingElement.textContent === "Done") {
+      pvpEventManager.removeListener("#left-btn", "click", passDevice);
+      const dialog = document.getElementById("modal");
+      dialog.close();
+      dialog.remove();
+      renderPassDevice();
+      setTimeout(() => {
+        pvpEventManager.addListener("#left-btn", "click", switchPlayer);
+      }, 200);
+    }
+  }
+
+  function switchPlayer(matchingElement, e) {
+    if (matchingElement.textContent === "Done") {
+      pvpEventManager.removeListener("#left-btn", "click", switchPlayer);
+
+      if (player1.turn === true) {
+        player1.turn === false;
+        renderBoard(player1, false, false);
+        renderBoard(player2, false, true);
+      }
+      if (player2.turn === true) {
+        player2.turn === false;
+        renderBoard(player1, false, true);
+        renderBoard(player2, false, false);
+      }
+
+      const dialog = document.getElementById("modal");
+      dialog.close();
+      dialog.remove();
+      document.getElementById("modal-overlay").remove();
     }
   }
 }
