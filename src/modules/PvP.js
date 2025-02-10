@@ -20,20 +20,11 @@ export function initPvP() {
   const player2 = new Player("player2", "2", false);
 
   // Player 1 place ships
-  // renderBoard(player1, true);
-  // renderShips(player1, true);
-  // playerShipPlacement(player1, player2);
-
-  randomizeShipPlacement(player1);
-  randomizeShipPlacement(player2);
-  renderBoard(player1, false, false);
-  renderShips(player1, false);
-  renderBoard(player2, false, true);
-  renderShips(player2, false);
-  renderPlayerStart(player1);
-
+  renderBoard(player1, true);
+  renderShips(player1, true);
+  playerShipPlacement(player1, player2);
+  // Start game turn sequence
   pvpEventManager.addListener("#left-btn", "click", startTurnSquence);
-
   function startTurnSquence(matchingElement, e) {
     if (matchingElement.textContent === "Okay") {
       pvpEventManager.removeListener("#left-btn", "click", startTurnSquence);
@@ -56,7 +47,7 @@ export function initPvP() {
       player1.turn = true;
     }
   }
-
+  // Logic for players to take turns attacking
   function turnSequence(matchingElement, e) {
     console.log(e.target.id);
     const coordinate = e.target.id;
@@ -109,7 +100,7 @@ export function initPvP() {
     }
     return;
   }
-
+  // Button to finish turn and pass device
   function passDevice(matchingElement, e) {
     if (matchingElement.textContent === "Done") {
       pvpEventManager.removeListener("#left-btn", "click", passDevice);
@@ -122,7 +113,7 @@ export function initPvP() {
       }, 200);
     }
   }
-
+  // Triggered by opponent player once device is passed
   function switchPlayer(matchingElement, e) {
     if (matchingElement.textContent === "Done") {
       pvpEventManager.removeListener("#left-btn", "click", switchPlayer);
