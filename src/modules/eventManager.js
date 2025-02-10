@@ -16,7 +16,6 @@ export default class EventManager {
 
     addListener(selector, eventType, handler) {
         const key = `${selector}|${eventType}`;
-        
         this.eventListeners.set(key, {
             selector,
             eventType,
@@ -28,6 +27,7 @@ export default class EventManager {
 
     removeListener(selector, eventType) {
         const key = `${selector}|${eventType}`;
+
         
         if (this.eventListeners.has(key)) {
             this.eventListeners.delete(key);

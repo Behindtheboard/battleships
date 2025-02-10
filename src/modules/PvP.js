@@ -58,11 +58,11 @@ export function initPvP() {
   }
 
   function turnSequence(matchingElement, e) {
-    console.log(matchingElement.id);
     console.log(e.target.id);
+    const coordinate = e.target.id;
+    if (coordinate === "") return;
+    let i = true;
     if (player1.turn) {
-      const coordinate = e.target.id;
-      let i = true;
       while (i) {
         try {
           player2.receiveAttack(coordinate);
@@ -77,15 +77,15 @@ export function initPvP() {
         gameover = true;
         return win(player1);
       }
-      player1.turn = false;
+      setTimeout(() => {
+        pvpEventManager.addListener("#left-btn", "click", passDevice);
+      }, 200);
       renderDoneTurn();
     }
     if (player2.turn) {
-      const coordinate = e.target.id;
-      let i = true;
       while (i) {
         try {
-          player2.receiveAttack(coordinate);
+          player1.receiveAttack(coordinate);
         } catch (error) {
           return alert(error.message);
         }
@@ -94,9 +94,11 @@ export function initPvP() {
       renderBoard(player1, false, true);
       if (player1.fleetSunk()) {
         gameover = true;
-        return win(computer);
+        return win(player2);
       }
-      player2.turn = false;
+      setTimeout(() => {
+        pvpEventManager.addListener("#left-btn", "click", passDevice);
+      }, 200);
       renderDoneTurn();
     }
     if (gameover) {
@@ -124,16 +126,17 @@ export function initPvP() {
   function switchPlayer(matchingElement, e) {
     if (matchingElement.textContent === "Done") {
       pvpEventManager.removeListener("#left-btn", "click", switchPlayer);
-
+      console.log(player1.turn);
       if (player1.turn === true) {
-        player1.turn === false;
-        renderBoard(player1, false, false);
-        renderBoard(player2, false, true);
-      }
-      if (player2.turn === true) {
-        player2.turn === false;
+        player1.turn = false;
+        player2.turn = true;
         renderBoard(player1, false, true);
         renderBoard(player2, false, false);
+      } else {
+        player2.turn = false;
+        player1.turn = true;
+        renderBoard(player1, false, false);
+        renderBoard(player2, false, true);
       }
 
       const dialog = document.getElementById("modal");
