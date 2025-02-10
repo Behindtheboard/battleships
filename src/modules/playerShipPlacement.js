@@ -161,9 +161,12 @@ export function playerShipPlacement(player, opponent) {
       () => {
         removeListeners();
         resetContainerStyle();
+        let coverboard = false;
         players.forEach((el) => {
+          if (opponent.alt === "robo") coverboard = false;
+          if (el.alt === "robo" || el.alt === "2") coverboard = true;
           renderShips(el, false);
-          renderBoard(el, false);
+          renderBoard(el, false, coverboard);
         });
         player.turn = true;
         startBattleBtn.remove();

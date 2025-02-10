@@ -67,13 +67,12 @@ export function renderXY() {
 }
 
 // Board Grid UI
-export function renderBoard(player, isNewGame) {
+export function renderBoard(player, isNewGame, coverboard) {
   const leftBoard = document.getElementById("left-board");
   const rightBoard = document.getElementById("right-board");
 
   const board = player.board;
   const playerAlt = player.alt;
-  let computer;
 
   playerAlt === "1" ? (leftBoard.innerHTML = "") : (rightBoard.innerHTML = "");
 
@@ -91,7 +90,7 @@ export function renderBoard(player, isNewGame) {
         boxDiv.textContent = "X";
       }
       if (col !== null && col !== "hit" && col !== "missed") {
-        playerAlt === "robo"
+        (coverboard)
           ? (boxDiv.style.backgroundColor = "grey")
           : (boxDiv.style.backgroundColor = "green");
       }
@@ -235,7 +234,6 @@ export function renderPassDevice() {
   createDialog('Click done when passed', 'Done')
   createOverlay()
 }
-
 
 // Winner Menu UI
 export function renderWinnerMenu(wonPlayer) {
