@@ -90,7 +90,7 @@ export function renderBoard(player, isNewGame, coverboard) {
         boxDiv.textContent = "X";
       }
       if (col !== null && col !== "hit" && col !== "missed") {
-        (coverboard)
+        coverboard
           ? (boxDiv.style.backgroundColor = "grey")
           : (boxDiv.style.backgroundColor = "green");
       }
@@ -102,10 +102,12 @@ export function renderBoard(player, isNewGame, coverboard) {
           break;
         case "1":
           if (isNewGame) boxDiv.id = `${rindex}${cindex}`;
+          if (coverboard) boxDiv.id = `${rindex}${cindex}`;
           leftBoard.appendChild(boxDiv);
           break;
         case "2":
           if (isNewGame) boxDiv.id = `${rindex}${cindex}`;
+          if (coverboard) boxDiv.id = `${rindex}${cindex}`;
           rightBoard.appendChild(boxDiv);
           break;
       }
@@ -231,8 +233,23 @@ export function renderButtonUnderBoard(side, btnText) {
 }
 // Blocks screen while player passes device to opponent
 export function renderPassDevice() {
-  createDialog('Click done when passed', 'Done')
-  createOverlay()
+  createDialog(
+    `Pass device so that only the other player can see the screen.\n Click \"Done\" once device is passed `,
+    "Done"
+  );
+  createOverlay();
+}
+// Blocks screen at the start of PVP
+export function renderPlayerStart(player) {
+  createDialog(
+    `${player.name} goes first. \n Click \"Okay"\ when only ${player.name} sees the screen`,
+    "Okay"
+  );
+  createOverlay();
+}
+
+export function renderDoneTurn() {
+  
 }
 
 // Winner Menu UI

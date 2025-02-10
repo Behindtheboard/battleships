@@ -6,6 +6,7 @@ import {
   flipShip,
   renderButtonUnderBoard,
   renderPassDevice,
+  renderPlayerStart,
 } from "./renderUI";
 
 // Handles ship drag and drop
@@ -151,24 +152,34 @@ export function playerShipPlacement(player, opponent) {
     sideShipsContainer.style.transition = "none";
   }
 
-  // Show startBattleButton when play fleet full
+  // Show when player is done placing all 5 ships into board and ready to start game
   function showStartBattleBtn() {
     const players = [player, opponent];
     renderButtonUnderBoard(side, "Start Battle");
     const startBattleBtn = document.getElementById("btn-under-board");
+    let pvp = false;
+    let computer = false;
     startBattleBtn.addEventListener(
       "click",
       () => {
         removeListeners();
         resetContainerStyle();
-        let coverboard = false;
         players.forEach((el) => {
-          if (opponent.alt === "robo") coverboard = false;
-          if (el.alt === "robo" || el.alt === "2") coverboard = true;
           renderShips(el, false);
-          renderBoard(el, false, coverboard);
         });
-        player.turn = true;
+        // PVP start
+        if (player.alt === "2" && opponent.alt === "1") {
+          renderPlayerStart(opponent);
+          opponent.turn = true;
+          renderBoard(player, false, true);
+          renderBoard(opponent, false, false);
+        }
+        // Computer game start
+        if (player.alt === "1" && opponent.alt === "robo") {
+          renderBoard(player, false, false);
+          renderBoard(opponent, false, true);
+          player.turn == true;
+        }
         startBattleBtn.remove();
         return;
       },
@@ -194,8 +205,6 @@ export function playerShipPlacement(player, opponent) {
             .addEventListener("click", () =>
               player2ShipPlacement(opponent, player)
             );
-        } else {
-          opponent.turn = true;
         }
       },
       true

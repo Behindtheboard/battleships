@@ -70,6 +70,7 @@ class Gameboard {
   }
 
   receiveAttack(coordinate) {
+    console.log(coordinate)
     const hitBox = this.board[coordinate[0]][coordinate[1]];
     if (hitBox === null) {
       return (this.board[coordinate[0]][coordinate[1]] = "missed");
