@@ -14,7 +14,6 @@ export function initComputerGame() {
   const computer = new Player("computer", "robo", false);
 
   renderBoard(player1, true, false);
-  renderBoard(computer, true, false);
   renderShips(player1, true);
 
   playerShipPlacement(player1, computer);
@@ -36,11 +35,8 @@ export function initComputerGame() {
       i = false;
     }
     renderBoard(computer, false, true);
-    if (computer.fleetSunk()) {
-      resetHitsList();
-      compEventManager.cleanup();
-      return win(player1);
-    }
+    if (computer.fleetSunk()) return triggerWin(player1);
+
     // Computer turn
     setTimeout(() => {
       try {
@@ -49,12 +45,14 @@ export function initComputerGame() {
         alert(error.message);
       }
       renderBoard(player1, false, false);
-      if (player1.fleetSunk()) {
-        resetHitsList();
-        compEventManager.cleanup();
-        return win(computer);
-      }
+      if (player1.fleetSunk()) return triggerWin(computer);
     }, 200);
+  }
+
+  function triggerWin(wonPlayer) {
+    resetHitsList();
+    compEventManager.cleanup();
+    win(wonPlayer);
   }
 }
 
@@ -118,7 +116,7 @@ export function computerLogic(opponent) {
     }
   }
 
-  // return winCheat();
+  return winCheat();
 
   if (hits.length === 0) {
     return generateCoordinate();

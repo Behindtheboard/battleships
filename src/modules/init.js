@@ -1,9 +1,5 @@
 import { initComputerGame, resetHitsList } from "./computerGame";
-import {
-  renderXY,
-  renderWinnerMenu,
-  renderStartMenu,
-} from "./renderUI";
+import { renderXY, renderWinnerMenu, renderStartMenu } from "./renderUI";
 import { initPvP } from "./PvP";
 import EventManager from "./eventManager";
 
@@ -23,7 +19,7 @@ function startComputerGame() {
   dialog.close();
   dialog.remove();
   document.getElementById("modal-overlay").remove();
-  eventManager.cleanup()
+  eventManager.cleanup();
   return initComputerGame();
 }
 // Start player vs player game when "1v1" button pressed
@@ -32,7 +28,7 @@ function startPvP() {
   dialog.close();
   dialog.remove();
   document.getElementById("modal-overlay").remove();
-  eventManager.cleanup()
+  eventManager.cleanup();
   return initPvP();
 }
 
@@ -43,11 +39,15 @@ export function win(wonPlayer) {
   eventManager.addListener("#left-btn", "click", reset);
 
   function reset() {
-    eventManager.cleanup()
-    document.querySelectorAll;
-    resetHitsList();
+    eventManager.cleanup();
     dialog.close();
     dialog.remove();
+    document.querySelectorAll("div[id$=-board").forEach((side) => {
+      side.innerHTML = "";
+    });
+    document.querySelectorAll(".ships-containers").forEach((side) => {
+      side.innerHTML = "";
+    });
     setTimeout(() => {
       eventManager.addListener("#left-btn", "click", startComputerGame);
       eventManager.addListener("#right-btn", "click", startPvP);

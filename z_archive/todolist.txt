@@ -11,8 +11,6 @@ make computer smarter
 ----bugs----
 -scroll on start menu misalign ships
 
-1v1 the right-board evetlistener active
-grabShip  stil activates even without clicking ship
 
 
 ------done------
