@@ -3,13 +3,11 @@ import {
   renderBoard,
   renderShips,
   renderPassDevice,
-  renderPlayerStart,
   renderDoneTurn,
 } from "./renderUI";
 import EventManager from "./eventManager";
 import { playerShipPlacement } from "./playerShipPlacement";
 import { win } from "./init";
-import randomizeShipPlacement from "./randomizeShipPlacement";
 
 // initialize event delegation class
 const pvpEventManager = new EventManager();
@@ -18,6 +16,7 @@ const pvpEventManager = new EventManager();
 export function initPvP() {
   const player1 = new Player("player1", "1", false);
   const player2 = new Player("player2", "2", false);
+  renderTitles(player1, player2)
 
   // Player 1 place ships
   renderBoard(player1, true);

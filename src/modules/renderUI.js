@@ -66,6 +66,15 @@ export function renderXY() {
   });
 }
 
+// Title boards of players
+export function renderTitles(player1, player2) {
+  const players = [player1, player2];
+  const titles = document.querySelectorAll("[id$=-title]");
+  for (let i = 0; i < 2; i++) {
+    titles[i].textContent = `${players[i].name}`;
+  }
+}
+
 // Board Grid UI
 export function renderBoard(player, isNewGame, coverboard) {
   const leftBoard = document.getElementById("left-board");
@@ -249,10 +258,7 @@ export function renderPlayerStart(player) {
 }
 
 export function renderDoneTurn() {
-  createDialog(
-    `Let me know when you're done with the turn`,
-    "Done"
-  );
+  createDialog(`Let me know when you're done with the turn`, "Done");
 }
 
 // Winner Menu UI

@@ -177,6 +177,13 @@ h1 {
   align-items: center;
 }
 
+[id$="-title"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
 #left-title {
   grid-row: 1;
   grid-column: 1;

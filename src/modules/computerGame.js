@@ -1,5 +1,5 @@
 import Player from "./gameboard";
-import { renderBoard, renderShips } from "./renderUI";
+import { renderBoard, renderShips, renderTitles } from "./renderUI";
 import EventManager from "./eventManager";
 import randomizeShipPlacement from "./randomizeShipPlacement";
 import { playerShipPlacement } from "./playerShipPlacement";
@@ -10,8 +10,9 @@ const compEventManager = new EventManager();
 
 // Battleship Game with computer as opponent
 export function initComputerGame() {
-  const player1 = new Player("player1", "1", false);
-  const computer = new Player("computer", "robo", false);
+  const player1 = new Player("Player 1", "1", false);
+  const computer = new Player("Bot", "robo", false);
+  renderTitles(player1, computer)
 
   renderBoard(player1, true, false);
   renderShips(player1, true);
@@ -116,7 +117,7 @@ export function computerLogic(opponent) {
     }
   }
 
-  return winCheat();
+  // return winCheat();
 
   if (hits.length === 0) {
     return generateCoordinate();
