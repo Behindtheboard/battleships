@@ -178,7 +178,6 @@ export function playerShipPlacement(player, opponent) {
         if (player.alt === "1" && opponent.alt === "robo") {
           renderBoard(player, false, false);
           renderBoard(opponent, false, true);
-          player.turn == true;
         }
         startBattleBtn.remove();
         return;

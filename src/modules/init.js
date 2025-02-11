@@ -43,13 +43,14 @@ export function win(wonPlayer) {
   eventManager.addListener("#left-btn", "click", reset);
 
   function reset() {
+    eventManager.cleanup()
     document.querySelectorAll;
     resetHitsList();
     dialog.close();
     dialog.remove();
-    eventManager.cleanup()
     setTimeout(() => {
       eventManager.addListener("#left-btn", "click", startComputerGame);
+      eventManager.addListener("#right-btn", "click", startPvP);
     }, 100);
     return renderStartMenu();
   }

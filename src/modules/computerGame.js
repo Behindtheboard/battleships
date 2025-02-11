@@ -5,66 +5,57 @@ import randomizeShipPlacement from "./randomizeShipPlacement";
 import { playerShipPlacement } from "./playerShipPlacement";
 import { win } from "./init";
 
+// initialize event delegation class
+const compEventManager = new EventManager();
+
 // Battleship Game with computer as opponent
 export function initComputerGame() {
-  let gameover = false;
   const player1 = new Player("player1", "1", false);
   const computer = new Player("computer", "robo", false);
 
-  renderBoard(player1, true);
-  renderBoard(computer, true);
+  renderBoard(player1, true, false);
+  renderBoard(computer, true, false);
   renderShips(player1, true);
 
   playerShipPlacement(player1, computer);
   randomizeShipPlacement(computer);
 
-  function turnSequence(e) {
-    if (player1.turn) {
-      const coordinate = e.target.id;
-      let i = true;
-      while (i) {
-        try {
-          computer.receiveAttack(coordinate);
-        } catch (error) {
-          return alert(error.message);
-        }
-        i = false;
+  compEventManager.addListener(`#right-board`, "mousedown", turnSequence);
+
+  function turnSequence(matchingElement, e) {
+    const coordinate = e.target.id;
+    if (coordinate === "") return;
+    let i = true;
+    // Player1 turn
+    while (i) {
+      try {
+        computer.receiveAttack(coordinate);
+      } catch (error) {
+        return alert(error.message);
       }
-      renderBoard(computer);
-      if (computer.fleetSunk()) {
-        gameover = true;
-        return win(player1);
-      }
-      player1.turn = false;
-      computer.turn = true;
+      i = false;
     }
-    if (computer.turn) {
-      const coordinate = computerLogic(player1);
-      setTimeout(() => {
-        try {
-          player1.receiveAttack(coordinate);
-        } catch (error) {
-          alert(error.message);
-        }
-        renderBoard(player1);
-      }, 200);
+    renderBoard(computer, false, true);
+    if (computer.fleetSunk()) {
+      resetHitsList();
+      compEventManager.cleanup();
+      return win(player1);
+    }
+    // Computer turn
+    setTimeout(() => {
+      try {
+        player1.receiveAttack(computerLogic(player1));
+      } catch (error) {
+        alert(error.message);
+      }
+      renderBoard(player1, false, false);
       if (player1.fleetSunk()) {
-        gameover = true;
+        resetHitsList();
+        compEventManager.cleanup();
         return win(computer);
       }
-      computer.turn = false;
-      player1.turn = true;
-    }
-    if (gameover) {
-      document
-        .getElementById("right-board")
-        .removeEventListener("mousedown", turnSequence);
-      return;
-    }
+    }, 200);
   }
-  document
-    .getElementById("right-board")
-    .addEventListener("mousedown", turnSequence);
 }
 
 const hits = [];

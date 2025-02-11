@@ -11,11 +11,11 @@ import { playerShipPlacement } from "./playerShipPlacement";
 import { win } from "./init";
 import randomizeShipPlacement from "./randomizeShipPlacement";
 
+// initialize event delegation class
 const pvpEventManager = new EventManager();
 
 // Battleship Game with computer as opponent
 export function initPvP() {
-  let gameover = false;
   const player1 = new Player("player1", "1", false);
   const player2 = new Player("player2", "2", false);
 
@@ -37,7 +37,6 @@ export function initPvP() {
         '#boards-container div[id$="-board"]'
       );
       boards.forEach((div) => {
-        console.log(div.id);
         pvpEventManager.addListener(`#${div.id}`, "mousedown", turnSequence);
         // div.addEventListener("click", (e) => turnSequence(e));
       });
@@ -49,7 +48,6 @@ export function initPvP() {
   }
   // Logic for players to take turns attacking
   function turnSequence(matchingElement, e) {
-    console.log(e.target.id);
     const coordinate = e.target.id;
     if (coordinate === "") return;
     let i = true;
@@ -65,7 +63,7 @@ export function initPvP() {
       }
       renderBoard(player2, false, true);
       if (player2.fleetSunk()) {
-        gameover = true;
+        pvpEventManager.cleanup()
         return win(player1);
       }
       setTimeout(() => {
@@ -84,19 +82,13 @@ export function initPvP() {
       }
       renderBoard(player1, false, true);
       if (player1.fleetSunk()) {
-        gameover = true;
+        pvpEventManager.cleanup()
         return win(player2);
       }
       setTimeout(() => {
         pvpEventManager.addListener("#left-btn", "click", passDevice);
       }, 200);
       renderDoneTurn();
-    }
-    if (gameover) {
-      document
-        .getElementById("right-board")
-        .removeEventListener("mousedown", turnSequence);
-      return;
     }
     return;
   }
@@ -117,7 +109,6 @@ export function initPvP() {
   function switchPlayer(matchingElement, e) {
     if (matchingElement.textContent === "Done") {
       pvpEventManager.removeListener("#left-btn", "click", switchPlayer);
-      console.log(player1.turn);
       if (player1.turn === true) {
         player1.turn = false;
         player2.turn = true;

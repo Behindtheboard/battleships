@@ -46,9 +46,6 @@ class Gameboard {
     }
 
     if (!this.isInFleet(ship)) this.fleet.push(ship);
-
-    console.log(this.board);
-    console.log(this.fleet);
   }
 
   removeShip(shipID) {
@@ -70,7 +67,6 @@ class Gameboard {
   }
 
   receiveAttack(coordinate) {
-    console.log(coordinate)
     const hitBox = this.board[coordinate[0]][coordinate[1]];
     if (hitBox === null) {
       return (this.board[coordinate[0]][coordinate[1]] = "missed");
@@ -80,7 +76,7 @@ class Gameboard {
     }
     hitBox.hit();
     this.board[coordinate[0]][coordinate[1]] = `hit`;
-    return this.fleetSunk();
+    return;
   }
 
   fleetSunk() {
@@ -117,7 +113,7 @@ export default class Player extends Gameboard {
   };
 
   get shipClasses() {
-    return this.shipClasses
+    return this.shipClasses;
   }
 }
 
