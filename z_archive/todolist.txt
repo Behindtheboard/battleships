@@ -1,12 +1,9 @@
 ---current working tree
 
 ------ToDo------
-make 2 player game
-    Done PLace button doesn't work
-
-
-
 make computer smarter
+    computer needs to attack around last hit
+    if patrol is hit, it won't need to hit less two conescutive spaces
 
 ----bugs----
 -scroll on start menu misalign ships

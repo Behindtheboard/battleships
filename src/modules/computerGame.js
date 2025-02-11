@@ -12,7 +12,7 @@ const compEventManager = new EventManager();
 export function initComputerGame() {
   const player1 = new Player("Player 1", "1", false);
   const computer = new Player("Bot", "robo", false);
-  renderTitles(player1, computer)
+  renderTitles(player1, computer);
 
   renderBoard(player1, true, false);
   renderShips(player1, true);
@@ -62,25 +62,9 @@ const hitShips = [];
 // Returns coordinates of computer
 export function computerLogic(opponent) {
   const oppBoard = opponent.board;
-  function checkMissed(coordinate) {
-    const [row, col] = coordinate.split("").map((n) => Number(n));
-    if (oppBoard[row][col] === "missed") {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
-  function addIfHit(coordinate) {
-    const [row, col] = coordinate.split("").map((n) => Number(n));
-    const coord = oppBoard[row][col];
-    if (coord !== "missed" && coord !== "hit" && coord !== null) {
-      hits.push(coordinate);
-      hitShips.push(coord);
-    }
-  }
-
-  function generateCoordinate() {
+  // generates random coordinates
+  function genRandomCoord() {
     while (true) {
       const row = Math.floor(Math.random() * 10).toString();
       const col = Math.floor(Math.random() * 10).toString();
@@ -92,52 +76,52 @@ export function computerLogic(opponent) {
     }
   }
 
+  // checks if coordinate missed opponent ship
+  function checkMissed(coordinate) {
+    const [row, col] = coordinate.split("").map((n) => Number(n));
+    if (oppBoard[row][col] === "missed") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  // add to hit's array if coordinate hits
+  function addIfHit(coordinate) {
+    const [row, col] = coordinate.split("").map((n) => Number(n));
+    const coord = oppBoard[row][col];
+    if (coord !== "missed" && coord !== "hit" && coord !== null) {
+      hits.push(coordinate);
+      hitShips.push(coord);
+    }
+  }
+  // checks if the lasthit ship is sunk
   function checkIsSunk(coordinate) {
     const [row, col] = coordinate.split("").map((n) => Number(n));
     const lastHitShip = hitShips[hitShips.length - 1];
     lastHitShip.isSunk() ? true : false;
   }
 
-  function winCheat() {
-    for (let rindex = 0; rindex < oppBoard.length; rindex++) {
-      const row = oppBoard[rindex];
-      for (let cindex = 0; cindex < row.length; cindex++) {
-        const col = row[cindex];
-        if (
-          col !== "missed" &&
-          col !== "hit" &&
-          col !== null &&
-          !hits.includes(`${rindex}${cindex}`)
-        ) {
-          hits.push(`${rindex}${cindex}`);
-          const nc = `${rindex}${cindex}`;
-          return nc;
-        }
-      }
-    }
-  }
-
   // return winCheat();
 
-  if (hits.length === 0) {
-    return generateCoordinate();
-  }
+  // Get random coordinate when there's no last hit ship
+  if (hits.length === 0) return genRandomCoord();
 
-  const hitsArrLength = hits.length - 1;
-  const lastHit = hits[hitsArrLength];
+  const lastHit = hits[hits.length - 1];
 
+  // if last hit ship is sunk then generate random coordinate
   if (checkIsSunk(lastHit)) {
-    return generateCoordinate();
+    // ** I think this is a spot where we check last hit ship length
+    return genRandomCoord();
   }
 
-  return generateCoordinate();
+  return genRandomCoord();
 
-  // const [row, col] = lastHit.split("").map((n) => Number(n));
+  const [row, col] = lastHit.split("").map((n) => Number(n));
 
-  // let j;
-  // let minusLength;
-  // let newRow = row;
-  // let newCol = col;
+  let j;
+  let minusLength;
+  let newRow = row;
+  let newCol = col;
 
   // if (row + 1 > 0 && row + 1 < 10 && !checkMissed([row + 1] + [col])) {
   //   newRow = row + 1;
@@ -156,6 +140,26 @@ export function computerLogic(opponent) {
   //   addIfHit([newRow] + [newCol]);
   //   return [newRow] + [newCol];
   // }
+
+  // for testing
+  function winCheat() {
+    for (let rindex = 0; rindex < oppBoard.length; rindex++) {
+      const row = oppBoard[rindex];
+      for (let cindex = 0; cindex < row.length; cindex++) {
+        const col = row[cindex];
+        if (
+          col !== "missed" &&
+          col !== "hit" &&
+          col !== null &&
+          !hits.includes(`${rindex}${cindex}`)
+        ) {
+          hits.push(`${rindex}${cindex}`);
+          const nc = `${rindex}${cindex}`;
+          return nc;
+        }
+      }
+    }
+  }
 }
 
 export function resetHitsList() {
