@@ -5,26 +5,33 @@ import randomizeShipPlacement from "./randomizeShipPlacement";
 import { playerShipPlacement } from "./playerShipPlacement";
 import { win } from "./init";
 
+const coordRegex = /\d.*?\d/;
 // initialize event delegation class
 const compEventManager = new EventManager();
 
 // Battleship Game with computer as opponent
 export function initComputerGame() {
-  const player1 = new Player("Player 1", "1", false);
+  const player1 = new Player("Player", "1", false);
   const computer = new Player("Bot", "robo", false);
   renderTitles(player1, computer);
 
   renderBoard(player1, true, false);
   renderShips(player1, true);
-
   playerShipPlacement(player1, computer);
   randomizeShipPlacement(computer);
+
+  // *test
+  // randomizeShipPlacement(player1);
+  // renderBoard(player1, false, false);
+  // renderShips(player1, false);
+  // renderBoard(computer, false, true);
+  // renderShips(computer, false);
 
   compEventManager.addListener(`#right-board`, "mousedown", turnSequence);
 
   function turnSequence(matchingElement, e) {
     const coordinate = e.target.id;
-    if (coordinate === "") return;
+    if (!coordRegex.test(coordinate)) return;
     let i = true;
     // Player1 turn
     while (i) {
@@ -95,53 +102,59 @@ export function computerLogic(opponent) {
     }
   }
   // checks if the lasthit ship is sunk
-  function checkIsSunk(coordinate) {
-    const [row, col] = coordinate.split("").map((n) => Number(n));
+  function lastIsSunk() {
     const lastHitShip = hitShips[hitShips.length - 1];
-    lastHitShip.isSunk() ? true : false;
+    return lastHitShip.isSunk();
   }
-
-  // return winCheat();
 
   // Get random coordinate when there's no last hit ship
   if (hits.length === 0) return genRandomCoord();
 
   const lastHit = hits[hits.length - 1];
 
+
   // if last hit ship is sunk then generate random coordinate
-  if (checkIsSunk(lastHit)) {
+  if (lastIsSunk()) {
     // ** I think this is a spot where we check last hit ship length
     return genRandomCoord();
   }
+  //
+  const nextHit = adjacentAtk();
+  if (!nextHit) return nextHit;
 
-  return genRandomCoord();
+  function adjacentAtk() {
+    const [row, col] = lastHit.split("").map((n) => Number(n));
+    const moves = [
+      [row - 1, col],
+      [row + 1, col],
+      [row, col - 1],
+      [row, col + 1],
+    ];
+    let adjacentCoord = false;
+    moves.forEach((nextAtk) => {
+      const stringCoord = nextAtk.join("");
+      if (adjacentCoord) return;
+      if (
+        nextAtk[0] + nextAtk[1] < 19 &&
+        nextAtk[0] * nextAtk[1] >= 0 &&
+        coordRegex.test(stringCoord) &&
+        !checkMissed(stringCoord) &&
+        !hits.includes(stringCoord)
+      ) {
+        console.log(stringCoord);
+        console.log(!hits.includes(stringCoord));
+        console.log(coordRegex.test(stringCoord));
+        addIfHit(stringCoord);
+        adjacentCoord = stringCoord;
+        return;
+      }
+    });
+    console.log(adjacentCoord);
+    if (adjacentCoord) return adjacentCoord;
+    return false;
+  }
 
-  const [row, col] = lastHit.split("").map((n) => Number(n));
-
-  let j;
-  let minusLength;
-  let newRow = row;
-  let newCol = col;
-
-  // if (row + 1 > 0 && row + 1 < 10 && !checkMissed([row + 1] + [col])) {
-  //   newRow = row + 1;
-  // }
-  // if (row - 1 > 0 && row - 1 < 10 && !checkMissed([row - 1] + [col])) {
-  //   newRow = row - 1;
-  // }
-  // if (col + 1 > 0 && col + 1 < 10 && !checkMissed([row] + [col + 1])) {
-  //   newCol = col + 1;
-  // }
-  // if (col - 1 > 0 && col - 1 < 10 && !checkMissed([row] + [col - 1])) {
-  //   newCol = col - 1;
-  // }
-
-  // if (!hits.includes([newRow] + [newCol])) {
-  //   addIfHit([newRow] + [newCol]);
-  //   return [newRow] + [newCol];
-  // }
-
-  // for testing
+  //* for testing
   function winCheat() {
     for (let rindex = 0; rindex < oppBoard.length; rindex++) {
       const row = oppBoard[rindex];
