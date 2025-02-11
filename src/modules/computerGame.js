@@ -111,7 +111,13 @@ export function computerLogic(opponent) {
   if (hits.length === 0) return genRandomCoord();
 
   const lastHit = hits[hits.length - 1];
-
+  const lastHitShip = hitShips[hitShips.length - 1];
+  function checkDmgShip() {
+    const damagedShip = hitShips.filter((ship) => {
+      return ship === lastHitShip;
+    });
+    if (damagedShip.length < 2) return false;
+  }
 
   // if last hit ship is sunk then generate random coordinate
   if (lastIsSunk()) {
