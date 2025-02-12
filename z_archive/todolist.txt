@@ -1,4 +1,6 @@
 ---current working tree
+** need to fix ship ends where the Max gets messed up
+
 
 ------ToDo------
 make computer smarter

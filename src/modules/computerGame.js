@@ -15,17 +15,17 @@ export function initComputerGame() {
   const computer = new Player("Bot", "robo", false);
   renderTitles(player1, computer);
 
-  renderBoard(player1, true, false);
-  renderShips(player1, true);
-  playerShipPlacement(player1, computer);
+  // renderBoard(player1, true, false);
+  // renderShips(player1, true);
+  // playerShipPlacement(player1, computer);
   randomizeShipPlacement(computer);
 
-  // *test
-  // randomizeShipPlacement(player1);
-  // renderBoard(player1, false, false);
-  // renderShips(player1, false);
-  // renderBoard(computer, false, true);
-  // renderShips(computer, false);
+  // * for testing
+  randomizeShipPlacement(player1);
+  renderBoard(player1, false, false);
+  renderShips(player1, false);
+  renderBoard(computer, false, true);
+  renderShips(computer, false);
 
   compEventManager.addListener(`#right-board`, "mousedown", turnSequence);
 
@@ -48,7 +48,9 @@ export function initComputerGame() {
     // Computer turn
     setTimeout(() => {
       try {
-        player1.receiveAttack(computerLogic(player1));
+        const test = computerLogic(player1);
+        console.log(test)
+        player1.receiveAttack(test);
       } catch (error) {
         alert(error.message);
       }
@@ -65,9 +67,24 @@ export function initComputerGame() {
 }
 // object that saves hit ships with {coordinate:shipObj} pair
 const hits = {};
+let lastCoord;
 // Returns coordinates of computer
 export function computerLogic(opponent) {
+  console.log("-------New coord-----");
   const oppBoard = opponent.board;
+  // returns random coordinate when there's no last hit ship
+  if (Object.keys(hits).length < 1) return genRandomCoord();
+  // if last hit ship is sunk then generate random coordinate
+  if (lastIsSunk()) {
+    // ** I think this is a spot where we check last hit ship length
+    return genRandomCoord();
+  }
+  // returns last hit ship front and end coordinate
+  const shipEnds = dmgShipCoords();
+  if (shipEnds) return shipEnds;
+  // Get the coordinates around the coordinate of last hit ship
+  const nextHit = adjacentAtk();
+  if (nextHit) return nextHit;
 
   // generates random coordinates
   function genRandomCoord() {
@@ -81,7 +98,6 @@ export function computerLogic(opponent) {
       }
     }
   }
-
   // checks if coordinate missed opponent ship
   function checkMissed(coordStr) {
     const [row, col] = coordStr.split("").map((n) => Number(n));
@@ -96,46 +112,78 @@ export function computerLogic(opponent) {
     const [row, col] = coordStr.split("").map((n) => Number(n));
     const coordObj = oppBoard[row][col];
     if (coordObj !== "missed" && coordObj !== "hit" && coordObj !== null) {
-      hits.coordinate = coordObj;
+      hits[coordStr] = coordObj;
+      lastCoord = coordStr;
     }
   }
   // checks if coordinate has already hit ship
   function hasHitShip(coordStr) {
     return coordStr in hits;
   }
-
   // checks if all ships sunk in hits obj
   function lastIsSunk() {
-    for (let coordStr in hits) {
-      if (!hits[coordStr].isSunk()) return false;
-    }
-    return true;
+    return hits[lastCoord].isSunk();
   }
-
   // returns the string coordinate of last hit ship
   function lastHitStr() {
-    const hitShips = Object.keys(hits);
-    return hitShips[hitShips.length - 1];
+    return lastCoord;
   }
-
-  // Get random coordinate when there's no last hit ship
-  if (hits.length === 0) return genRandomCoord();
-
-  function checkDmgShip() {
-    const lastHitShipDmg = hits[lastHitStr()].damage
+  // returns coordinate of the rest of last hit ships
+  function dmgShipCoords() {
+    const lastHitShipDmg = hits[lastHitStr()].damage;
     if (lastHitShipDmg < 2) return false;
-
+    const shipCoords = Object.fromEntries(
+      Object.entries(hits).filter(
+        ([coord, ship]) => ship === hits[lastHitStr()]
+      )
+    );
+    const rObj = {};
+    const cObj = {};
+    let row;
+    let col;
+    Object.keys(shipCoords).forEach((coord) => {
+      rObj[coord[0]] = (rObj[coord[0]] || 0) + 1;
+      cObj[coord[1]] = (cObj[coord[1]] || 0) + 1;
+    });
+    for (let num in rObj) {
+      if (rObj[num] > 1) row = num;
+    }
+    for (let num in cObj) {
+      if (cObj[num] > 1) col = num;
+    }
+    if (row) {
+      const colArr = Object.keys(cObj);
+      const cMin = Number(Math.min(...colArr));
+      const cMax = Number(Math.max(...colArr));
+      const minCoord = row.toString() + (cMin - 1).toString();
+      const maxCoord = row.toString() + (cMax + 1).toString();
+      if (cMin >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord)) {
+        addIfHit(minCoord);
+        return minCoord;
+      }
+      if (cMax <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord)) {
+        addIfHit(maxCoord);
+        return maxCoord;
+      }
+    }
+    if (col) {
+      const rowArr = Object.keys(rObj);
+      const rMin = Number(Math.min(...rowArr));
+      const rMax = Number(Math.max(...rowArr));
+      const minCoord = (rMin - 1).toString() + col.toString();
+      const maxCoord = (rMax + 1).toString() + col.toString();
+      if (rMin >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord)) {
+        addIfHit(minCoord);
+        return minCoord;
+      }
+      if (rMax <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord)) {
+        addIfHit(maxCoord);
+        return maxCoord;
+      }
+    }
+    return null;
   }
-
-  // if last hit ship is sunk then generate random coordinate
-  if (lastIsSunk()) {
-    // ** I think this is a spot where we check last hit ship length
-    return genRandomCoord();
-  }
-  //
-  const nextHit = adjacentAtk();
-  if (!nextHit) return nextHit;
-
+  // returns adjecent coordinates of last hit spot of ship
   function adjacentAtk() {
     const [row, col] = lastHitStr()
       .split("")
@@ -148,24 +196,20 @@ export function computerLogic(opponent) {
     ];
     let adjacentCoord = false;
     moves.forEach((nextAtk) => {
-      const stringCoord = nextAtk.join("");
+      const coordStr = nextAtk.join("");
       if (adjacentCoord) return;
       if (
         nextAtk[0] + nextAtk[1] < 19 &&
         nextAtk[0] * nextAtk[1] >= 0 &&
-        coordRegex.test(stringCoord) &&
-        !checkMissed(stringCoord) &&
-        !hasHitShip(stringCoord)
+        coordStr < 100 &&
+        !checkMissed(coordStr) &&
+        !hasHitShip(coordStr)
       ) {
-        console.log(stringCoord);
-        console.log(!hasHitShip(stringCoord));
-        console.log(coordRegex.test(stringCoord));
-        addIfHit(stringCoord);
-        adjacentCoord = stringCoord;
+        addIfHit(coordStr);
+        adjacentCoord = coordStr;
         return;
       }
     });
-    console.log(adjacentCoord);
     if (adjacentCoord) return adjacentCoord;
     return false;
   }
@@ -192,8 +236,8 @@ export function computerLogic(opponent) {
 }
 
 export function resetHitsList() {
-  for (let key in obj) {
-    delete obj[key];
+  for (let coord in hits) {
+    delete hits[coord];
   }
 }
 
