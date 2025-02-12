@@ -63,9 +63,8 @@ export function initComputerGame() {
     win(wonPlayer);
   }
 }
-
-const hits = [];
-const hitShips = [];
+// object that saves hit ships with {coordinate:shipObj} pair
+const hits = {};
 // Returns coordinates of computer
 export function computerLogic(opponent) {
   const oppBoard = opponent.board;
@@ -75,17 +74,17 @@ export function computerLogic(opponent) {
     while (true) {
       const row = Math.floor(Math.random() * 10).toString();
       const col = Math.floor(Math.random() * 10).toString();
-      const coord = row + col;
-      if (!checkMissed(coord) && !hits.includes(coord)) {
-        addIfHit(coord);
-        return coord;
+      const coordStr = row + col;
+      if (!checkMissed(coordStr) && !hasHitShip(coordStr)) {
+        addIfHit(coordStr);
+        return coordStr;
       }
     }
   }
 
   // checks if coordinate missed opponent ship
-  function checkMissed(coordinate) {
-    const [row, col] = coordinate.split("").map((n) => Number(n));
+  function checkMissed(coordStr) {
+    const [row, col] = coordStr.split("").map((n) => Number(n));
     if (oppBoard[row][col] === "missed") {
       return true;
     } else {
@@ -93,30 +92,39 @@ export function computerLogic(opponent) {
     }
   }
   // add to hit's array if coordinate hits
-  function addIfHit(coordinate) {
-    const [row, col] = coordinate.split("").map((n) => Number(n));
-    const coord = oppBoard[row][col];
-    if (coord !== "missed" && coord !== "hit" && coord !== null) {
-      hits.push(coordinate);
-      hitShips.push(coord);
+  function addIfHit(coordStr) {
+    const [row, col] = coordStr.split("").map((n) => Number(n));
+    const coordObj = oppBoard[row][col];
+    if (coordObj !== "missed" && coordObj !== "hit" && coordObj !== null) {
+      hits.coordinate = coordObj;
     }
   }
-  // checks if the lasthit ship is sunk
+  // checks if coordinate has already hit ship
+  function hasHitShip(coordStr) {
+    return coordStr in hits;
+  }
+
+  // checks if all ships sunk in hits obj
   function lastIsSunk() {
-    const lastHitShip = hitShips[hitShips.length - 1];
-    return lastHitShip.isSunk();
+    for (let coordStr in hits) {
+      if (!hits[coordStr].isSunk()) return false;
+    }
+    return true;
+  }
+
+  // returns the string coordinate of last hit ship
+  function lastHitStr() {
+    const hitShips = Object.keys(hits);
+    return hitShips[hitShips.length - 1];
   }
 
   // Get random coordinate when there's no last hit ship
   if (hits.length === 0) return genRandomCoord();
 
-  const lastHit = hits[hits.length - 1];
-  const lastHitShip = hitShips[hitShips.length - 1];
   function checkDmgShip() {
-    const damagedShip = hitShips.filter((ship) => {
-      return ship === lastHitShip;
-    });
-    if (damagedShip.length < 2) return false;
+    const lastHitShipDmg = hits[lastHitStr()].damage
+    if (lastHitShipDmg < 2) return false;
+
   }
 
   // if last hit ship is sunk then generate random coordinate
@@ -129,7 +137,9 @@ export function computerLogic(opponent) {
   if (!nextHit) return nextHit;
 
   function adjacentAtk() {
-    const [row, col] = lastHit.split("").map((n) => Number(n));
+    const [row, col] = lastHitStr()
+      .split("")
+      .map((n) => Number(n));
     const moves = [
       [row - 1, col],
       [row + 1, col],
@@ -145,10 +155,10 @@ export function computerLogic(opponent) {
         nextAtk[0] * nextAtk[1] >= 0 &&
         coordRegex.test(stringCoord) &&
         !checkMissed(stringCoord) &&
-        !hits.includes(stringCoord)
+        !hasHitShip(stringCoord)
       ) {
         console.log(stringCoord);
-        console.log(!hits.includes(stringCoord));
+        console.log(!hasHitShip(stringCoord));
         console.log(coordRegex.test(stringCoord));
         addIfHit(stringCoord);
         adjacentCoord = stringCoord;
@@ -170,7 +180,7 @@ export function computerLogic(opponent) {
           col !== "missed" &&
           col !== "hit" &&
           col !== null &&
-          !hits.includes(`${rindex}${cindex}`)
+          !hasHitShip(`${rindex}${cindex}`)
         ) {
           hits.push(`${rindex}${cindex}`);
           const nc = `${rindex}${cindex}`;
@@ -182,8 +192,9 @@ export function computerLogic(opponent) {
 }
 
 export function resetHitsList() {
-  hits.length = 0;
-  hitShips.length = 0;
+  for (let key in obj) {
+    delete obj[key];
+  }
 }
 
 export function autoWin(player) {
@@ -194,7 +205,7 @@ export function autoWin(player) {
         col !== "missed" &&
         col !== "hit" &&
         col !== null &&
-        !hits.includes(`${rindex}${cindex}`)
+        !hasHitShip(`${rindex}${cindex}`)
       ) {
         hits.push(`${rindex}${cindex}`);
         player.receiveAttack(`${rindex}${cindex}`);
