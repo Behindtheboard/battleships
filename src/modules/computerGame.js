@@ -49,7 +49,7 @@ export function initComputerGame() {
     setTimeout(() => {
       try {
         const test = computerLogic(player1);
-        console.log(test)
+        console.log(test);
         player1.receiveAttack(test);
       } catch (error) {
         alert(error.message);
@@ -65,6 +65,7 @@ export function initComputerGame() {
     win(wonPlayer);
   }
 }
+
 // object that saves hit ships with {coordinate:shipObj} pair
 const hits = {};
 let lastCoord;
@@ -74,6 +75,8 @@ export function computerLogic(opponent) {
   const oppBoard = opponent.board;
   // returns random coordinate when there's no last hit ship
   if (Object.keys(hits).length < 1) return genRandomCoord();
+  // check for any remaing hit ships that are not sunk
+  unsunkShip();
   // if last hit ship is sunk then generate random coordinate
   if (lastIsSunk()) {
     // ** I think this is a spot where we check last hit ship length
@@ -107,7 +110,7 @@ export function computerLogic(opponent) {
       return false;
     }
   }
-  // add to hit's array if coordinate hits
+  // add to hit's object if coordinate hits
   function addIfHit(coordStr) {
     const [row, col] = coordStr.split("").map((n) => Number(n));
     const coordObj = oppBoard[row][col];
@@ -127,6 +130,12 @@ export function computerLogic(opponent) {
   // returns the string coordinate of last hit ship
   function lastHitStr() {
     return lastCoord;
+  }
+  // checks unsunk ship that was hit
+  function unsunkShip() {
+    for (let coordStr in hits) {
+      if (!hits[coordStr].isSunk()) return (lastCoord = coordStr);
+    }
   }
   // returns coordinate of the rest of last hit ships
   function dmgShipCoords() {
@@ -157,11 +166,11 @@ export function computerLogic(opponent) {
       const cMax = Number(Math.max(...colArr));
       const minCoord = row.toString() + (cMin - 1).toString();
       const maxCoord = row.toString() + (cMax + 1).toString();
-      if (cMin >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord)) {
+      if (cMin - 1 >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord)) {
         addIfHit(minCoord);
         return minCoord;
       }
-      if (cMax <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord)) {
+      if (cMax + 1 <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord)) {
         addIfHit(maxCoord);
         return maxCoord;
       }
@@ -172,11 +181,11 @@ export function computerLogic(opponent) {
       const rMax = Number(Math.max(...rowArr));
       const minCoord = (rMin - 1).toString() + col.toString();
       const maxCoord = (rMax + 1).toString() + col.toString();
-      if (rMin >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord)) {
+      if (rMin - 1 >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord)) {
         addIfHit(minCoord);
         return minCoord;
       }
-      if (rMax <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord)) {
+      if (rMax + 1 <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord)) {
         addIfHit(maxCoord);
         return maxCoord;
       }
@@ -213,26 +222,6 @@ export function computerLogic(opponent) {
     if (adjacentCoord) return adjacentCoord;
     return false;
   }
-
-  //* for testing
-  function winCheat() {
-    for (let rindex = 0; rindex < oppBoard.length; rindex++) {
-      const row = oppBoard[rindex];
-      for (let cindex = 0; cindex < row.length; cindex++) {
-        const col = row[cindex];
-        if (
-          col !== "missed" &&
-          col !== "hit" &&
-          col !== null &&
-          !hasHitShip(`${rindex}${cindex}`)
-        ) {
-          hits.push(`${rindex}${cindex}`);
-          const nc = `${rindex}${cindex}`;
-          return nc;
-        }
-      }
-    }
-  }
 }
 
 export function resetHitsList() {
@@ -241,7 +230,26 @@ export function resetHitsList() {
   }
 }
 
-export function autoWin(player) {
+//* for testing
+function winCheat() {
+  for (let rindex = 0; rindex < oppBoard.length; rindex++) {
+    const row = oppBoard[rindex];
+    for (let cindex = 0; cindex < row.length; cindex++) {
+      const col = row[cindex];
+      if (
+        col !== "missed" &&
+        col !== "hit" &&
+        col !== null &&
+        !hasHitShip(`${rindex}${cindex}`)
+      ) {
+        hits.push(`${rindex}${cindex}`);
+        const nc = `${rindex}${cindex}`;
+        return nc;
+      }
+    }
+  }
+}
+function autoWin(player) {
   const hits = [];
   player.board.forEach((row, rindex) => {
     row.forEach((col, cindex) => {
