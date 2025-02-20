@@ -77,11 +77,8 @@ export function computerLogic(opponent) {
   if (Object.keys(hits).length < 1) return genRandomCoord();
   // check for any remaing hit ships that are not sunk
   unsunkShip();
-  // if last hit ship is sunk then generate random coordinate
-  if (lastIsSunk()) {
-    // ** I think this is a spot where we check last hit ship length
-    return genRandomCoord();
-  }
+  // if last hit ship is sunk then generate coordinates avoiding sunk ship lengths
+  if (lastIsSunk()) return genSmartCoord(opponent);
   // returns last hit ship front and end coordinate
   const shipEnds = dmgShipCoords();
   if (shipEnds) return shipEnds;
@@ -221,6 +218,57 @@ export function computerLogic(opponent) {
     });
     if (adjacentCoord) return adjacentCoord;
     return false;
+  }
+  // returns coordinates that avoid number of blanks spaces under sunk ship lengths
+  function genSmartCoord(opponent) {
+    let coordStr;
+    const minLength = minShip();
+    while (true) {
+      coordStr = genRandomCoord();
+      if (sideCheck(coordStr, minLength)) return coordStr;
+    }
+
+    function sideCheck(coordStr, minLength) {
+      const moves = createMoves(1, coordStr);
+      console.log(minLength);
+      console.log(coordStr);
+      for (let i = 0; i < 4; i++) {
+        console.log(`i${i}`);
+        for (let j = 0; j < minLength; j++) {
+          const nextAtk = moves[i + j];
+          console.log(`j${j} ` + moves[i + j]);
+          const nextAtkStr = moves[i + j].join("");
+          if (
+            nextAtk[0] + nextAtk[1] < 19 &&
+            nextAtk[0] * nextAtk[1] >= 0 &&
+            coordStr < 100 &&
+            !checkMissed(nextAtkStr) &&
+            !hasHitShip(nextAtkStr)
+          ) {
+            if (j === minLength) return true;
+            continue;
+          }
+          break;
+        }
+        break;
+      }
+      return false;
+    }
+    function minShip() {
+      const sunkShips = opponent.fleet
+        .filter((ship) => ship.isSunk())
+        .map((ship) => ship.length);
+      return Number(Math.min(...sunkShips));
+    }
+    function createMoves(num, coordStr) {
+      const [row, col] = coordStr.split("").map((n) => Number(n));
+      return [
+        [row - num, col],
+        [row + num, col],
+        [row, col - num],
+        [row, col + num],
+      ];
+    }
   }
 }
 
