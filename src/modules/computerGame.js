@@ -50,6 +50,7 @@ export function initComputerGame() {
       try {
         const test = computerLogic(player1);
         console.log(`final ` + test);
+        addIfHit(test, player1.board);
         player1.receiveAttack(test);
         console.log(player1.board);
       } catch (error) {
@@ -70,6 +71,18 @@ export function initComputerGame() {
 // object that saves hit ships with {coordinate:shipObj} pair
 const hits = {};
 let lastCoord;
+// Add to hits object if computer coordinate hits ship
+function addIfHit(coordStr, opponent) {
+  const oppBoard = opponent;
+  const [row, col] = coordStr.split("").map((n) => Number(n));
+  const coordObj = oppBoard[row][col];
+  if (coordObj !== "missed" && coordObj !== "hit" && coordObj !== null) {
+    hits[coordStr] = coordObj;
+    lastCoord = coordStr;
+    console.log("addifhit " + coordStr);
+  }
+}
+
 // Returns coordinates of computer
 export function computerLogic(opponent) {
   console.log("-------New coord-----");
@@ -97,7 +110,6 @@ export function computerLogic(opponent) {
       const col = Math.floor(Math.random() * 10).toString();
       const coordStr = row + col;
       if (!checkMissed(coordStr) && !hasHitShip(coordStr)) {
-        addIfHit(coordStr);
         return coordStr;
       }
     }
@@ -109,16 +121,6 @@ export function computerLogic(opponent) {
       return true;
     } else {
       return false;
-    }
-  }
-  // add to hit's object if coordinate hits
-  function addIfHit(coordStr) {
-    const [row, col] = coordStr.split("").map((n) => Number(n));
-    const coordObj = oppBoard[row][col];
-    if (coordObj !== "missed" && coordObj !== "hit" && coordObj !== null) {
-      hits[coordStr] = coordObj;
-      lastCoord = coordStr;
-      console.log("addifhit " + coordStr);
     }
   }
   // checks if coordinate has already hit ship
@@ -172,13 +174,9 @@ export function computerLogic(opponent) {
       const minCoord = row.toString() + (cMin - 1).toString();
       const maxCoord = row.toString() + (cMax + 1).toString();
       if (cMin - 1 >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord)) {
-        console.log("row minCoord " + minCoord);
-        addIfHit(minCoord);
         return minCoord;
       }
       if (cMax + 1 <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord)) {
-        console.log("row maxCoord " + maxCoord);
-        addIfHit(maxCoord);
         return maxCoord;
       }
     }
@@ -189,13 +187,9 @@ export function computerLogic(opponent) {
       const minCoord = (rMin - 1).toString() + col.toString();
       const maxCoord = (rMax + 1).toString() + col.toString();
       if (rMin - 1 >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord)) {
-        addIfHit(minCoord);
-        console.log("col minCoord " + minCoord);
         return minCoord;
       }
       if (rMax + 1 <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord)) {
-        addIfHit(maxCoord);
-        console.log("col maxCoord " + maxCoord);
         return maxCoord;
       }
     }
@@ -223,7 +217,6 @@ export function computerLogic(opponent) {
         !checkMissed(coordStr) &&
         !hasHitShip(coordStr)
       ) {
-        addIfHit(coordStr);
         adjacentCoord = coordStr;
         return;
       }
@@ -238,7 +231,6 @@ export function computerLogic(opponent) {
     while (true) {
       coordStr = genRandomCoord();
       if (sideCheck(coordStr, minLength)) {
-        addIfHit(coordStr);
         return coordStr;
       }
     }
