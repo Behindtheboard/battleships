@@ -117,11 +117,7 @@ export function computerLogic(opponent) {
   // checks if coordinate missed opponent ship
   function checkMissed(coordStr) {
     const [row, col] = coordStr.split("").map((n) => Number(n));
-    if (oppBoard[row][col] === "missed") {
-      return true;
-    } else {
-      return false;
-    }
+    return oppBoard[row][col] === "missed";
   }
   // checks if coordinate has already hit ship
   function hasHitShip(coordStr) {
@@ -138,10 +134,7 @@ export function computerLogic(opponent) {
   // checks unsunk ship that was hit
   function unsunkShip() {
     for (let coordStr in hits) {
-      if (!hits[coordStr].isSunk()) {
-        console.log(hits[coordStr]);
-        return (lastCoord = coordStr);
-      }
+      if (!hits[coordStr].isSunk()) return (lastCoord = coordStr);
     }
   }
   // returns coordinate of the rest of last hit ships
@@ -173,12 +166,11 @@ export function computerLogic(opponent) {
       const cMax = Number(Math.max(...colArr));
       const minCoord = row.toString() + (cMin - 1).toString();
       const maxCoord = row.toString() + (cMax + 1).toString();
-      if (cMin - 1 >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord)) {
+      if (cMin - 1 >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord))
         return minCoord;
-      }
-      if (cMax + 1 <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord)) {
+
+      if (cMax + 1 <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord))
         return maxCoord;
-      }
     }
     if (col) {
       const rowArr = Object.keys(rObj);
@@ -186,12 +178,11 @@ export function computerLogic(opponent) {
       const rMax = Number(Math.max(...rowArr));
       const minCoord = (rMin - 1).toString() + col.toString();
       const maxCoord = (rMax + 1).toString() + col.toString();
-      if (rMin - 1 >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord)) {
+      if (rMin - 1 >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord))
         return minCoord;
-      }
-      if (rMax + 1 <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord)) {
+
+      if (rMax + 1 <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord))
         return maxCoord;
-      }
     }
     return null;
   }
@@ -217,8 +208,7 @@ export function computerLogic(opponent) {
         !checkMissed(coordStr) &&
         !hasHitShip(coordStr)
       ) {
-        adjacentCoord = coordStr;
-        return;
+        return (adjacentCoord = coordStr);
       }
     });
     if (adjacentCoord) return adjacentCoord;
@@ -230,9 +220,7 @@ export function computerLogic(opponent) {
     const minLength = minShip();
     while (true) {
       coordStr = genRandomCoord();
-      if (sideCheck(coordStr, minLength)) {
-        return coordStr;
-      }
+      if (sideCheck(coordStr, minLength)) return coordStr;
     }
 
     function sideCheck(coordStr, minLength) {
