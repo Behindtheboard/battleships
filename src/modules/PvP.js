@@ -4,6 +4,7 @@ import {
   renderShips,
   renderPassDevice,
   renderDoneTurn,
+  renderTitles,
 } from "./renderUI";
 import EventManager from "./eventManager";
 import { playerShipPlacement } from "./playerShipPlacement";
