@@ -49,8 +49,9 @@ export function initComputerGame() {
     setTimeout(() => {
       try {
         const test = computerLogic(player1);
-        console.log(test);
+        console.log(`final ` + test);
         player1.receiveAttack(test);
+        console.log(player1.board);
       } catch (error) {
         alert(error.message);
       }
@@ -75,7 +76,7 @@ export function computerLogic(opponent) {
   const oppBoard = opponent.board;
   // returns random coordinate when there's no last hit ship
   if (Object.keys(hits).length < 1) return genRandomCoord();
-  // check for any remaing hit ships that are not sunk
+  // check for any remaining hit ships that are not sunk
   unsunkShip();
   // if last hit ship is sunk then generate coordinates avoiding sunk ship lengths
   if (lastIsSunk()) return genSmartCoord(opponent);
@@ -85,6 +86,9 @@ export function computerLogic(opponent) {
   // Get the coordinates around the coordinate of last hit ship
   const nextHit = adjacentAtk();
   if (nextHit) return nextHit;
+
+  console.log("shouldnt hit");
+  console.log(hits);
 
   // generates random coordinates
   function genRandomCoord() {
@@ -114,6 +118,7 @@ export function computerLogic(opponent) {
     if (coordObj !== "missed" && coordObj !== "hit" && coordObj !== null) {
       hits[coordStr] = coordObj;
       lastCoord = coordStr;
+      console.log("addifhit " + coordStr);
     }
   }
   // checks if coordinate has already hit ship
@@ -131,7 +136,10 @@ export function computerLogic(opponent) {
   // checks unsunk ship that was hit
   function unsunkShip() {
     for (let coordStr in hits) {
-      if (!hits[coordStr].isSunk()) return (lastCoord = coordStr);
+      if (!hits[coordStr].isSunk()) {
+        console.log(hits[coordStr]);
+        return (lastCoord = coordStr);
+      }
     }
   }
   // returns coordinate of the rest of last hit ships
@@ -164,10 +172,12 @@ export function computerLogic(opponent) {
       const minCoord = row.toString() + (cMin - 1).toString();
       const maxCoord = row.toString() + (cMax + 1).toString();
       if (cMin - 1 >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord)) {
+        console.log("row minCoord " + minCoord);
         addIfHit(minCoord);
         return minCoord;
       }
       if (cMax + 1 <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord)) {
+        console.log("row maxCoord " + maxCoord);
         addIfHit(maxCoord);
         return maxCoord;
       }
@@ -180,10 +190,12 @@ export function computerLogic(opponent) {
       const maxCoord = (rMax + 1).toString() + col.toString();
       if (rMin - 1 >= 0 && !checkMissed(minCoord) && !hasHitShip(minCoord)) {
         addIfHit(minCoord);
+        console.log("col minCoord " + minCoord);
         return minCoord;
       }
       if (rMax + 1 <= 9 && !checkMissed(maxCoord) && !hasHitShip(maxCoord)) {
         addIfHit(maxCoord);
+        console.log("col maxCoord " + maxCoord);
         return maxCoord;
       }
     }
@@ -225,15 +237,19 @@ export function computerLogic(opponent) {
     const minLength = minShip();
     while (true) {
       coordStr = genRandomCoord();
-      if (sideCheck(coordStr, minLength)) return coordStr;
+      if (sideCheck(coordStr, minLength)) {
+        addIfHit(coordStr);
+        return coordStr;
+      }
     }
 
     function sideCheck(coordStr, minLength) {
       const moves = createMoves(coordStr, minLength);
-      let emptyCtn = 0;
-      let minLengthCtn = 0;
+      let emptyCnt = 0;
+      let minLengthCnt = 0;
       console.log(minLength);
-      console.log(coordStr);
+      console.log("sideCheck " + coordStr);
+      console.log(moves);
       for (let i = 0; i < moves.length - 1; i++) {
         const nextAtk = moves[i];
         const nextAtkStr = moves[i].join("");
@@ -244,18 +260,19 @@ export function computerLogic(opponent) {
           !checkMissed(nextAtkStr) &&
           !hasHitShip(nextAtkStr)
         ) {
-          if (emptyCtn === minLength) return true;
-          emptyCtn++;
+          emptyCnt++;
         }
-        if (minLengthCtn === minLength) {
-          emptyCtn = 0;
-          minLengthCtn = 0;
+        if (minLengthCnt === minLength) {
+          emptyCnt = 0;
+          minLengthCnt = 0;
         } else {
-          minLengthCtn++;
+          minLengthCnt++;
         }
+        if (emptyCnt === minLength) return true;
       }
       return false;
     }
+    // Returns minimun square length to check
     function minShip() {
       const sunkShips = opponent.fleet
         .filter((ship) => ship.isSunk())
@@ -281,8 +298,8 @@ function createMoves(coordStr, num) {
   const [row, col] = coordStr.split("").map((n) => Number(n));
   const queue = [];
   for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < num; j++) {
-      const moves = testAdj(j);
+    for (let j = 0; j <= num; j++) {
+      const moves = testAdj(j + 1);
       const coord = [row + moves[i][0], col + moves[i][1]];
       queue.push(coord);
     }
