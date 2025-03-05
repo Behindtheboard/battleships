@@ -229,28 +229,30 @@ export function computerLogic(opponent) {
     }
 
     function sideCheck(coordStr, minLength) {
-      const moves = createMoves(1, coordStr);
+      const moves = createMoves(coordStr, minLength);
+      let emptyCtn = 0;
+      let minLengthCtn = 0;
       console.log(minLength);
       console.log(coordStr);
-      for (let i = 0; i < 4; i++) {
-        console.log(`i${i}`);
-        for (let j = 0; j < minLength; j++) {
-          const nextAtk = moves[i + j];
-          console.log(`j${j} ` + moves[i + j]);
-          const nextAtkStr = moves[i + j].join("");
-          if (
-            nextAtk[0] + nextAtk[1] < 19 &&
-            nextAtk[0] * nextAtk[1] >= 0 &&
-            coordStr < 100 &&
-            !checkMissed(nextAtkStr) &&
-            !hasHitShip(nextAtkStr)
-          ) {
-            if (j === minLength) return true;
-            continue;
-          }
-          break;
+      for (let i = 0; i < moves.length - 1; i++) {
+        const nextAtk = moves[i];
+        const nextAtkStr = moves[i].join("");
+        if (
+          nextAtk[0] + nextAtk[1] < 19 &&
+          nextAtk[0] * nextAtk[1] >= 0 &&
+          coordStr < 100 &&
+          !checkMissed(nextAtkStr) &&
+          !hasHitShip(nextAtkStr)
+        ) {
+          if (emptyCtn === minLength) return true;
+          emptyCtn++;
         }
-        break;
+        if (minLengthCtn === minLength) {
+          emptyCtn = 0;
+          minLengthCtn = 0;
+        } else {
+          minLengthCtn++;
+        }
       }
       return false;
     }
@@ -258,16 +260,12 @@ export function computerLogic(opponent) {
       const sunkShips = opponent.fleet
         .filter((ship) => ship.isSunk())
         .map((ship) => ship.length);
-      return Number(Math.min(...sunkShips));
-    }
-    function createMoves(num, coordStr) {
-      const [row, col] = coordStr.split("").map((n) => Number(n));
-      return [
-        [row - num, col],
-        [row + num, col],
-        [row, col - num],
-        [row, col + num],
-      ];
+      if (Number(Math.min(...sunkShips)) === 2) return 3;
+      const three = [2, 3, 3];
+      if ([...sunkShips].sort() === three) return 4;
+      const four = [2, 3, 3, 4];
+      if ([...sunkShips].sort() === four) return 5;
+      return 1;
     }
   }
 }
@@ -278,38 +276,84 @@ export function resetHitsList() {
   }
 }
 
-//* for testing
-function winCheat() {
-  for (let rindex = 0; rindex < oppBoard.length; rindex++) {
-    const row = oppBoard[rindex];
-    for (let cindex = 0; cindex < row.length; cindex++) {
-      const col = row[cindex];
-      if (
-        col !== "missed" &&
-        col !== "hit" &&
-        col !== null &&
-        !hasHitShip(`${rindex}${cindex}`)
-      ) {
-        hits.push(`${rindex}${cindex}`);
-        const nc = `${rindex}${cindex}`;
-        return nc;
-      }
+// return function with coordinate around a potential coordinate
+function createMoves(coordStr, num) {
+  const [row, col] = coordStr.split("").map((n) => Number(n));
+  const queue = [];
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < num; j++) {
+      const moves = testAdj(j);
+      const coord = [row + moves[i][0], col + moves[i][1]];
+      queue.push(coord);
     }
   }
-}
-function autoWin(player) {
-  const hits = [];
-  player.board.forEach((row, rindex) => {
-    row.forEach((col, cindex) => {
-      if (
-        col !== "missed" &&
-        col !== "hit" &&
-        col !== null &&
-        !hasHitShip(`${rindex}${cindex}`)
-      ) {
-        hits.push(`${rindex}${cindex}`);
-        player.receiveAttack(`${rindex}${cindex}`);
-      }
+  if (num > 2) {
+    let cross;
+    if (num === 3) cross = testThree();
+    if (num === 4) cross = testFour();
+    if (num === 5) cross = testFive();
+
+    cross.forEach((e) => {
+      const coord = [row + e[0], col + e[1]];
+      queue.push(coord);
     });
-  });
+  }
+
+  function testAdj(num) {
+    return [
+      [-num, 0],
+      [num, 0],
+      [0, -num],
+      [0, num],
+    ];
+  }
+
+  function testThree() {
+    return [
+      [-1, 0],
+      [0, 0],
+      [+1, 0],
+      [0, -1],
+      [0, 0],
+      [0, +1],
+    ];
+  }
+
+  function testFour() {
+    return [
+      [-2, 0],
+      [-1, 0],
+      [0, 0],
+      [1, 0],
+      [-1, 0],
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [0, -2],
+      [0, -1],
+      [0, 0],
+      [0, 1],
+      [0, -1],
+      [0, 0],
+      [0, 1],
+      [0, 2],
+    ];
+  }
+
+  function testFive() {
+    return [
+      [-2, 0],
+      [-1, 0],
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [0, -2],
+      [0, -1],
+      [0, 0],
+      [0, 1],
+      [0, 2],
+    ];
+  }
+
+  return queue;
 }
