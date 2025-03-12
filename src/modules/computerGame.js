@@ -222,48 +222,56 @@ export function computerLogic(opponent) {
       coordStr = genRandomCoord();
       if (sideCheck(coordStr, minLength)) return coordStr;
     }
-
-    function sideCheck(coordStr, minLength) {
-      const moves = createMoves(coordStr, minLength);
-      let emptyCnt = 0;
-      let minLengthCnt = 0;
-      console.log(minLength);
-      console.log("sideCheck " + coordStr);
-      console.log(moves);
-      for (let i = 0; i < moves.length - 1; i++) {
-        const nextAtk = moves[i];
-        const nextAtkStr = moves[i].join("");
-        if (
-          nextAtk[0] + nextAtk[1] < 19 &&
-          nextAtk[0] * nextAtk[1] >= 0 &&
-          coordStr < 100 &&
-          !checkMissed(nextAtkStr) &&
-          !hasHitShip(nextAtkStr)
-        ) {
-          emptyCnt++;
-        }
-        if (minLengthCnt === minLength) {
-          emptyCnt = 0;
-          minLengthCnt = 0;
-        } else {
-          minLengthCnt++;
-        }
-        if (emptyCnt === minLength) return true;
+  }
+  // returns a boolean if there are squares available
+  function sideCheck(coordStr, minLength) {
+    const moves = createMoves(coordStr, minLength);
+    let emptyCnt = 0;
+    let minLengthCnt = 0;
+    console.log(minLength);
+    console.log("sideCheck " + coordStr);
+    console.log(moves);
+    for (let i = 0; i < moves.length - 1; i++) {
+      const nextAtk = moves[i];
+      const nextAtkStr = moves[i].join("");
+      if (
+        nextAtk[0] + nextAtk[1] < 19 &&
+        nextAtk[0] * nextAtk[1] >= 0 &&
+        coordStr < 100 &&
+        !checkMissed(nextAtkStr) &&
+        !hasHitShip(nextAtkStr)
+      ) {
+        emptyCnt++;
       }
-      return false;
+      if (minLengthCnt === minLength) {
+        emptyCnt = 0;
+        minLengthCnt = 0;
+      } else {
+        minLengthCnt++;
+      }
+      if (emptyCnt === minLength) return true;
     }
-    // Returns minimun square length to check
-    function minShip() {
-      const sunkShips = opponent.fleet
-        .filter((ship) => ship.isSunk())
-        .map((ship) => ship.length);
-      if (Number(Math.min(...sunkShips)) === 2) return 3;
-      const three = [2, 3, 3];
-      if ([...sunkShips].sort() === three) return 4;
-      const four = [2, 3, 3, 4];
-      if ([...sunkShips].sort() === four) return 5;
-      return 1;
-    }
+    return false;
+  }
+  // Returns minimun square length to check
+  function minShip() {
+    const sunkShips = opponent.fleet
+      .filter((ship) => ship.isSunk())
+      .map((ship) => ship.length);
+    const sunkShipsSort = [...sunkShips].sort();
+
+    const five = [2, 3, 3, 4];
+    if (sunkShipsSort === five) return 5;
+
+    let count = 0;
+    sunkShipsSort.forEach((num) => {
+      if (num === 3) count++;
+      if (num === 2) count++;
+    });
+    if (count === 3) return 4;
+
+    if (sunkShipsSort.includes(2)) return 3;
+    return 1;
   }
 }
 
