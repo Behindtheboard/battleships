@@ -34,29 +34,24 @@ export function initComputerGame() {
     if (!coordRegex.test(coordinate)) return;
     let i = true;
     // Player1 turn
-    while (i) {
-      try {
-        computer.receiveAttack(coordinate);
-      } catch (error) {
-        return alert(error.message);
-      }
-      i = false;
+    try {
+      computer.receiveAttack(coordinate);
+    } catch (error) {
+      return alert(error.message);
     }
     renderBoard(computer, false, true);
     if (computer.fleetSunk()) return triggerWin(player1);
 
     // Computer turn
-    setTimeout(() => {
-      try {
-        const test = computerLogic(player1);
-        addIfHit(test, player1.board);
-        player1.receiveAttack(test);
-      } catch (error) {
-        alert(error.message);
-      }
-      renderBoard(player1, false, false);
-      if (player1.fleetSunk()) return triggerWin(computer);
-    }, 200);
+    try {
+      const test = computerLogic(player1);
+      addIfHit(test, player1.board);
+      player1.receiveAttack(test);
+    } catch (error) {
+      alert(error.message);
+    }
+    renderBoard(player1, false, false);
+    if (player1.fleetSunk()) return triggerWin(computer);
   }
 
   function triggerWin(wonPlayer) {
@@ -95,7 +90,6 @@ export function computerLogic(opponent) {
   // Get the coordinates around the coordinate of last hit ship
   const nextHit = adjacentAtk();
   if (nextHit) return nextHit;
-
 
   // generates random coordinates
   function genRandomCoord() {
