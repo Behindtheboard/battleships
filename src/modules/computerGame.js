@@ -15,17 +15,17 @@ export function initComputerGame() {
   const computer = new Player("Bot", "robo", false);
   renderTitles(player1, computer);
 
-  // renderBoard(player1, true, false);
-  // renderShips(player1, true);
-  // playerShipPlacement(player1, computer);
+  renderBoard(player1, true, false);
+  renderShips(player1, true);
+  playerShipPlacement(player1, computer);
   randomizeShipPlacement(computer);
 
   // * for testing
-  randomizeShipPlacement(player1);
-  renderBoard(player1, false, false);
-  renderShips(player1, false);
-  renderBoard(computer, false, true);
-  renderShips(computer, false);
+  // randomizeShipPlacement(player1);
+  // renderBoard(player1, false, false);
+  // renderShips(player1, false);
+  // renderBoard(computer, false, true);
+  // renderShips(computer, false);
 
   compEventManager.addListener(`#right-board`, "mousedown", turnSequence);
 
@@ -49,10 +49,8 @@ export function initComputerGame() {
     setTimeout(() => {
       try {
         const test = computerLogic(player1);
-        console.log(`final ` + test);
         addIfHit(test, player1.board);
         player1.receiveAttack(test);
-        console.log(player1.board);
       } catch (error) {
         alert(error.message);
       }
@@ -79,13 +77,11 @@ function addIfHit(coordStr, opponent) {
   if (coordObj !== "missed" && coordObj !== "hit" && coordObj !== null) {
     hits[coordStr] = coordObj;
     lastCoord = coordStr;
-    console.log("addifhit " + coordStr);
   }
 }
 
 // Returns coordinates of computer
 export function computerLogic(opponent) {
-  console.log("-------New coord-----");
   const oppBoard = opponent.board;
   // returns random coordinate when there's no last hit ship
   if (Object.keys(hits).length < 1) return genRandomCoord();
@@ -100,8 +96,6 @@ export function computerLogic(opponent) {
   const nextHit = adjacentAtk();
   if (nextHit) return nextHit;
 
-  console.log("shouldnt hit");
-  console.log(hits);
 
   // generates random coordinates
   function genRandomCoord() {
@@ -221,7 +215,6 @@ export function computerLogic(opponent) {
     while (true) {
       coordStr = genRandomCoord();
       if (sideCheck(coordStr, minLength)) {
-        console.log(`passed ` + coordStr);
         return coordStr;
       }
     }
@@ -231,18 +224,13 @@ export function computerLogic(opponent) {
     const moves = createMoves(coordStr, minLength);
     let emptyCnt = 0;
     let minLengthCnt = 0;
-    console.log(minLength);
-    console.log("sideCheck " + coordStr);
-    console.log(moves);
     for (let i = 0; i < moves.length - 1; i++) {
       const nextAtk = moves[i];
       const nextAtkStr = moves[i].join("");
-      console.log(nextAtkStr);
       if (minLengthCnt === minLength) {
         emptyCnt = 0;
         minLengthCnt = 0;
       } else {
-        console.log("minLength " + minLengthCnt);
         minLengthCnt++;
       }
       if (
@@ -254,7 +242,6 @@ export function computerLogic(opponent) {
         !hasHitShip(nextAtkStr)
       ) {
         emptyCnt++;
-        console.log("mt " + emptyCnt);
       }
       if (emptyCnt === minLength) return true;
     }
