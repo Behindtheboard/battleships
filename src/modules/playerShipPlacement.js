@@ -8,6 +8,7 @@ import {
   renderPassDevice,
   renderPlayerStart,
 } from "./renderUI";
+import randomizeShipPlacement from "./randomizeShipPlacement";
 
 // Handles ship drag and drop
 export function playerShipPlacement(player, opponent) {
@@ -164,9 +165,9 @@ export function playerShipPlacement(player, opponent) {
       () => {
         removeListeners();
         resetContainerStyle();
-        players.forEach((el) => {
-          renderShips(el, false);
-        });
+        // players.forEach((el) => {
+        //   renderShips(el, false);
+        // });
         // PVP start
         if (player.alt === "2" && opponent.alt === "1") {
           renderPlayerStart(opponent);
