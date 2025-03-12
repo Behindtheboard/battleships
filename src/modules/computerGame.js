@@ -220,7 +220,10 @@ export function computerLogic(opponent) {
     const minLength = minShip();
     while (true) {
       coordStr = genRandomCoord();
-      if (sideCheck(coordStr, minLength)) return coordStr;
+      if (sideCheck(coordStr, minLength)) {
+        console.log(`passed ` + coordStr);
+        return coordStr;
+      }
     }
   }
   // returns a boolean if there are squares available
@@ -234,20 +237,24 @@ export function computerLogic(opponent) {
     for (let i = 0; i < moves.length - 1; i++) {
       const nextAtk = moves[i];
       const nextAtkStr = moves[i].join("");
+      console.log(nextAtkStr);
+      if (minLengthCnt === minLength) {
+        emptyCnt = 0;
+        minLengthCnt = 0;
+      } else {
+        console.log("minLength " + minLengthCnt);
+        minLengthCnt++;
+      }
       if (
+        nextAtk[0] >= 0 &&
+        nextAtk[1] >= 0 &&
         nextAtk[0] + nextAtk[1] < 19 &&
-        nextAtk[0] * nextAtk[1] >= 0 &&
         coordStr < 100 &&
         !checkMissed(nextAtkStr) &&
         !hasHitShip(nextAtkStr)
       ) {
         emptyCnt++;
-      }
-      if (minLengthCnt === minLength) {
-        emptyCnt = 0;
-        minLengthCnt = 0;
-      } else {
-        minLengthCnt++;
+        console.log("mt " + emptyCnt);
       }
       if (emptyCnt === minLength) return true;
     }
